@@ -40,13 +40,13 @@ class GetTimetable:
 
     async def get_timetable(self, update, context):
         if context.user_data.get('in_conversation'):
-            return ConversationHandler.END
+            return
         if context.user_data.get('last'):
             context.user_data['last'] = False
-            return ConversationHandler.END
+            return
         if not context.user_data.get('INFO'):
             await update.message.reply_text(f'Для начала заполни свои данные')
-            return ConversationHandler.END
+            return
         if update.message.text == '📚Расписание📚':
             lessons, day = await get_timetable_for_user(context.user_data['INFO']['Name'],
                                                         context.user_data['INFO']['Familia'],
@@ -72,6 +72,3 @@ class GetTimetable:
                 except Exception:
                     continue
             await update.message.reply_text(t, parse_mode='MarkdownV2')
-            return ConversationHandler.END
-        else:
-            return ConversationHandler.END
