@@ -71,18 +71,28 @@ def prepare_for_markdown(text):
     return res
 
 
-def put_to_db(update):
+def put_to_db(update, name, surname, grade):
     db_sess = db_session.create_session()
     user__id = update.message.from_user.id
-    message__id = update.message.chat.id
-    if db_sess.query(User).filter(User.chat_id == message__id).first():
+    if db_sess.query(User).filter(User.telegram_id == user__id).first():
         if not db_sess.query(User).filter(User.telegram_id == user__id,
-                                          User.chat_id == message__id).first():
-            user = User(chat_id=message__id, telegram_id=user__id)
+                                          User.chat_id == update.message.chat.id).first():
+            user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name, grade=grade)
             db_sess.add(user)
     else:
-        user = User(chat_id=message__id, telegram_id=user__id)
+        user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name, grade=grade)
         db_sess.add(user)
         db_sess.commit()
+    db_sess.commit()
+    db_sess.close()
+
+
+def update_db(update, name, surname, grade):
+    db_sess = db_session.create_session()
+    user__id = update.message.from_user.id
+    user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+    user.surname = surname
+    user.name = name
+    user.grade = grade
     db_sess.commit()
     db_sess.close()
