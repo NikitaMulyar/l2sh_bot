@@ -14,19 +14,24 @@ class MailTo:
     step_text = 4
     step_author = 5
 
+    async def timetable_kbrd(self):
+        btn = KeyboardButton('📚Расписание📚')
+        kbd = ReplyKeyboardMarkup([[btn]], resize_keyboard=True)
+        return kbd
+
     async def mailing_parallels_kbrd(self):
         btns = []
         for i in self.parallels:
             btns.append(KeyboardButton(i))
 
-        kbd = ReplyKeyboardMarkup([[btns], [KeyboardButton('Всем')]], resize_keyboard=True)
+        kbd = ReplyKeyboardMarkup([btns, [KeyboardButton('Всем')]], resize_keyboard=True)
         return kbd
 
     async def mailing_classes_kbrd(self, parallel):
         btns = []
         for i in self.classes[parallel]:
             btns.append(KeyboardButton(i))
-        kbd = ReplyKeyboardMarkup([[btns], [KeyboardButton(f'Всем')]],
+        kbd = ReplyKeyboardMarkup([btns, [KeyboardButton(f'Всем')]],
                                   resize_keyboard=True)
         return kbd
 
@@ -91,7 +96,9 @@ class MailTo:
         db_sess = db_session.create_session()
         all_users = db_sess.query(User).all()
         if context.user_data['PARAL'] != 'Всем':
-            all_users = db_sess.query(User).filter(context.user_data['PARAL'] in User.grade).all()
+            # context.user_data['PARAL'] in User.grade
+            all_users = (db_sess.query(User).
+                         filter(User.grade[:-1] == context.user_data['PARAL']).all())
             if context.user_data['CLASS'] != 'Всем':
                 all_users = db_sess.query(User).filter(
                     context.user_data['CLASS'] == User.grade).all()
@@ -100,13 +107,15 @@ class MailTo:
                                    context.user_data['MESSAGE'] + f'\n\nОт {update.message.text}')
         context.user_data['in_conversation'] = False
         p, c = context.user_data['PARAL'], context.user_data['CLASS']
-        t = context.user_data['MESSAGE'] + f'\n\nОт {update.message.text}'
+        t = '📬Новое сообщение!📬\n\n' + context.user_data['MESSAGE'] + f'\n\nОт {update.message.text}'
         await update.message.reply_text(f'Сообщение:\n"{t}"\n\nбыло отправлено в '
                                         f'параллель "{p}", класс: "{c}"')
-        await update.message.reply_text('Настройка рассылки окончена. Начать сначала: /mailing')
+        await update.message.reply_text('Настройка рассылки окончена. Начать сначала: /mail',
+                                        reply_markup=await self.timetable_kbrd())
         return ConversationHandler.END
 
     async def end_mailing(self, update, context):
-        await update.message.reply_text('Настройка рассылки прервана. Начать сначала: /mailing')
+        await update.message.reply_text('Настройка рассылки прервана. Начать сначала: /mail',
+                                        reply_markup=await self.timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END

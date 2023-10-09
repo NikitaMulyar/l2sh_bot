@@ -41,20 +41,18 @@ class GetTimetable:
     async def get_timetable(self, update, context):
         if context.user_data.get('in_conversation'):
             return
-        if context.user_data.get('last'):
-            context.user_data['last'] = False
-            return
-        if not context.user_data.get('INFO'):
+        db_sess = db_session.create_session()
+        user__id = update.message.from_user.id
+        if not db_sess.query(User).filter(User.telegram_id == user__id).first():
             await update.message.reply_text(f'Для начала заполни свои данные')
-            return
+            return ConversationHandler.END
         if update.message.text == '📚Расписание📚':
-            lessons, day = await get_timetable_for_user(context.user_data['INFO']['Name'],
-                                                        context.user_data['INFO']['Familia'],
-                                                        context.user_data['INFO']['Class'])
+            user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+            lessons, day = await get_timetable_for_user(user.name, user.surname, user.grade)
             if lessons.empty:
-                txt = (context.user_data['INFO']['Familia'] + ' ' + context.user_data['INFO']['Name'] + ' ' +
-                       context.user_data['INFO']['Class'])
-                class_txt = context.user_data['INFO']['Class']
+                txt = (user.surname + ' ' + user.name + ' ' + user.grade)
+                class_txt = user.grade
+
                 await update.message.reply_text(f'Ученика "{txt}" не найдено или отсутствует '
                                                 f'расписание для {class_txt} класса.')
                 return ConversationHandler.END

@@ -11,13 +11,11 @@ import os
 import string
 
 
-async def write_all(bot: telegram.Bot):
+async def write_all(bot: telegram.Bot, text):
     db_sess = db_session.create_session()
     all_users = db_sess.query(User).all()
     for user in all_users:
-        await bot.send_message(user.chat_id, 'Бот был перезапущен. '
-                                             'Пожалуйста, заполните свои данные заново с помощью '
-                                             'команды /start')
+        await bot.send_message(user.chat_id, text)
 
 
 async def extract_timetable_for_day(day, pdf, page_n):

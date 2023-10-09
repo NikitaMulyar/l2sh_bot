@@ -1,14 +1,20 @@
-from funcs_back import *
 from telegram.ext import ConversationHandler
-from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
-from server import bot
+from telegram import Bot, ReplyKeyboardMarkup, KeyboardButton
 from consts import *
+from config import *
+
 
 class LoadTimetables:
     step_pswrd = 1
     step_class = 2
     step_file = 3
     classes = ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД']
+    bot = Bot(BOT_TOKEN)
+
+    async def timetable_kbrd(self):
+        btn = KeyboardButton('📚Расписание📚')
+        kbd = ReplyKeyboardMarkup([[btn]], resize_keyboard=True)
+        return kbd
 
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
@@ -35,7 +41,7 @@ class LoadTimetables:
         return self.step_file
 
     async def load_pdf(self, update, context):
-        file_info = await bot.get_file(update.message.document.file_id)
+        file_info = await self.bot.get_file(update.message.document.file_id)
         await file_info.download_to_drive(path_to_timetables +
                                                  f"{context.user_data['filename']}.pdf")
         await update.message.reply_text('Файл загружен.')
@@ -43,5 +49,6 @@ class LoadTimetables:
         return self.step_class
 
     async def end_setting(self, update, context):
-        await update.message.reply_text('Загрузка расписаний завершена')
+        await update.message.reply_text('Загрузка расписаний завершена',
+                                        reply_markup=await self.timetable_kbrd())
         return ConversationHandler.END
