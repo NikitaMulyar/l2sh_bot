@@ -29,11 +29,12 @@ def main():
         pass
 
     asyncio.run(write_all(bot))
-
-    application = Application.builder().token(BOT_TOKEN).build()
-    # .post_init(post_init)
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
+    application = Application.builder().token(BOT_TOKEN).build()
+    # .post_init(post_init)
+    # loop = asyncio.new_event_loop()
+    # asyncio.set_event_loop(loop)
     start_dialog = SetTimetable()
     timetable__ = GetTimetable()
 

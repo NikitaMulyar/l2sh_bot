@@ -74,21 +74,10 @@ class GetTimetable:
                         t += prepare_for_markdown(f'{txt_info}{lesson_info[1]} (Каб. {lesson_info[-1]}, учитель: {lesson_info[0]})\n\n')
                 except Exception:
                     continue
-            print(t)
             await update.message.reply_text(t, parse_mode='MarkdownV2')
             return ConversationHandler.END
-        elif update.message.text == password:
-            return 1
         else:
-            print('666')
             return ConversationHandler.END
-
-    async def load_timetables(self, update, context):
-        """file_info = await bot.get_file(update.message.document.file_id)
-        file = await file_info.download_as_bytearray()
-        context.user_data['QUESTIONS'] = json.loads(file)['test']"""
-        await update.message.reply_text('Файл загружен.')
-        return 1
 
     async def end_setting(self, update, context):
         await update.message.reply_text('Загрузка расписаний завершена')
