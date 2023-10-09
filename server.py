@@ -28,6 +28,7 @@ def main():
     except Exception:
         pass
 
+    asyncio.run(write_all(bot))
     application = Application.builder().token(BOT_TOKEN).build()
     # .post_init(post_init)
 
