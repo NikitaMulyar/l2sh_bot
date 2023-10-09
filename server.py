@@ -16,10 +16,6 @@ logger = logging.getLogger(__name__)
 bot = Bot(BOT_TOKEN)
 
 
-async def post_init(application: Application) -> None:
-    await application.bot.set_my_commands([('start', 'Начать настройку данных')])
-
-
 def main():
     try:
         if not os.path.exists('out/'):
