@@ -85,3 +85,14 @@ def put_to_db(update, name, surname, grade):
         db_sess.commit()
     db_sess.commit()
     db_sess.close()
+
+
+def update_db(update, name, surname, grade):
+    db_sess = db_session.create_session()
+    user__id = update.message.from_user.id
+    user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+    user.surname = surname
+    user.name = name
+    user.grade = grade
+    db_sess.commit()
+    db_sess.close()

@@ -22,14 +22,18 @@ class SetTimetable:
         db_sess = db_session.create_session()
         user__id = update.message.from_user.id
         if db_sess.query(User).filter(User.telegram_id == user__id).first():
+            user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+            user.chat_id = update.message.chat.id
+            db_sess.commit()
+            db_sess.close()
             await update.message.reply_text(
                 'Привет! Я вижу, что ты уже есть в системе.\n'
                 'Теперь ты можешь пользоваться ботом',
                 reply_markup=await self.timetable_kbrd())
             context.user_data['in_conversation'] = False
-            context.user_data['last'] = True
             return ConversationHandler.END
         else:
+            db_sess.close()
             await update.message.reply_text(
                 'Привет! В этом боте ты можешь узнавать свое расписание на день!\n'
                 'Но сначала немного формальностей: напиши свой класс (пример: 7Г)',

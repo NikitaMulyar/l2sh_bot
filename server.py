@@ -6,7 +6,7 @@ import threading
 from config import BOT_TOKEN
 from class_start import *
 from class_timetable import *
-
+from class_edit_user import *
 
 logging.basicConfig(
     filename='out/logs.log', filemode='a',
@@ -37,6 +37,7 @@ def main():
     # asyncio.set_event_loop(loop)
     start_dialog = SetTimetable()
     timetable__ = GetTimetable()
+    edit_user_class = Edit_User()
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start_dialog.start)],
@@ -54,7 +55,17 @@ def main():
         },
         fallbacks=[CommandHandler('end_setting', timetable__.end_setting)]
     )
-    application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler]})
+
+    edit_user_handler = ConversationHandler(
+        entry_points=[CommandHandler('edit', edit_user_class.start)],
+        states={
+            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_class)],
+            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_familia)],
+            3: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_name)]
+        },
+        fallbacks=[CommandHandler('end', edit_user_class.end_setting)]
+    )
+    application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler]})
     application.run_polling()
 
 
