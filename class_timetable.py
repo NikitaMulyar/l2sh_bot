@@ -82,3 +82,6 @@ class GetTimetable:
     async def end_setting(self, update, context):
         await update.message.reply_text('Загрузка расписаний завершена')
         return ConversationHandler.END
+
+    async def load_timetables(self):
+        pass
