@@ -1,9 +1,6 @@
-import pandas as pd
-
 from funcs_back import *
 from telegram.ext import ConversationHandler
 from telegram import KeyboardButton, ReplyKeyboardMarkup
-from consts import *
 
 
 class GetTimetable:
@@ -69,7 +66,7 @@ class GetTimetable:
                     # предмет, каб.
                     start, end = self.for_datetime[key]
                     if start <= (time_now.hour, time_now.minute) < end:
-                        t += f'_*' + prepare_for_markdown(f'{txt_info}{lesson_info[1]} (Каб. {lesson_info[-1]}, учитель: {lesson_info[0]})') + '*_\n\n'
+                        t += f'_*' + prepare_for_markdown(f'{txt_info}{lesson_info[1]} - каб. {lesson_info[-1]}\n(учитель: {lesson_info[0]})') + '*_\n\n'
                     else:
                         t += prepare_for_markdown(f'{txt_info}{lesson_info[1]} (Каб. {lesson_info[-1]}, учитель: {lesson_info[0]})\n\n')
                 except Exception:
@@ -78,7 +75,3 @@ class GetTimetable:
             return ConversationHandler.END
         else:
             return ConversationHandler.END
-
-    async def end_setting(self, update, context):
-        await update.message.reply_text('Загрузка расписаний завершена')
-        return ConversationHandler.END

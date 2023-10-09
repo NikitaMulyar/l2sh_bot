@@ -2,7 +2,6 @@ import asyncio
 import logging
 from telegram import Bot
 from telegram.ext import Application, MessageHandler, filters, CommandHandler
-import threading
 from config import BOT_TOKEN
 from class_start import *
 from class_timetable import *
@@ -47,13 +46,7 @@ def main():
         },
         fallbacks=[CommandHandler('end', start_dialog.end_setting)]
     )
-    timetable_handler = ConversationHandler(
-        entry_points=[MessageHandler(filters.TEXT & ~filters.COMMAND, timetable__.get_timetable)],
-        states={
-            1: [MessageHandler(filters.Document.FileExtension('pdf'), timetable__.load_timetables)]
-        },
-        fallbacks=[CommandHandler('end_setting', timetable__.end_setting)]
-    )
+    timetable_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, timetable__.get_timetable)
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler]})
     application.run_polling()
 
