@@ -1849,3 +1849,18 @@ task: <Task pending name='Application:6066156043:update_fetcher' coro=<Applicati
 2023-10-09 17:16:16,182 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/getUpdates "HTTP/1.1 200 OK"
 2023-10-09 17:26:08,352 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/sendMessage "HTTP/1.1 200 OK"
 2023-10-09 17:26:08,536 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/sendMessage "HTTP/1.1 200 OK"
+2023-10-09 20:15:05,669 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/sendMessage "HTTP/1.1 200 OK"
+2023-10-09 20:15:05,871 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/sendMessage "HTTP/1.1 200 OK"
+2023-10-09 20:20:44,186 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/sendMessage "HTTP/1.1 200 OK"
+2023-10-09 20:20:44,434 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/sendMessage "HTTP/1.1 200 OK"
+2023-10-09 20:20:44,651 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/getMe "HTTP/1.1 200 OK"
+2023-10-09 20:20:44,739 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/deleteWebhook "HTTP/1.1 200 OK"
+2023-10-09 20:20:44,742 - apscheduler.scheduler - INFO - Scheduler started
+2023-10-09 20:20:44,743 - telegram.ext.Application - INFO - Application started
+2023-10-09 20:20:45,212 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/getUpdates "HTTP/1.1 200 OK"
+2023-10-09 20:20:45,566 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/sendMessage "HTTP/1.1 200 OK"
+2023-10-09 20:20:55,485 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/getUpdates "HTTP/1.1 200 OK"
+2023-10-09 20:21:05,580 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/getUpdates "HTTP/1.1 200 OK"
+2023-10-09 20:21:15,666 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6066156043:AAG8zM4qHqmnBJ9HYEkV8rMUEMLFrSgTzik/getUpdates "HTTP/1.1 200 OK"
+2023-10-09 20:21:18,406 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Application:6066156043:update_fetcher' coro=<Application._update_fetcher() running at /Users/nikita/PycharmProjects/BOT_l2sh/venv/lib/python3.10/site-packages/telegram/ext/_application.py:1110> wait_for=<Future pending cb=[Task.task_wakeup()]>>
