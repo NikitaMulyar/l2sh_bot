@@ -10,6 +10,7 @@ class User(SqlAlchemyBase):
     surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     grade = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    number = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     def __repr__(self):
         return f'<User> {self.chat_id} {self.telegram_id}'

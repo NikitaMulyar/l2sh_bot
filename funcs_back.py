@@ -75,10 +75,12 @@ def put_to_db(update, name, surname, grade):
     if db_sess.query(User).filter(User.telegram_id == user__id).first():
         if not db_sess.query(User).filter(User.telegram_id == user__id,
                                           User.chat_id == update.message.chat.id).first():
-            user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name, grade=grade)
+            user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name,
+                        grade=grade, number=grade[:-1])
             db_sess.add(user)
     else:
-        user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name, grade=grade)
+        user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name,
+                    grade=grade, number=grade[:-1])
         db_sess.add(user)
         db_sess.commit()
     db_sess.commit()
@@ -92,5 +94,6 @@ def update_db(update, name, surname, grade):
     user.surname = surname
     user.name = name
     user.grade = grade
+    user.number = grade[:-1]
     db_sess.commit()
     db_sess.close()

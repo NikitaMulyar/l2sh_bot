@@ -98,7 +98,7 @@ class MailTo:
         if context.user_data['PARAL'] != 'Всем':
             # context.user_data['PARAL'] in User.grade
             all_users = (db_sess.query(User).
-                         filter(User.grade[:-1] == context.user_data['PARAL']).all())
+                         filter(User.number == context.user_data['PARAL']).all())
             if context.user_data['CLASS'] != 'Всем':
                 all_users = db_sess.query(User).filter(
                     context.user_data['CLASS'] == User.grade).all()
