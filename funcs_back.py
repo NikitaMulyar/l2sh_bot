@@ -21,8 +21,16 @@ bot = Bot(BOT_TOKEN)
 async def timetable_kbrd():
     btn = KeyboardButton('📚Расписание📚')
     btn2 = KeyboardButton('Расписание на день недели\n(без изм. в распис.):')
+    btn3 = KeyboardButton('🎨Мои кружки🎨')
     arr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
-    kbd = ReplyKeyboardMarkup([[btn], [btn2], arr], resize_keyboard=True)
+    kbd = ReplyKeyboardMarkup([[btn], [btn2], arr, [btn3]], resize_keyboard=True)
+    return kbd
+
+
+async def extra_school_timetable_kbrd():
+    btn = KeyboardButton('♟️Сегодня♟️')
+    arr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
+    kbd = ReplyKeyboardMarkup([[btn], arr], resize_keyboard=True)
     return kbd
 
 

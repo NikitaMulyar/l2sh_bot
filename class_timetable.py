@@ -185,3 +185,8 @@ class GetTimetable:
                 except Exception as e:
                     continue
             await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+        elif update.message.text == '🎨Мои кружки🎨':
+            await update.message.reply_text('Выбери интересующий тебя день',
+                                            reply_markup=await extra_school_timetable_kbrd())
+        elif update.message.text == '♟️Сегодня♟️':
+            await update.message.reply_text('Кружки', reply_markup=await timetable_kbrd())
