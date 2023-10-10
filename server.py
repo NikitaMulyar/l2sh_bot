@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from telegram.ext import Application, MessageHandler, filters, CommandHandler
+from telegram.ext import Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler
 from class_timetable import *
 from class_edit_user import *
 from class_mailing import *
@@ -8,7 +8,6 @@ from class_start import *
 from class_load_timetable import *
 from classes_support_profile import *
 from class_extra_lesson import *
-
 
 logging.basicConfig(
     filename='out/logs.log', filemode='a',
@@ -27,7 +26,7 @@ def main():
         pass
 
     asyncio.run(write_all(bot, '🔋Бот был перезапущен. Все диалоги сброшены. '
-                                             'Необходимо использовать команду /start'))
+                               'Необходимо использовать команду /start'))
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     application = Application.builder().token(BOT_TOKEN).build()
@@ -82,9 +81,14 @@ def main():
     sup_hadler = CommandHandler('support', sup.get_supp)
     prof_handler = CommandHandler('profile', prof.get_profile)
     timetable_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, timetable__.get_timetable)
+    config_extra = ConversationHandler(
+        entry_points=[CommandHandler("extra", extra_lesson_dialog.start)],
+        states={
+            1: [CallbackQueryHandler(extra_lesson_dialog.yes_no)]},
+        fallbacks=[CommandHandler('end_extra', extra_lesson_dialog.get_out)], )
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
                                        4: [mailto_handler], 5: [load_tt_handler],
-                                       6: [prof_handler], 7: [sup_hadler]})
+                                       6: [prof_handler], 7: [sup_hadler], 8: [config_extra]})
     try:
         application.run_polling()
     except Exception:
