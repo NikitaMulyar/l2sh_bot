@@ -15,8 +15,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-bot = Bot(BOT_TOKEN)
-
 
 def main():
     try:
@@ -25,10 +23,8 @@ def main():
     except Exception:
         pass
 
-    asyncio.run(write_all(bot, '🔋Бот был перезапущен. Все диалоги сброшены. '
-                                             'Необходимо использовать команду /start'))
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+    asyncio.gather(write_all(bot, '🔋Бот был перезапущен. Все диалоги сброшены. '
+                                             'Необходимо использовать команду /start', all_=True))
     application = Application.builder().token(BOT_TOKEN).build()
     # .post_init(post_init)
     # loop = asyncio.new_event_loop()
@@ -38,13 +34,15 @@ def main():
     edit_user_class = Edit_User()
     mail_dialog = MailTo()
     load_tt = LoadTimetables()
+    load_changes_in_tt = LoadEditsTT()
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start_dialog.start)],
         states={
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_class)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_familia)],
-            3: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_name)]
+            3: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_name)],
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_psw)]
         },
         fallbacks=[CommandHandler('end', start_dialog.end_setting)]
     )
@@ -63,8 +61,7 @@ def main():
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_psw)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_parallel)],
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_class)],
-            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_text)],
-            5: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_author)]
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_text)]
         },
         fallbacks=[CommandHandler('end_mail', mail_dialog.end_mailing)]
     )
@@ -75,6 +72,13 @@ def main():
                 3: [MessageHandler(filters.Document.FileExtension('pdf'), load_tt.load_pdf)]},
         fallbacks=[CommandHandler('end_load', load_tt.end_setting)]
     )
+    load_changes_in_tt_handler = ConversationHandler(
+        entry_points=[CommandHandler('changes', load_changes_in_tt.start)],
+        states={1: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_changes_in_tt.get_pswrd)],
+                2: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_changes_in_tt.get_date)],
+                3: [MessageHandler(filters.Document.FileExtension('pdf'), load_changes_in_tt.load_pdf)]},
+        fallbacks=[CommandHandler('end_changes', load_changes_in_tt.end_setting)]
+    )
     sup = Support()
     prof = Profile()
     sup_hadler = CommandHandler('support', sup.get_supp)
@@ -82,11 +86,9 @@ def main():
     timetable_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, timetable__.get_timetable)
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
                                        4: [mailto_handler], 5: [load_tt_handler],
-                                       6: [prof_handler], 7: [sup_hadler]})
-    try:
-        application.run_polling()
-    except Exception:
-        write_all(bot, '🪫Бот остановлен.')
+                                       6: [prof_handler], 7: [sup_hadler],
+                                       8: [load_changes_in_tt_handler]})
+    application.run_polling()
 
 
 if __name__ == '__main__':

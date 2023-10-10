@@ -1,7 +1,6 @@
 from funcs_back import *
 from telegram.ext import ConversationHandler
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
-from server import bot
 
 
 class MailTo:
@@ -12,12 +11,6 @@ class MailTo:
     step_parallel = 2
     step_class = 3
     step_text = 4
-    step_author = 5
-
-    async def timetable_kbrd(self):
-        btn = KeyboardButton('📚Расписание📚')
-        kbd = ReplyKeyboardMarkup([[btn]], resize_keyboard=True)
-        return kbd
 
     async def mailing_parallels_kbrd(self):
         btns = []
@@ -38,6 +31,14 @@ class MailTo:
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
+        if user.grade == 'АДМИН':
+            await update.message.reply_text(
+                'Выберите параллель, к которой будет обращена рассылка:',
+                reply_markup=await self.mailing_parallels_kbrd())
+            context.user_data['in_conversation'] = True
+            return self.step_parallel
         await update.message.reply_text('Введите пароль админа:')
         context.user_data['in_conversation'] = True
         return self.step_pswrd
@@ -89,12 +90,9 @@ class MailTo:
 
     async def get_text(self, update, context):
         context.user_data['MESSAGE'] = update.message.text
-        await update.message.reply_text('Введите свои ФИО:')
-        return self.step_author
-
-    async def get_author(self, update, context):
         db_sess = db_session.create_session()
-        all_users = db_sess.query(User).all()
+        all_users = db_sess.query(User).filter(User.grade != 'АДМИН').all()
+        author = db_sess.query(User).filter(User.chat_id == update.message.chat.id).first()
         if context.user_data['PARAL'] != 'Всем':
             # context.user_data['PARAL'] in User.grade
             all_users = (db_sess.query(User).
@@ -103,19 +101,24 @@ class MailTo:
                 all_users = db_sess.query(User).filter(
                     context.user_data['CLASS'] == User.grade).all()
         for user in all_users:
-            await bot.send_message(user.chat_id,
-                                   context.user_data['MESSAGE'] + f'\n\nОт {update.message.text}')
+            try:
+                await bot.send_message(user.chat_id, '📬Новое сообщение!📬\n\n' +
+                                       context.user_data[
+                                           'MESSAGE'] + f'\n\nОт {author.surname} {author.name}, {author.grade}')
+            except Exception:
+                pass
         context.user_data['in_conversation'] = False
         p, c = context.user_data['PARAL'], context.user_data['CLASS']
-        t = '📬Новое сообщение!📬\n\n' + context.user_data['MESSAGE'] + f'\n\nОт {update.message.text}'
+        t = '📬Новое сообщение!📬\n\n' + context.user_data[
+            'MESSAGE'] + f'\n\nОт {author.surname} {author.name}, {author.grade}'
         await update.message.reply_text(f'Сообщение:\n"{t}"\n\nбыло отправлено в '
                                         f'параллель "{p}", класс: "{c}"')
         await update.message.reply_text('Настройка рассылки окончена. Начать сначала: /mail',
-                                        reply_markup=await self.timetable_kbrd())
+                                        reply_markup=await timetable_kbrd())
         return ConversationHandler.END
 
     async def end_mailing(self, update, context):
         await update.message.reply_text('Настройка рассылки прервана. Начать сначала: /mail',
-                                        reply_markup=await self.timetable_kbrd())
+                                        reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
