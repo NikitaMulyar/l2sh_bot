@@ -7,6 +7,7 @@ from class_mailing import *
 from class_start import *
 from class_load_timetable import *
 from classes_support_profile import *
+from class_extra_lesson import *
 
 
 logging.basicConfig(
@@ -38,6 +39,7 @@ def main():
     edit_user_class = Edit_User()
     mail_dialog = MailTo()
     load_tt = LoadTimetables()
+    extra_lesson_dialog = Extra_Lessons()
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start_dialog.start)],
