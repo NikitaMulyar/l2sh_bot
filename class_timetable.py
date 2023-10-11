@@ -132,7 +132,7 @@ class GetTimetable:
                 except Exception as e:
                     continue
             t += '\n'
-            edits_in_tt, for_which_day = await get_edits_in_timetable()
+            edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
             if ('завтра' in for_which_day and context.user_data['NEXT_DAY_TT'] or
                     'сегодня' in for_which_day and not context.user_data.get('NEXT_DAY_TT')):
                 if len(edits_in_tt) != 0:

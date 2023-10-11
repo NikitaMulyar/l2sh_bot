@@ -153,4 +153,16 @@ async def get_timetable_for_user_6_9(context, class_):
                                 t += prepare_for_markdown(f'{txt_info}{lesson_info[1]} - каб. {lesson_info[-1]}\n(учитель: {lesson_info[0]})\n\n')"""
 
 
-print(asyncio.run(get_timetable_for_user_6_9(dict(), '6А'))[0].loc['1\n09:00 - 09:45'][2])
+# print(asyncio.run(get_timetable_for_user_6_9(dict(), '6А'))[0].loc['1\n09:00 - 09:45'][2])
+
+
+from datetime import datetime
+time_ = datetime.now()
+day_ = str(time_.day).rjust(2, '0')
+month_ = str(time_.month).rjust(2, '0')
+today_file = f'{day_}{month_}{time_.year}'
+time_ = time_ + timedelta(days=1)
+day_ = str(time_.day).rjust(2, '0')
+month_ = str(time_.month).rjust(2, '0')
+tomorrow_file = f'{day_}{month_}{time_.year}'
+print(today_file, tomorrow_file)

@@ -184,34 +184,50 @@ async def get_timetable_for_user(context, name, familia, class_):
     return timetable_, day
 
 
-async def clear_the_changes_folder():
+"""async def clear_the_changes_folder():
     if os.path.exists(path_to_changes):
         shutil.rmtree(path_to_changes)
-    os.mkdir(path_to_changes)
+    os.mkdir(path_to_changes)"""
 
 
-async def get_edits_in_timetable():
+async def get_edits_in_timetable(next_day_tt):
     # filename format: DD.MM.YYYY
+    time_ = datetime.now()
+    day_ = str(time_.day).rjust(2, '0')
+    month_ = str(time_.month).rjust(2, '0')
+    today_file = f'{day_}.{month_}.{time_.year}.pdf'
+    time_2 = time_ + timedelta(days=1)
+    day_ = str(time_2.day).rjust(2, '0')
+    month_ = str(time_2.month).rjust(2, '0')
+    tomorrow_file = f'{day_}.{month_}.{time_2.year}.pdf'
+
     if len([i for i in os.walk(path_to_changes)][0][-1]) == 0:
         # Файла с изменениями нет
         return [], ''
-    filename = [i for i in os.walk(path_to_changes)][0][-1][-1].strip('.pdf')
-    date_ = tuple(map(int, filename.split('.')))
-    time_ = datetime.now()  # - timedelta(hours=3)
-    # !!!!!!!!!!!!!!!!!
-    period = (datetime(day=date_[0], month=date_[1], year=date_[2], hour=16, minute=30) - timedelta(days=1),
+    if next_day_tt:
+        if not os.path.exists(path_to_changes + tomorrow_file):
+            # Файла с изменениями нет
+            return [], ''
+    else:
+        if not os.path.exists(path_to_changes + today_file):
+            # Файла с изменениями нет
+            return [], ''
+
+    """period = (datetime(day=date_[0], month=date_[1], year=date_[2], hour=16, minute=30) - timedelta(days=1),
               datetime(day=date_[0], month=date_[1], year=date_[2], hour=16, minute=30))
     dfs = []
     if not period[0] < time_ < period[1]:
         # Изменения не актуальны
-        return [], ''
+        return [], ''"""
 
-    if time_ >= datetime(day=date_[0], month=date_[1], year=date_[2]):
+    if not next_day_tt:
         day = "*Изменения на сегодня*"
+        path_ = path_to_changes + tomorrow_file
     else:
         day = "*Изменения на завтра*"
+        path_ = path_to_changes + tomorrow_file
     day = prepare_for_markdown('🔔') + day + prepare_for_markdown('🔔\n')
-    path_ = path_to_changes + filename + '.pdf'
+    dfs = []
     with pdfplumber.open(path_) as pdf:
         tables = []
         for page in pdf.pages:

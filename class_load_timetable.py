@@ -98,7 +98,7 @@ class LoadEditsTT:
 
     async def load_pdf(self, update, context):
         file_info = await bot.get_file(update.message.document.file_id)
-        await clear_the_changes_folder()
+        # await clear_the_changes_folder()
         await file_info.download_to_drive(path_to_changes + f"{context.user_data['changes_date']}.pdf")
         await update.message.reply_text('Файл загружен. Проведена рассылка всем ученикам об обновлении расписаний.')
         await write_all(bot, prepare_for_markdown('❕') + '_*Уважаемые лицеисты\!*_' +

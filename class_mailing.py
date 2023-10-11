@@ -109,8 +109,8 @@ class MailTo:
                     context.user_data['CLASS'] == User.grade).all()
         mailbox_ = prepare_for_markdown('📬')
         mail_text = (mailbox_ + '*Новое сообщение\!*' + mailbox_ + prepare_for_markdown('\n\n') +
-                     context.user_data['MESSAGE'] +
-                     f'\n\nОт {author.surname} {author.name}, {author.grade}')
+                     prepare_for_markdown(context.user_data['MESSAGE']) +
+                     f'\n\nОт {author.surname} {author.name}\, {author.grade}')
         for user in all_users:
             try:
                 await bot.send_message(user.chat_id, mail_text,
