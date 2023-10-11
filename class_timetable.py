@@ -175,7 +175,8 @@ class GetTimetable:
             t += '\n'
             t += await self.get_edits(context, user)
             await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
-        elif update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
+        elif (not context.user_data.get('EXTRA_CLICKED') and
+              update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
             user = db_sess.query(User).filter(User.telegram_id == user__id).first()
             if int(user.number) >= 10:
                 lessons, day = await get_standard_timetable_for_user(user.name, user.surname, user.grade,
@@ -246,5 +247,34 @@ class GetTimetable:
         elif update.message.text == '🎨Мои кружки🎨':
             await update.message.reply_text('Выбери интересующий тебя день',
                                             reply_markup=await extra_school_timetable_kbrd())
+            context.user_data['EXTRA_CLICKED'] = True
+        elif context.user_data['EXTRA_CLICKED'] and update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
+            context.user_data['EXTRA_CLICKED'] = False
+            extra_text = extra_lessons_return(update.message.from_user.id, update.message.text)
+            text = prepare_for_markdown(extra_text)
+            if text == '':
+                await update.message.reply_text(
+                    f'*Кружков на {self.days[self.day_num[update.message.text]]} нет*',
+                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+                return
+            await update.message.reply_text(
+                f'*Кружки на {self.days[self.day_num[update.message.text]].lower()}*\n\n{text}',
+                reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
         elif update.message.text == '♟️Сегодня♟️':
-            await update.message.reply_text('Кружки', reply_markup=await timetable_kbrd())
+            today = datetime.now().weekday()
+            context.user_data['EXTRA_CLICKED'] = False
+            if today == 6:
+                await update.message.reply_text(f'*В воскресенье нужно отдыхать\! Кружков нет\.*',
+                                                reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+                return
+            days = {value: key for key, value in self.day_num.items()}
+            extra_text = extra_lessons_return(update.message.from_user.id, days[today])
+            text = prepare_for_markdown(extra_text)
+            if text == '':
+                await update.message.reply_text(
+                    f'*Кружков на {self.days[today].lower()} нет*',
+                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+                return
+            await update.message.reply_text(
+                f'*Кружки на {self.days[today]}*\n\n{text}',
+                reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')

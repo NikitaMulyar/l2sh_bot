@@ -1,8 +1,6 @@
-import pandas as pd
-from telegram import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ConversationHandler
 from funcs_back import *
-from data.extra_lessons import *
 from data.user_to_extra import *
 
 
@@ -40,15 +38,11 @@ class Extra_Lessons:
         db_sess.commit()
         db_sess.close()
 
-    async def timetable_kbrd(self):
-        btn = KeyboardButton('📚Расписание📚')
-        kbd = ReplyKeyboardMarkup([[btn]], resize_keyboard=True)
-        return kbd
-
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
         await update.message.reply_text('Здесь ты можешь выбрать кружки, которые хочешь видеть в своём расписании.\n'
+                                        'Если захочешь закончить, напиши: /end_extra'
                                         'Давай начнем выбирать:')
         context.user_data['in_conversation'] = True
         context.user_data['choose_count'] = 0
@@ -105,6 +99,6 @@ class Extra_Lessons:
 
     async def get_out(self, update, context):
         await update.message.reply_text('Загрузка кружков завершена. Спасибо',
-                                        reply_markup=await self.timetable_kbrd())
+                                        reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END

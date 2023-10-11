@@ -1,12 +1,13 @@
 import asyncio
 import logging
-from telegram.ext import Application, MessageHandler, filters, CommandHandler
+from telegram.ext import Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler
 from class_timetable import *
 from class_edit_user import *
 from class_mailing import *
 from class_start import *
 from class_load_timetable import *
 from classes_support_profile import *
+from class_extra_lesson import *
 
 
 logging.basicConfig(
@@ -35,6 +36,7 @@ def main():
     mail_dialog = MailTo()
     load_tt = LoadTimetables()
     load_changes_in_tt = LoadEditsTT()
+    extra_lesson_dialog = Extra_Lessons()
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start_dialog.start)],
@@ -80,6 +82,12 @@ def main():
                 3: [MessageHandler(filters.Document.FileExtension('pdf'), load_changes_in_tt.load_pdf)]},
         fallbacks=[CommandHandler('end_changes', load_changes_in_tt.end_setting)]
     )
+    config_extra = ConversationHandler(
+        entry_points=[CommandHandler("extra", extra_lesson_dialog.start)],
+        states={
+            1: [CallbackQueryHandler(extra_lesson_dialog.yes_no)]},
+        fallbacks=[CommandHandler('end_extra', extra_lesson_dialog.get_out)], )
+
     sup = Support()
     prof = Profile()
     sup_hadler = CommandHandler('support', sup.get_supp)
@@ -88,7 +96,8 @@ def main():
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
                                        4: [mailto_handler], 5: [load_tt_handler],
                                        6: [prof_handler], 7: [sup_hadler],
-                                       8: [load_changes_in_tt_handler]})
+                                       8: [load_changes_in_tt_handler],
+                                       9: [config_extra]})
     application.run_polling()
 
 
