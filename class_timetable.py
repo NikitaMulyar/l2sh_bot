@@ -132,7 +132,7 @@ class GetTimetable:
             for txt_info, key in self.lessons_keys.items():
                 try:
                     if int(user.number) >= 10:
-                        pre_lesson_info = lessons.loc[key].split('###')
+                        pre_lesson_info = lessons.loc[key]
                     else:
                         pre_lesson_info = lessons.loc[key][day].split('###')
                     start, end = self.for_datetime[key]
@@ -149,7 +149,7 @@ class GetTimetable:
                         'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
                         'математика (1)', '(1)', 'физика (1)', 'эффекты (1)', 'математика (2)', 'математике']:
                             if lesson_info[-1] == 'Эрлих И.Г. 310':
-                                lesson_info = ['Эрлих И.Г.'] + lesson_info[-2] + ['310']
+                                lesson_info = ['Эрлих И.Г.'] + [lesson_info[-2]] + ['310']
                             lesson_name = lesson_info[-2]
                             teachers = " ".join(lesson_info[:-2])
                         else:
