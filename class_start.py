@@ -46,7 +46,7 @@ class SetTimetable:
                 context.user_data['INFO']['Class'] = update.message.text
                 await update.message.reply_text('Введите пароль админа:')
                 return self.step_pswrd
-        else:
+        elif update.message.text == 'АДМИН':
             context.user_data['INFO']['Class'] = update.message.text
             await update.message.reply_text('Введите пароль админа:')
             return self.step_pswrd
