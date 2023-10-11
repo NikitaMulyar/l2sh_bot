@@ -20,7 +20,7 @@ bot = Bot(BOT_TOKEN)
 
 async def timetable_kbrd():
     btn = KeyboardButton('📚Расписание📚')
-    btn2 = KeyboardButton('Расписание на день недели\n(без изм. в распис.):')
+    btn2 = KeyboardButton('Расписание на день недели:')
     btn3 = KeyboardButton('🎨Мои кружки🎨')
     arr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
     kbd = ReplyKeyboardMarkup([[btn], [btn2], arr, [btn3]], resize_keyboard=True)
@@ -116,6 +116,8 @@ async def get_timetable_for_user_6_9(context, class_):
             timetable_, day = await extract_timetable_for_day_6_9(day + 1, pdf, page_n)
             context.user_data['NEXT_DAY_TT'] = True
             # Флажок, чтобы расписание на следующий день не выделялось, если завтра больше уроков
+        else:
+            context.user_data['NEXT_DAY_TT'] = False
     return timetable_, day
 
 
@@ -181,6 +183,8 @@ async def get_timetable_for_user(context, name, familia, class_):
             timetable_, day = await extract_timetable_for_day(day + 1, pdf, page_n)
             context.user_data['NEXT_DAY_TT'] = True
             # Флажок, чтобы расписание на следующий день не выделялось, если завтра больше уроков
+        else:
+            context.user_data['NEXT_DAY_TT'] = False
     return timetable_, day
 
 
