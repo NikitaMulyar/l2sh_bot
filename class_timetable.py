@@ -151,13 +151,13 @@ class GetTimetable:
                         if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
                         'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
                         'математика (1)', '(1)', 'физика (1)', 'эффекты (1)', 'математика (2)', 'математике']:
-                            if lesson_info[-1] == 'Эрлих И.Г. 310':
-                                lesson_info = ['Эрлих И.Г.'] + [lesson_info[-2]] + ['310']
+                            if 'Эрлих И.Г.' in lesson_info[-1]:
+                                lesson_info = ['Эрлих И.Г.'] + [lesson_info[-2]] + [lesson_info[-1].split(' ')[-1]]
                             lesson_name = lesson_info[-2]
                             teachers = " ".join(lesson_info[:-2])
                         else:
-                            if lesson_info[-1] == 'Эрлих И.Г. 310':
-                                lesson_info = ['Эрлих И.Г.'] + lesson_info[-3:-1] + ['310']
+                            if 'Эрлих И.Г.' in lesson_info[-1]:
+                                lesson_info = ['Эрлих И.Г.'] + lesson_info[-3:-1] + [lesson_info[-1].split(' ')[-1]]
                             lesson_name = " ".join(lesson_info[-3:-1])
                             teachers = " ".join(lesson_info[:-3])
                         cabinet = lesson_info[-1]
@@ -209,13 +209,13 @@ class GetTimetable:
                         if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
                         'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
                         'математика (1)', '(1)', 'физика (1)', 'эффекты (1)', 'математика (2)', 'математике']:
-                            if lesson_info[-1] == 'Эрлих И.Г. 310':
-                                lesson_info = ['Эрлих И.Г.'] + [lesson_info[-2]] + ['310']
+                            if 'Эрлих И.Г.' in lesson_info[-1]:
+                                lesson_info = ['Эрлих И.Г.'] + [lesson_info[-2]] + [lesson_info[-1].split(' ')[-1]]
                             lesson_name = lesson_info[-2]
                             teachers = " ".join(lesson_info[:-2])
                         else:
-                            if lesson_info[-1] == 'Эрлих И.Г. 310':
-                                lesson_info = ['Эрлих И.Г.'] + lesson_info[-3:-1] + ['310']
+                            if 'Эрлих И.Г.' in lesson_info[-1]:
+                                lesson_info = ['Эрлих И.Г.'] + lesson_info[-3:-1] + [lesson_info[-1].split(' ')[-1]]
                             lesson_name = " ".join(lesson_info[-3:-1])
                             teachers = " ".join(lesson_info[:-3])
                         cabinet = lesson_info[-1]
