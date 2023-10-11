@@ -146,6 +146,7 @@ class GetTimetable:
                         t += f'_*' + prepare_for_markdown(f'➡️ {txt_info}')
                     else:
                         t += prepare_for_markdown(f'{txt_info}')
+                    last_cab = ''
                     for lesson_info in pre_lesson_info:
                         lesson_info = lesson_info.split('\n')
                         if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
@@ -169,8 +170,13 @@ class GetTimetable:
                         elif lesson_name == 'И.Н. ВТЭК':
                             lesson_name = 'ВТЭК'
                             teachers += " И.Н."
+                        if len(lesson_info) == 2:
+                            cabinet = last_cab
+                            lesson_name = lesson_info[-2]
+                            teachers = " ".join(lesson_info[:-2])
                         t += prepare_for_markdown(
                             f'{lesson_name} - каб. {cabinet}\n(учитель: {teachers})\n')
+                        last_cab = cabinet
                     if start <= (time_now.hour, time_now.minute) < end and not context.user_data['NEXT_DAY_TT']:
                         t += '*_'
                     t += '\n'
@@ -204,6 +210,7 @@ class GetTimetable:
                         pre_lesson_info = lessons.loc[key][day].split('###')
 
                     t += prepare_for_markdown(f'{txt_info}')
+                    last_cab = ""
                     for lesson_info in pre_lesson_info:
                         lesson_info = lesson_info.split('\n')
                         if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
@@ -227,8 +234,13 @@ class GetTimetable:
                         elif lesson_name == 'И.Н. ВТЭК':
                             lesson_name = 'ВТЭК'
                             teachers += " И.Н."
+                        if len(lesson_info) == 2:
+                            cabinet = last_cab
+                            lesson_name = lesson_info[-2]
+                            teachers = " ".join(lesson_info[:-2])
                         t += prepare_for_markdown(
                             f'{lesson_name} - каб. {cabinet}\n(учитель: {teachers})\n')
+                        last_cab = cabinet
                         """if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
                         'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
                         'математика (1)', '(1)', 'физика (1)', 'эффекты (1)', 'математика (2)', 'математике']:
