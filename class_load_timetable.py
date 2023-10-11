@@ -13,6 +13,7 @@ class LoadTimetables:
             return ConversationHandler.END
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
+        await update.message.reply_text('Прервать загрузку расписаний: /end_load')
         if user and user.grade == 'АДМИН':
             await update.message.reply_text(f'Укажите класс (пример: 7Г):')
             context.user_data['in_conversation'] = True
@@ -71,6 +72,7 @@ class LoadEditsTT:
             return ConversationHandler.END
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
+        await update.message.reply_text('Прервать загрузку расписаний: /end_changes')
         if user and user.grade == 'АДМИН':
             await update.message.reply_text(f'Укажите дату изменений в расписании (формат: ДД.ММ.ГГГГ):')
             context.user_data['in_conversation'] = True
