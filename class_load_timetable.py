@@ -15,7 +15,8 @@ class LoadTimetables:
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
         await update.message.reply_text('Прервать загрузку расписаний: /end_load')
         if user and user.grade == 'АДМИН':
-            await update.message.reply_text(f'Укажите класс (пример: 7Г):')
+            await update.message.reply_text(f'Укажите класс\n⚠️Если расписание 6-9 классов, то нужно указать без кавычек: '
+                                        f'"6-9". Для 10, 11 классов по-обычному: 10А, 10Д, 11Г и т.п.:')
             context.user_data['in_conversation'] = True
             return self.step_class
         await update.message.reply_text('Введите пароль админа:')
@@ -46,7 +47,8 @@ class LoadTimetables:
                                                  f"{context.user_data['filename']}.pdf")
         await update.message.reply_text('Файл загружен. Завершить: /end_load')
         context.user_data['FILE_UPLOADED'] = True
-        await update.message.reply_text(f'Укажите класс (пример: 7Г):')
+        await update.message.reply_text(f'Укажите класс\n⚠️Если расписание 6-9 классов, то нужно указать без кавычек: '
+                                        f'"6-9". Для 10, 11 классов по-обычному: 10А, 10Д, 11Г и т.п.:')
         return self.step_class
 
     async def end_setting(self, update, context):

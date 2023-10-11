@@ -211,6 +211,7 @@ async def get_edits_in_timetable(next_day_tt):
     if len([i for i in os.walk(path_to_changes)][0][-1]) == 0:
         # Файла с изменениями нет
         return [], ''
+    print(next_day_tt, path_to_changes + tomorrow_file, path_to_changes + today_file)
     if next_day_tt:
         if not os.path.exists(path_to_changes + tomorrow_file):
             # Файла с изменениями нет
@@ -229,7 +230,7 @@ async def get_edits_in_timetable(next_day_tt):
 
     if not next_day_tt:
         day = "*Изменения на сегодня*"
-        path_ = path_to_changes + tomorrow_file
+        path_ = path_to_changes + today_file
     else:
         day = "*Изменения на завтра*"
         path_ = path_to_changes + tomorrow_file
