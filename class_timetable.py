@@ -254,7 +254,7 @@ class GetTimetable:
             text = prepare_for_markdown(extra_text)
             if text == '':
                 await update.message.reply_text(
-                    f'*Кружков на {self.days[self.day_num[update.message.text]]} нет*',
+                    f'*Кружков на {self.days[self.day_num[update.message.text]].lower()} нет*',
                     reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
                 return
             await update.message.reply_text(
@@ -276,5 +276,5 @@ class GetTimetable:
                     reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
                 return
             await update.message.reply_text(
-                f'*Кружки на {self.days[today]}*\n\n{text}',
+                f'*Кружки на {self.days[today].lower()}*\n\n{text}',
                 reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
