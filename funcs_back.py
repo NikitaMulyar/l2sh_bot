@@ -309,10 +309,16 @@ def extra_lessons_return(id, button_text):
     day = days[button_text]
     db_sess = db_session.create_session()
     extra_lessons = db_sess.query(Extra_to_User).filter(Extra_to_User.user_id == id).all()
-    text = ""
+    full_text = []
     for extra_lesson in extra_lessons:
         extra = db_sess.query(Extra).filter(Extra.id == extra_lesson.extra_id, Extra.day == day).first()
+        text = ""
         if extra:
-            text += extra.to_str()
+            text += f"📚 {extra.title} 📚\n"
+            text += f"🕝 {extra.time} 🕝\n"
+            if extra.teacher.count(".") > 1:
+                text += f'Учитель: {extra.teacher}\n'
+            f'🏫 Место проведения: {extra.place} 🏫\n'
+        full_text.append(text)
     db_sess.close()
-    return text
+    return "\n".join(full_text)

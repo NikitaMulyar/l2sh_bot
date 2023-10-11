@@ -16,8 +16,3 @@ class Extra(SqlAlchemyBase):
 
     def __repr__(self):
         return f'<Extra> {self.title} {self.time} {self.teacher} {self.place}'
-
-    def to_str(self):
-        return (f'{self.title} {self.time}\n'
-                f'Учитель: {self.teacher}\n'
-                f'Место проведения: {self.place}\n')

@@ -42,7 +42,7 @@ class Extra_Lessons:
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
         await update.message.reply_text('Здесь ты можешь выбрать кружки, которые хочешь видеть в своём расписании.\n'
-                                        'Если захочешь закончить, напиши: /end_extra'
+                                        'Если захочешь закончить, напиши: /end_extra\n'
                                         'Давай начнем выбирать:')
         context.user_data['in_conversation'] = True
         context.user_data['choose_count'] = 0
@@ -65,6 +65,9 @@ class Extra_Lessons:
             return ConversationHandler.END
         lesson = list(db_sess.query(Extra).filter(Extra.grade == grade).all())[context.user_data['choose_count']]
         context.user_data['choose_count'] += 1
+        while lesson.teacher.count(".") <= 1 and user.grade not in lesson.teacher:
+            lesson = list(db_sess.query(Extra).filter(Extra.grade == grade).all())[context.user_data['choose_count']]
+            context.user_data['choose_count'] += 1
         context.user_data['lesson'] = lesson
         db_sess.close()
         text = f"""\t{lesson.day}\t\n{lesson.title} - {lesson.teacher}\n{lesson.time}, {lesson.place}"""
