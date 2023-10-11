@@ -4,6 +4,7 @@ from telegram.ext import ConversationHandler
 
 class GetTimetable:
     days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среду', 3: 'Четверг', 4: 'Пятницу', 5: 'Субботу'}
+    days2 = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}
     day_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
     lessons_keys = {'0️⃣-й урок, 8:30 - 8:55:\n': '0\n08:30 - 08:55',
                     '1️⃣-й урок, 9:00 - 9:45:\n': '1\n09:00 - 09:45',
@@ -110,7 +111,7 @@ class GetTimetable:
         user__id = update.message.from_user.id
         if not db_sess.query(User).filter(User.telegram_id == user__id).first():
             await update.message.reply_text(f'Для начала заполни свои данные: /start')
-            return ConversationHandler.END
+            return
         if update.message.text == '📚Расписание📚':
             user = db_sess.query(User).filter(User.telegram_id == user__id).first()
             context.user_data['NEXT_DAY_TT'] = False
@@ -235,7 +236,6 @@ class GetTimetable:
                                 f'{" ".join(lesson_info[-3:-1])} - каб. {lesson_info[-1]}\n(учитель: {" ".join(lesson_info[:-3])})\n')"""
                     t += '\n'
                 except Exception as e:
-                    print(e.__repr__())
                     continue
             if self.day_num[update.message.text] == datetime.now().weekday():
                 context.user_data['NEXT_DAY_TT'] = False
@@ -277,4 +277,19 @@ class GetTimetable:
                 return
             await update.message.reply_text(
                 f'*Кружки на {self.days[today].lower()}*\n\n{text}',
+                reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+        elif update.message.text == '🎭Все кружки🎭':
+            context.user_data['EXTRA_CLICKED'] = False
+            text_res = ""
+            for day, day_number in self.day_num.items():
+                extra_text = extra_lessons_return(update.message.from_user.id, day)
+                text = prepare_for_markdown(extra_text)
+                if text != "":
+                    text_res += f'_*{self.days2[day_number]}*_\n{text}\n'
+            if text_res == '':
+                await update.message.reply_text(
+                    f'*Ты еще не записывался\(лась\) на кружки\.*',
+                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+                return
+            await update.message.reply_text(text_res,
                 reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')

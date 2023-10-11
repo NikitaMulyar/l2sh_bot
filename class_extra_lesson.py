@@ -1,4 +1,4 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
 from funcs_back import *
 from data.user_to_extra import *
@@ -60,7 +60,7 @@ class Extra_Lessons:
 
         if context.user_data['choose_count'] == self.count[int(grade)]:
             await update.callback_query.edit_message_text('Загрузка кружков завершена. Спасибо',
-                                                          reply_markup="")
+                                                          reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
         lesson = list(db_sess.query(Extra).filter(Extra.grade == grade).all())[context.user_data['choose_count']]

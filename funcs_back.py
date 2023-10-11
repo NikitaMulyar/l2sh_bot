@@ -31,8 +31,9 @@ async def timetable_kbrd():
 
 async def extra_school_timetable_kbrd():
     btn = KeyboardButton('♟️Сегодня♟️')
+    btn2 = KeyboardButton('🎭Все кружки🎭')
     arr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
-    kbd = ReplyKeyboardMarkup([[btn], arr], resize_keyboard=True)
+    kbd = ReplyKeyboardMarkup([[btn, btn2], arr], resize_keyboard=True)
     return kbd
 
 
