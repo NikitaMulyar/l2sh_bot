@@ -33,6 +33,16 @@ class Edit_User(SetTimetable):
         return self.step_familia
 
     async def get_name(self, update, context):
+        db_sess = db_session.create_session()
+        user__id = update.message.from_user.id
+        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+        if user.grade != context.user_data['INFO']['Class']:
+            extra_lessons = db_sess.query(Extra_to_User).filter(Extra_to_User.user_id == user__id).all()
+            for extra_lesson in extra_lessons:
+                db_sess.delete(extra_lesson)
+            db_sess.commit()
+            db_sess.close()
+            await update.message.reply_text('Вы поменяли класс, поэтому все настройки кружко сброшены')
         context.user_data['INFO']['Name'] = update.message.text
         update_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
                   context.user_data['INFO']['Class'])
