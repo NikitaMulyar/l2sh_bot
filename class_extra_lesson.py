@@ -41,6 +41,12 @@ class Extra_Lessons:
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
+        user__id = update.message.from_user.id
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+        if user.grade == 'АДМИН':
+            await update.message.reply_text(f'⚠️У админов нет доступа к расписанию.')
+            return
         await update.message.reply_text('Здесь ты можешь выбрать кружки, которые хочешь видеть в своём расписании.\n'
                                         'Если захочешь закончить, напиши: /end_extra\n'
                                         'Давай начнем выбирать:')
