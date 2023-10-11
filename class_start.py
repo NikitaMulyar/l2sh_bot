@@ -41,7 +41,12 @@ class SetTimetable:
         db_sess = db_session.create_session()
         user__id = update.message.from_user.id
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
-        if user and user.grade != 'АДМИН' and update.message.text == 'АДМИН':
+        if user:
+            if update.message.text == 'АДМИН' and user.grade != 'АДМИН':
+                context.user_data['INFO']['Class'] = update.message.text
+                await update.message.reply_text('Введите пароль админа:')
+                return self.step_pswrd
+        elif update.message.text == 'АДМИН':
             context.user_data['INFO']['Class'] = update.message.text
             await update.message.reply_text('Введите пароль админа:')
             return self.step_pswrd

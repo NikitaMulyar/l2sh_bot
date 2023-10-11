@@ -110,10 +110,13 @@ class GetTimetable:
         db_sess = db_session.create_session()
         user__id = update.message.from_user.id
         if not db_sess.query(User).filter(User.telegram_id == user__id).first():
-            await update.message.reply_text(f'Для начала заполни свои данные: /start')
+            await update.message.reply_text(f'⚠️Для начала заполни свои данные: /start')
+            return
+        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+        if user.grade == 'АДМИН':
+            await update.message.reply_text(f'⚠️У админов нет доступа к расписанию.')
             return
         if update.message.text == '📚Расписание📚':
-            user = db_sess.query(User).filter(User.telegram_id == user__id).first()
             context.user_data['NEXT_DAY_TT'] = False
             if int(user.number) >= 10:
                 lessons, day = await get_timetable_for_user(context, user.name, user.surname, user.grade)

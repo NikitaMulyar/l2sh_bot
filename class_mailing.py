@@ -38,6 +38,7 @@ class MailTo:
             await update.message.reply_text(
                 f'Ты даже не заполнил(а) свои данные. Напиши /start и заполни свои данные')
             return ConversationHandler.END
+        await update.message.reply_text('Прервать настройку рассылки: /end_mail')
         if user.grade == 'АДМИН':
             await update.message.reply_text(
                 'Выберите параллель, к которой будет обращена рассылка:',

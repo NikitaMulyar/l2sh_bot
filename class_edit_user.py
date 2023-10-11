@@ -42,7 +42,7 @@ class Edit_User(SetTimetable):
                 db_sess.delete(extra_lesson)
             db_sess.commit()
             db_sess.close()
-            await update.message.reply_text('Вы поменяли класс, поэтому все настройки кружко сброшены')
+            await update.message.reply_text('Вы поменяли класс, поэтому все настройки кружков сброшены')
         context.user_data['INFO']['Name'] = update.message.text
         update_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
                   context.user_data['INFO']['Class'])

@@ -6,13 +6,14 @@ class LoadTimetables:
     step_pswrd = 1
     step_class = 2
     step_file = 3
-    classes = ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД']
+    classes = ['6-9'] + [f'{i}{j}' for i in range(10, 12) for j in 'АБВГД']
 
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
+        await update.message.reply_text('Прервать загрузку расписаний: /end_load')
         if user and user.grade == 'АДМИН':
             await update.message.reply_text(f'Укажите класс (пример: 7Г):')
             context.user_data['in_conversation'] = True
@@ -27,7 +28,8 @@ class LoadTimetables:
                                             'Начать сначала: /load')
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
-        await update.message.reply_text(f'Укажите класс (пример: 7Г):')
+        await update.message.reply_text(f'Укажите класс\n⚠️Если расписание 6-9 классов, то нужно указать без кавычек: '
+                                        f'"6-9". Для 10, 11 классов по-обычному: 10А, 10Д, 11Г и т.п.')
         return self.step_class
 
     async def get_class(self, update, context):
@@ -71,6 +73,7 @@ class LoadEditsTT:
             return ConversationHandler.END
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
+        await update.message.reply_text('Прервать загрузку расписаний: /end_changes')
         if user and user.grade == 'АДМИН':
             await update.message.reply_text(f'Укажите дату изменений в расписании (формат: ДД.ММ.ГГГГ):')
             context.user_data['in_conversation'] = True
