@@ -312,13 +312,13 @@ def extra_lessons_return(id, button_text):
     full_text = []
     for extra_lesson in extra_lessons:
         extra = db_sess.query(Extra).filter(Extra.id == extra_lesson.extra_id, Extra.day == day).first()
-        text = ""
         if extra:
+            text = "⤵️\n"
             text += f"📚 {extra.title} 📚\n"
             text += f"🕝 {extra.time} 🕝\n"
             if extra.teacher.count(".") > 1:
                 text += f'Учитель: {extra.teacher}\n'
             f'🏫 Место проведения: {extra.place} 🏫\n'
-        full_text.append(text)
+            full_text.append(text)
     db_sess.close()
-    return "\n".join(full_text)
+    return "".join(full_text)
