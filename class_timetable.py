@@ -170,7 +170,7 @@ class GetTimetable:
                         elif lesson_name == 'И.Н. ВТЭК':
                             lesson_name = 'ВТЭК'
                             teachers += " И.Н."
-                        if len(lesson_info) == 2:
+                        if cabinet == '':
                             cabinet = last_cab
                             lesson_name = lesson_info[-2]
                             teachers = " ".join(lesson_info[:-2])
@@ -234,7 +234,7 @@ class GetTimetable:
                         elif lesson_name == 'И.Н. ВТЭК':
                             lesson_name = 'ВТЭК'
                             teachers += " И.Н."
-                        if len(lesson_info) == 2:
+                        if cabinet == '':
                             cabinet = last_cab
                             lesson_name = lesson_info[-2]
                             teachers = " ".join(lesson_info[:-2])
