@@ -12,7 +12,8 @@ class Edit_User(SetTimetable):
             db_sess.close()
             await update.message.reply_text('Если вы из пед. состава, укажите вместо класса "АДМИН" (без кавычек)')
             await update.message.reply_text('Давай начнём изменять информацию о тебе.\n'
-                                            'Напиши свой класс: (пример: 7Г)')
+                                            'Напиши свой класс: (пример: 7Г)\n'
+                                            'Если захочешь остановить изменения, напиши: /end_edit')
             context.user_data['INFO'] = dict()
             return self.step_class
         else:

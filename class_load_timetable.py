@@ -13,7 +13,7 @@ class LoadTimetables:
             return ConversationHandler.END
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
-        if user.grade == 'АДМИН':
+        if user and user.grade == 'АДМИН':
             await update.message.reply_text(f'Укажите класс (пример: 7Г):')
             context.user_data['in_conversation'] = True
             return self.step_class
@@ -71,7 +71,7 @@ class LoadEditsTT:
             return ConversationHandler.END
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
-        if user.grade == 'АДМИН':
+        if user and user.grade == 'АДМИН':
             await update.message.reply_text(f'Укажите дату изменений в расписании (формат: ДД.ММ.ГГГГ):')
             context.user_data['in_conversation'] = True
             return self.step_date

@@ -33,13 +33,20 @@ class MailTo:
             return ConversationHandler.END
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
+        if not user:
+            db_sess.close()
+            await update.message.reply_text(
+                f'Ты даже не заполнил(а) свои данные. Напиши /start и заполни свои данные')
+            return ConversationHandler.END
         if user.grade == 'АДМИН':
             await update.message.reply_text(
                 'Выберите параллель, к которой будет обращена рассылка:',
                 reply_markup=await self.mailing_parallels_kbrd())
             context.user_data['in_conversation'] = True
+            db_sess.close()
             return self.step_parallel
         await update.message.reply_text('Введите пароль админа:')
+        db_sess.close()
         context.user_data['in_conversation'] = True
         return self.step_pswrd
 
@@ -100,19 +107,20 @@ class MailTo:
             if context.user_data['CLASS'] != 'Всем':
                 all_users = db_sess.query(User).filter(
                     context.user_data['CLASS'] == User.grade).all()
+        mailbox_ = prepare_for_markdown('📬')
+        mail_text = (mailbox_ + '*Новое сообщение\!*' + mailbox_ + prepare_for_markdown('\n\n') +
+                     context.user_data['MESSAGE'] +
+                     f'\n\nОт {author.surname} {author.name}, {author.grade}')
         for user in all_users:
             try:
-                await bot.send_message(user.chat_id, '📬Новое сообщение!📬\n\n' +
-                                       context.user_data[
-                                           'MESSAGE'] + f'\n\nОт {author.surname} {author.name}, {author.grade}')
+                await bot.send_message(user.chat_id, mail_text,
+                                       parse_mode='MarkdownV2')
             except Exception:
                 pass
         context.user_data['in_conversation'] = False
         p, c = context.user_data['PARAL'], context.user_data['CLASS']
-        t = '📬Новое сообщение!📬\n\n' + context.user_data[
-            'MESSAGE'] + f'\n\nОт {author.surname} {author.name}, {author.grade}'
-        await update.message.reply_text(f'Сообщение:\n"{t}"\n\nбыло отправлено в '
-                                        f'параллель "{p}", класс: "{c}"')
+        await update.message.reply_text(f'Сообщение:\n"{mail_text}"\n\nбыло отправлено в '
+                                        f'параллель "{p}", класс: "{c}"', parse_mode='MarkdownV2')
         await update.message.reply_text('Настройка рассылки окончена. Начать сначала: /mail',
                                         reply_markup=await timetable_kbrd())
         return ConversationHandler.END

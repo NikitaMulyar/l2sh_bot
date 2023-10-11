@@ -55,7 +55,7 @@ async def get_number_of_students_page_6_9(class_):
     reader = PyPDF2.PdfReader(path_to_timetables + '6-9.pdf')
     page_n = 0
     for page in reader.pages:
-        if class_ in page.extract_text():
+        if class_ == page.extract_text().split('\n')[-1]:
             break
         page_n += 1
     else:
@@ -104,7 +104,7 @@ async def get_timetable_for_user_6_9(context, class_):
     with pdfplumber.open(path_to_timetables + '6-9.pdf') as pdf:
         # day = (datetime.now() - timedelta(hours=3)).weekday()
         # !!!!!!!!!!!!!!!!!!!
-        now_ = datetime.now()
+        now_ = datetime.now()  # - timedelta(hours=3)
         day = now_.weekday()
         timetable_, day = await extract_timetable_for_day_6_9(day, pdf, page_n)
         last_les_end_h, last_les_end_m = map(int,
@@ -227,8 +227,8 @@ async def get_edits_in_timetable():
             df = df.rename(columns={None: 'Замена2', 'Замена': 'Замены',
                                     'Замена кабинета': 'Замены кабинетов',
                                     "№\nурока": "№ урока",
-                                    'Замена\nкабинета': 'Замены кабинетов'})
-            print(df)
+                                    'Замена\nкабинета': 'Замены кабинетов',
+                                    'Урок по\nрасписанию': 'Урок по расписанию'})
             if i == 1:
                 df['Замены'] = df['Замены'] + '//' + df['Замена2']
                 df.drop('Замена2', axis=1, inplace=True)

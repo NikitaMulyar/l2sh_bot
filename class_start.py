@@ -22,7 +22,8 @@ class SetTimetable:
             db_sess.close()
             await update.message.reply_text(
                 'Привет! Я вижу, что ты уже есть в системе.\n'
-                'Теперь ты можешь пользоваться ботом',
+                'Теперь ты можешь пользоваться ботом.\n'
+                'Все команды бота доступны в синей кнопке "Меню"',
                 reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
@@ -31,16 +32,20 @@ class SetTimetable:
             await update.message.reply_text('Если вы из пед. состава, укажите вместо класса "АДМИН" (без кавычек)')
             await update.message.reply_text(
                 'Привет! В этом боте ты можешь узнавать свое расписание на день!\n'
-                'Но сначала немного формальностей: напиши свой класс (пример: 7Г)')
+                'Но сначала немного формальностей: напиши свой класс (пример: 7Г)\n'
+                'Если захочешь остановить регистрацию, напиши: /end')
             context.user_data['INFO'] = dict()
             return self.step_class
 
     async def get_class(self, update, context):
-        if update.message.text == 'АДМИН':
+        db_sess = db_session.create_session()
+        user__id = update.message.from_user.id
+        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+        if user and user.grade != 'АДМИН' and update.message.text == 'АДМИН':
             context.user_data['INFO']['Class'] = update.message.text
             await update.message.reply_text('Введите пароль админа:')
             return self.step_pswrd
-        if update.message.text not in self.classes:
+        if update.message.text != 'АДМИН' and update.message.text not in self.classes:
             await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
             return self.step_class
         context.user_data['INFO']['Class'] = update.message.text

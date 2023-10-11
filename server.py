@@ -51,7 +51,8 @@ def main():
         states={
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_class)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_familia)],
-            3: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_name)]
+            3: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_name)],
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_psw)]
         },
         fallbacks=[CommandHandler('end_edit', edit_user_class.end_setting)]
     )
