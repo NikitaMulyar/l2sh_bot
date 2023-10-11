@@ -30,3 +30,4 @@ tornado==6.3.3
 typing_extensions==4.8.0
 tzdata==2023.3
 tzlocal==5.1
+xlrd==2.0.1
