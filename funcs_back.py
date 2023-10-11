@@ -3,6 +3,8 @@ import telegram
 import PyPDF2
 from data import db_session
 from data.users import User
+from data.user_to_extra import Extra_to_User
+from data.extra_lessons import Extra
 from datetime import datetime
 from consts import *
 import pandas as pd
@@ -97,3 +99,17 @@ def update_db(update, name, surname, grade):
     user.number = grade[:-1]
     db_sess.commit()
     db_sess.close()
+
+
+def extra_lessons_return(id, button_text):
+    days = {"пн": "Понедельник", "вт": "Вторник", "ср": "Среда", "чт": "Четверг", "пт": "Пятница", "cб": "Суббота"}
+    day = days[button_text]
+    db_sess = db_session.create_session()
+    extra_lessons = db_sess.query(Extra_to_User).filter(Extra_to_User.user_id == id).all()
+    text = ""
+    for extra_lesson in extra_lessons:
+        extra = db_sess.query(Extra).filter(Extra.id == extra_lesson.extra_id, Extra.day == day).first()
+        if extra:
+            text += extra.to_str()
+    db_sess.close()
+    return text
