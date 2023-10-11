@@ -66,7 +66,7 @@ class Extra_Lessons:
 
         if context.user_data['choose_count'] == self.count[int(grade)]:
             await update.callback_query.edit_message_text('Загрузка кружков завершена. Спасибо',
-                                                          reply_markup=await timetable_kbrd())
+                                                          reply_markup="")
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
         lesson = list(db_sess.query(Extra).filter(Extra.grade == grade).all())[context.user_data['choose_count']]
