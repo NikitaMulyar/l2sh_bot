@@ -135,7 +135,7 @@ class GetTimetable:
             for txt_info, key in self.lessons_keys.items():
                 try:
                     if int(user.number) >= 10:
-                        pre_lesson_info = lessons.loc[key]
+                        pre_lesson_info = lessons.loc[key].split('###')
                     else:
                         pre_lesson_info = lessons.loc[key][day].split('###')
                     start, end = self.for_datetime[key]
