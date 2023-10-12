@@ -119,7 +119,7 @@ class GetTimetable:
         if update.message.text == '📚Расписание📚':
             context.user_data['NEXT_DAY_TT'] = False
             if int(user.number) >= 10:
-                lessons, day = await get_timetable_for_user(context, user.name, user.surname, user.grade)
+                lessons, day = await get_timetable_for_user(context, f'{user.surname} {user.name}', user.grade)
             else:
                 lessons, day = await get_timetable_for_user_6_9(context, user.grade)
             if lessons.empty:
@@ -189,7 +189,7 @@ class GetTimetable:
               update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
             user = db_sess.query(User).filter(User.telegram_id == user__id).first()
             if int(user.number) >= 10:
-                lessons, day = await get_standard_timetable_for_user(user.name, user.surname, user.grade,
+                lessons, day = await get_standard_timetable_for_user(f'{user.surname} {user.name}', user.grade,
                                                                      self.day_num[update.message.text])
             else:
                 lessons, day = await get_standard_timetable_for_user_6_9(user.grade,

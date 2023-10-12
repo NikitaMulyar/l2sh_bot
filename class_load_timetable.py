@@ -1,5 +1,6 @@
 from telegram.ext import ConversationHandler
 from funcs_back import *
+from timetables_csv import *
 
 
 class LoadTimetables:
@@ -43,8 +44,15 @@ class LoadTimetables:
 
     async def load_pdf(self, update, context):
         file_info = await bot.get_file(update.message.document.file_id)
+        #await write_all(bot, prepare_for_markdown('❕') + '_*Бот будет недоступен в течение 1-2 минут\.*_\n' +
+        #                prepare_for_markdown(f"Производится загрузка нового расписания для {context.user_data['filename']} класса."),
+        #                parse_mode='MarkdownV2')
         await file_info.download_to_drive(path_to_timetables +
-                                                 f"{context.user_data['filename']}.pdf")
+                                          f"{context.user_data['filename']}.pdf")
+        if context.user_data['filename'] == '6-9':
+            await extract_timetable_for_students_6_9()
+        else:
+            await extract_timetable_for_students_10_11([context.user_data['filename']])
         await update.message.reply_text('Файл загружен. Завершить: /end_load')
         context.user_data['FILE_UPLOADED'] = True
         await update.message.reply_text(f'Укажите класс\n⚠️Если расписание 6-9 классов, то нужно указать без кавычек: '

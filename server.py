@@ -8,6 +8,7 @@ from class_start import *
 from class_load_timetable import *
 from classes_support_profile import *
 from class_extra_lesson import *
+from timetables_csv import *
 
 
 logging.basicConfig(
@@ -21,11 +22,19 @@ def main():
     try:
         if not os.path.exists('out/'):
             os.mkdir("out/")
+        if not os.path.exists('changes_tt/'):
+            os.mkdir("changes_tt/")
+        if not os.path.exists('timetables/'):
+            os.mkdir("timetables/")
+        if not os.path.exists('timetables_csv/'):
+            os.mkdir("timetables_csv/")
     except Exception:
         pass
 
     asyncio.gather(write_all(bot, '🔋Бот был перезапущен. Все диалоги сброшены. '
                                              'Необходимо использовать команду /start', all_=True))
+    asyncio.gather(extract_timetable_for_students_10_11())
+    asyncio.gather(extract_timetable_for_students_6_9())
     application = Application.builder().token(BOT_TOKEN).build()
     # .post_init(post_init)
     # loop = asyncio.new_event_loop()

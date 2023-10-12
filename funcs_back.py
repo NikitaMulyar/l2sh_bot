@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 import telegram
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Bot
-import PyPDF2
 from data.user_to_extra import Extra_to_User
 from data.extra_lessons import Extra
 from data import db_session
 from data.users import User
 from datetime import datetime, timedelta
-from consts import *
-import pandas as pd
-import pdfplumber
-import os
-import shutil
+from timetables_csv import *
 import string
 from config import *
 import numpy as np
@@ -52,36 +47,8 @@ async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
             pass
 
 
-async def get_number_of_students_page_6_9(class_):
-    if not os.path.exists(path_to_timetables + '6-9.pdf'):
-        return -1
-    reader = PyPDF2.PdfReader(path_to_timetables + '6-9.pdf')
-    page_n = 0
-    for page in reader.pages:
-        if class_ == page.extract_text().split('\n')[-1]:
-            break
-        page_n += 1
-    else:
-        # 'Такой класс не найден или для вашего класса нет расписания :('
-        return -1
-    return page_n
-
-
-async def extract_timetable_for_day_6_9(day, pdf, page_n):
-    if day == 6:
-        day = 0
-    table = pdf.pages[page_n].extract_table()
-    df = pd.DataFrame(table[1:], columns=table[0])
-    df[''].ffill(axis=0, inplace=True)
-    day_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
-    df[''] = df[''].apply(lambda x: day_num[x])
-    for col in df.columns.values:
-        if col != '':
-            df[col] = df[col] + '###'
-    df = df.groupby('').sum()
-    for col in df.columns.values:
-        df[col] = df[col].apply(lambda x: np.NaN if x == 0 else x)
-    df = df.ffill(axis=1)
+async def extract_timetable_for_day_6_9(day, class_):
+    df = pd.read_csv(path_to_timetables_csv + f'{class_}.csv')
     df = df.iloc[day].to_frame()
     df[day] = df[day].str.strip('###')
     df[day] = df[day].apply(lambda x: np.NaN if x == '' else x)
@@ -90,111 +57,65 @@ async def extract_timetable_for_day_6_9(day, pdf, page_n):
 
 
 async def get_standard_timetable_for_user_6_9(class_, day):
-    page_n = await get_number_of_students_page_6_9(class_)
-    if page_n == -1:
-        return pd.DataFrame(), page_n
-    with pdfplumber.open(path_to_timetables + '6-9.pdf') as pdf:
-        # day = (datetime.now() - timedelta(hours=3)).weekday()
-        # !!!!!!!!!!!!!!!!!!!
-        timetable_, day = await extract_timetable_for_day_6_9(day, pdf, page_n)
-        return timetable_, day
-
-
-async def get_timetable_for_user_6_9(context, class_):
-    page_n = await get_number_of_students_page_6_9(class_)
-    if page_n == -1:
-        return pd.DataFrame(), page_n
-    with pdfplumber.open(path_to_timetables + '6-9.pdf') as pdf:
-        # day = (datetime.now() - timedelta(hours=3)).weekday()
-        # !!!!!!!!!!!!!!!!!!!
-        now_ = datetime.now()  # - timedelta(hours=3)
-        day = now_.weekday()
-        timetable_, day = await extract_timetable_for_day_6_9(day, pdf, page_n)
-        last_les_end_h, last_les_end_m = map(int,
-                                             timetable_.index.values[-1].split(' - ')[-1]
-                                             .split(':'))
-        # !!!!!!!!!!!!!!!!!!!!!
-        h, m = now_.hour, now_.minute
-        if (h, m) > (last_les_end_h, last_les_end_m):
-            timetable_, day = await extract_timetable_for_day_6_9(day + 1, pdf, page_n)
-            context.user_data['NEXT_DAY_TT'] = True
-            # Флажок, чтобы расписание на следующий день не выделялось, если завтра больше уроков
-        else:
-            context.user_data['NEXT_DAY_TT'] = False
+    if not os.path.exists(path_to_timetables_csv + f'{class_}.csv'):
+        return pd.DataFrame(), -1
+    timetable_, day = await extract_timetable_for_day_6_9(day, class_)
     return timetable_, day
 
 
-async def extract_timetable_for_day(day, pdf, page_n):
-    if day == 6:
-        day = 0
-    page = pdf.pages[page_n]
-    table = page.extract_table()
-    df = pd.DataFrame(table[1:], columns=table[0])
-    for col in df.columns.values:
-        df.loc[df[col] == '', col] = '--'
-    df.ffill(axis=1, inplace=True)
+async def get_timetable_for_user_6_9(context, class_):
+    if not os.path.exists(path_to_timetables_csv + f'{class_}.csv'):
+        return pd.DataFrame(), -1
+    # day = (datetime.now() - timedelta(hours=3)).weekday()
+    # !!!!!!!!!!!!!!!!!!!
+    now_ = datetime.now()  # - timedelta(hours=3)
+    day = now_.weekday()
+    timetable_, day = await extract_timetable_for_day_6_9(day, class_)
+    last_les_end_h, last_les_end_m = map(int,
+                                         timetable_.index.values[-1].split(' - ')[-1]
+                                         .split(':'))
+    # !!!!!!!!!!!!!!!!!!!!!
+    h, m = now_.hour, now_.minute
+    if (h, m) > (last_les_end_h, last_les_end_m):
+        timetable_, day = await extract_timetable_for_day_6_9(day + 1, class_)
+        context.user_data['NEXT_DAY_TT'] = True
+        # Флажок, чтобы расписание на следующий день не выделялось, если завтра больше уроков
+    else:
+        context.user_data['NEXT_DAY_TT'] = False
+    return timetable_, day
+
+
+async def extract_timetable_for_day(day, full_name, class_):
+    df = pd.read_csv(path_to_timetables_csv + f'{full_name} {class_}.csv')
     df = df.iloc[day].to_frame()
     df = df[df[day] != '--'][day]
     return df, day
 
 
-async def get_number_of_students_page(name, familia, class_):
-    if not os.path.exists(path_to_timetables + class_):
-        return -1
-    reader = PyPDF2.PdfReader(path_to_timetables + class_)
-    page_n = 0
-    txt = familia.lower().capitalize() + ' ' + name.lower().capitalize()
-    for page in reader.pages:
-        if txt in page.extract_text():
-            break
-        page_n += 1
-    else:
-        # 'Такой ученик не найден или для вашего класса нет расписания :('
-        return -1
-    return page_n
-
-
-async def get_standard_timetable_for_user(name, familia, class_, day):
-    class_ = class_ + '.pdf'
-    page_n = await get_number_of_students_page(name, familia, class_)
-    if page_n == -1:
-        return pd.DataFrame(), page_n
-    with pdfplumber.open(path_to_timetables + class_) as pdf:
-        # day = (datetime.now() - timedelta(hours=3)).weekday()
-        # !!!!!!!!!!!!!!!!!!!
-        timetable_, day = await extract_timetable_for_day(day, pdf, page_n)
-        return timetable_, day
-
-
-async def get_timetable_for_user(context, name, familia, class_):
-    class_ = class_ + '.pdf'
-    page_n = await get_number_of_students_page(name, familia, class_)
-    if page_n == -1:
-        return pd.DataFrame(), page_n
-    with pdfplumber.open(path_to_timetables + class_) as pdf:
-        # day = (datetime.now() - timedelta(hours=3)).weekday()
-        # !!!!!!!!!!!!!!!!!!!
-        now_ = datetime.now()  # - timedelta(hours=3)
-        day = now_.weekday()
-        timetable_, day = await extract_timetable_for_day(day, pdf, page_n)
-        last_les_end_h, last_les_end_m = map(int,
-                                             timetable_.index.values[-1].split(' - ')[-1]
-                                             .split(':'))
-        # !!!!!!!!!!!!!!!!!!!!!
-        h, m = now_.hour, now_.minute
-        if (h, m) > (last_les_end_h, last_les_end_m):
-            timetable_, day = await extract_timetable_for_day(day + 1, pdf, page_n)
-            context.user_data['NEXT_DAY_TT'] = True
-            # Флажок, чтобы расписание на следующий день не выделялось, если завтра больше уроков
-        else:
-            context.user_data['NEXT_DAY_TT'] = False
+async def get_standard_timetable_for_user(full_name, class_, day):
+    if not os.path.exists(path_to_timetables_csv + f'{full_name} {class_}.csv'):
+        return pd.DataFrame(), -1
+    timetable_, day = await extract_timetable_for_day(day, full_name, class_)
     return timetable_, day
 
 
-"""async def clear_the_changes_folder():
-    if os.path.exists(path_to_changes):
-        shutil.rmtree(path_to_changes)
-    os.mkdir(path_to_changes)"""
+async def get_timetable_for_user(context, full_name, class_):
+    if not os.path.exists(path_to_timetables_csv + f'{full_name} {class_}.csv'):
+        return pd.DataFrame(), -1
+    now_ = datetime.now()  # - timedelta(hours=3)
+    day = now_.weekday()
+    timetable_, day = await extract_timetable_for_day(day, full_name, class_)
+    last_les_end_h, last_les_end_m = map(int,
+                                         timetable_.index.values[-1].split(' - ')[-1]
+                                         .split(':'))
+    h, m = now_.hour, now_.minute
+    if (h, m) > (last_les_end_h, last_les_end_m):
+        timetable_, day = await extract_timetable_for_day(day + 1, full_name, class_)
+        context.user_data['NEXT_DAY_TT'] = True
+        # Флажок, чтобы расписание на следующий день не выделялось, если завтра больше уроков
+    else:
+        context.user_data['NEXT_DAY_TT'] = False
+    return timetable_, day
 
 
 async def get_edits_in_timetable(next_day_tt):
@@ -211,7 +132,6 @@ async def get_edits_in_timetable(next_day_tt):
     if len([i for i in os.walk(path_to_changes)][0][-1]) == 0:
         # Файла с изменениями нет
         return [], ''
-    print(next_day_tt, path_to_changes + tomorrow_file, path_to_changes + today_file)
     if next_day_tt:
         if not os.path.exists(path_to_changes + tomorrow_file):
             # Файла с изменениями нет
@@ -220,13 +140,6 @@ async def get_edits_in_timetable(next_day_tt):
         if not os.path.exists(path_to_changes + today_file):
             # Файла с изменениями нет
             return [], ''
-
-    """period = (datetime(day=date_[0], month=date_[1], year=date_[2], hour=16, minute=30) - timedelta(days=1),
-              datetime(day=date_[0], month=date_[1], year=date_[2], hour=16, minute=30))
-    dfs = []
-    if not period[0] < time_ < period[1]:
-        # Изменения не актуальны
-        return [], ''"""
 
     if not next_day_tt:
         day = "*Изменения на сегодня*"
