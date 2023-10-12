@@ -46,10 +46,7 @@ class GetTimetable:
                         try:
                             number_of_lesson = df.iloc[j]['№ урока']
                         except Exception:
-                            try:
-                                number_of_lesson = df.iloc[j]['Урок по расписанию']
-                            except Exception:
-                                number_of_lesson = df.iloc[j]['Урок по\nрасписанию']
+                            number_of_lesson = df.iloc[j]['Урок №']
                         if 'Замены' in df.columns.values:
                             if j == 0:
                                 continue
