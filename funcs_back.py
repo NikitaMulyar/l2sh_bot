@@ -233,7 +233,12 @@ def extra_lessons_return(id, button_text):
             text += f"🕝 {extra.time} 🕝\n"
             if extra.teacher.count(".") > 1:
                 text += f'Учитель: {extra.teacher}\n'
-            f'🏫 Место проведения: {extra.place} 🏫\n'
+            place = ""
+            if "зал" in extra.place or "online" in extra.place:
+                place = extra.place
+            else:
+                place = f"{extra.place} кабинет"
+            text += f'🏫 Место проведения: {place} 🏫\n'
             full_text.append(text)
     db_sess.close()
     return "".join(full_text)

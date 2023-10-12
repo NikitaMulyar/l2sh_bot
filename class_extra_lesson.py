@@ -47,9 +47,10 @@ class Extra_Lessons:
         if user.grade == 'АДМИН':
             await update.message.reply_text(f'⚠️У админов нет доступа к расписанию.')
             return
-        await update.message.reply_text('Здесь ты можешь выбрать кружки, которые хочешь видеть в своём расписании.\n'
-                                        'Если захочешь закончить, напиши: /end_extra\n'
-                                        'Давай начнем выбирать:')
+        await update.message.reply_text('🌟 Здесь ты можешь добавить кружки, которые хотел бы увидеть в '
+                                        'своем расписании.\n'
+                                        'Если захочешь закончить, просто напиши: "/end_extra".\n'
+                                        'Давай начнем выбирать: ✨')
         context.user_data['in_conversation'] = True
         context.user_data['choose_count'] = 0
         return await self.choose_extra(update, context)
@@ -65,7 +66,8 @@ class Extra_Lessons:
         grade = user.number
 
         if context.user_data['choose_count'] == self.count[int(grade)]:
-            await update.callback_query.edit_message_text('Загрузка кружков завершена. Спасибо',
+            await update.callback_query.edit_message_text('🌟 Загрузка кружков завершена! Большое спасибо за твой '
+                                                          'выбор! 🙌🏻 Теперь ты можешь видеть своё расписание с кружками.',
                                                           reply_markup="")
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
@@ -76,7 +78,12 @@ class Extra_Lessons:
             context.user_data['choose_count'] += 1
         context.user_data['lesson'] = lesson
         db_sess.close()
-        text = f"""\t{lesson.day}\t\n{lesson.title} - {lesson.teacher}\n{lesson.time}, {lesson.place}"""
+        place = ""
+        if "зал" in lesson.place or "онлайн" in lesson.place:
+            place = lesson.place
+        else:
+            place = f"{lesson.place} кабинет"
+        text = f"""📅 {lesson.day} 📅\n {lesson.title} - {lesson.teacher} \n⏰ {lesson.time} ⏰\n🏫 {place} 🏫\nБудешь посещать?"""
         keyboard = [[InlineKeyboardButton("Да", callback_data="1"),
                      InlineKeyboardButton("Нет", callback_data="2")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -107,7 +114,8 @@ class Extra_Lessons:
         await self.choose_extra(update, context)
 
     async def get_out(self, update, context):
-        await update.message.reply_text('Загрузка кружков завершена. Спасибо',
+        await update.message.reply_text('🌟 Загрузка кружков завершена! Большое спасибо за твой '
+                                        'выбор! 🙌🏻 Теперь ты можешь видеть своё расписание с кружками.',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
