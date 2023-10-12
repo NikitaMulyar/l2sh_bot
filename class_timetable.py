@@ -43,6 +43,13 @@ class GetTimetable:
                 for df in edits_in_tt:
                     res = []
                     for j in df.index.values:
+                        try:
+                            number_of_lesson = df.iloc[j]['№ урока']
+                        except Exception:
+                            try:
+                                number_of_lesson = df.iloc[j]['Урок по расписанию']
+                            except Exception:
+                                number_of_lesson = df.iloc[j]['Урок по\nрасписанию']
                         if 'Замены' in df.columns.values:
                             if j == 0:
                                 continue
@@ -57,23 +64,23 @@ class GetTimetable:
                                     teacher = " ".join(teacher_cabinet[:-1])
                                     if cabinet.count('.') == 2:
                                         # Учитель
-                                        res.append([f"{class__}, ", df.iloc[j]['№ урока'], subject,
+                                        res.append([f"{class__}, ", number_of_lesson, subject,
                                                     cabinet,
                                                     df.iloc[j][
                                                         'Урок по расписанию']])  # Кабинет не указан, длина 5
                                     else:
-                                        res.append([f"{class__}, ", df.iloc[j]['№ урока'],
+                                        res.append([f"{class__}, ", number_of_lesson,
                                                     subject + ', ' + cabinet, teacher,
                                                     df.iloc[j][
                                                         'Урок по расписанию']])  # Все указано, длина 5
                                 else:
-                                    res.append([f"{class__}, ", df.iloc[j]['№ урока'],
+                                    res.append([f"{class__}, ", number_of_lesson,
                                                 subject])  # Отмена урока, длина 3
                         else:
                             if user.number in df.iloc[j]['Класс'] and user.grade[-1] in df.iloc[j][
                                 'Класс']:
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
-                                res.append([f"{class__}, ", df.iloc[j]['№ урока'],
+                                res.append([f"{class__}, ", number_of_lesson,
                                             df.iloc[j]['Замены кабинетов'],
                                             df.iloc[j][
                                                 'Урок по расписанию']])  # Изменения кабинетов, длина 4
