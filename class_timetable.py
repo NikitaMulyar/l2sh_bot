@@ -108,6 +108,7 @@ class GetTimetable:
                         t += text
         return t
 
+    @throttle
     async def get_timetable(self, update, context):
         if context.user_data.get('in_conversation'):
             return
