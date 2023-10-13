@@ -872,3 +872,568 @@ telegram.error.BadRequest: Message is too long
 2023-10-13 00:54:37,307 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot5961422499:AAGUbcnSzAVj7P_ymY-XC44CzOiEAasxXNI/getUpdates "HTTP/1.1 200 OK"
 2023-10-13 00:54:47,439 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot5961422499:AAGUbcnSzAVj7P_ymY-XC44CzOiEAasxXNI/getUpdates "HTTP/1.1 200 OK"
 2023-10-13 00:54:57,496 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot5961422499:AAGUbcnSzAVj7P_ymY-XC44CzOiEAasxXNI/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:41:32,133 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getMe "HTTP/1.1 200 OK"
+2023-10-14 01:41:32,193 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/deleteWebhook "HTTP/1.1 200 OK"
+2023-10-14 01:41:32,194 - apscheduler.scheduler - INFO - Scheduler started
+2023-10-14 01:41:32,194 - telegram.ext.Application - INFO - Application started
+2023-10-14 01:41:32,288 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 400 Bad Request"
+2023-10-14 01:41:32,521 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:41:37,902 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:41:37,904 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_2/funcs_back.py", line 20, in wrapper
+    now_ = datetime.datetime.now()
+AttributeError: type object 'datetime.datetime' has no attribute 'datetime'
+2023-10-14 01:41:37,964 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:41:37,966 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_2/funcs_back.py", line 20, in wrapper
+    now_ = datetime.datetime.now()
+AttributeError: type object 'datetime.datetime' has no attribute 'datetime'
+2023-10-14 01:41:48,023 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:41:58,104 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:42:02,404 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Application:6306869964:update_fetcher' coro=<Application._update_fetcher() running at /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py:1110> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+2023-10-14 01:42:03,821 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getMe "HTTP/1.1 200 OK"
+2023-10-14 01:42:03,828 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 400 Bad Request"
+2023-10-14 01:42:03,880 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/deleteWebhook "HTTP/1.1 200 OK"
+2023-10-14 01:42:03,881 - apscheduler.scheduler - INFO - Scheduler started
+2023-10-14 01:42:03,881 - telegram.ext.Application - INFO - Application started
+2023-10-14 01:42:03,909 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:42:04,971 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:42:04,977 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:42:05,170 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:42:05,173 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:42:15,305 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:42:25,365 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:42:35,427 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:42:45,493 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:42:55,554 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:43:05,614 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:43:15,680 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:43:20,785 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Application:6306869964:update_fetcher' coro=<Application._update_fetcher() running at /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py:1110> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+2023-10-14 01:43:22,187 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getMe "HTTP/1.1 200 OK"
+2023-10-14 01:43:22,194 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 400 Bad Request"
+2023-10-14 01:43:22,242 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/deleteWebhook "HTTP/1.1 200 OK"
+2023-10-14 01:43:22,243 - apscheduler.scheduler - INFO - Scheduler started
+2023-10-14 01:43:22,243 - telegram.ext.Application - INFO - Application started
+2023-10-14 01:43:22,271 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:43:23,956 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:43:23,958 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:43:24,036 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:43:24,040 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:43:24,075 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:43:28,043 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:43:28,046 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:43:28,233 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:43:28,236 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:43:28,337 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:43:28,339 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:43:33,381 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:43:33,382 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:43:43,444 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:43:53,502 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:44:03,574 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:44:13,640 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:44:23,705 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:44:33,768 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:44:43,826 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:44:53,894 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:45:03,956 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:45:14,020 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:45:24,079 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:45:34,145 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:45:44,210 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:45:54,269 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:45:58,501 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Application:6306869964:update_fetcher' coro=<Application._update_fetcher() running at /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py:1110> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+2023-10-14 01:46:00,105 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getMe "HTTP/1.1 200 OK"
+2023-10-14 01:46:00,138 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 400 Bad Request"
+2023-10-14 01:46:00,160 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/deleteWebhook "HTTP/1.1 200 OK"
+2023-10-14 01:46:00,161 - apscheduler.scheduler - INFO - Scheduler started
+2023-10-14 01:46:00,161 - telegram.ext.Application - INFO - Application started
+2023-10-14 01:46:00,218 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:46:01,815 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:01,818 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:46:01,915 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:46:01,962 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:01,964 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_2/funcs_back.py", line 31, in wrapper
+    asyncio.gather(trottle_ans(*args, **kwargs))
+TypeError: trottle_ans() takes 2 positional arguments but 3 were given
+2023-10-14 01:46:02,130 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:02,132 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_2/funcs_back.py", line 31, in wrapper
+    asyncio.gather(trottle_ans(*args, **kwargs))
+TypeError: trottle_ans() takes 2 positional arguments but 3 were given
+2023-10-14 01:46:06,865 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:06,868 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_2/funcs_back.py", line 31, in wrapper
+    asyncio.gather(trottle_ans(*args, **kwargs))
+TypeError: trottle_ans() takes 2 positional arguments but 3 were given
+2023-10-14 01:46:16,929 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:26,993 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:31,079 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:31,080 - telegram.ext.Application - INFO - Application is stopping. This might take a moment.
+2023-10-14 01:46:31,080 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2023-10-14 01:46:31,091 - telegram.ext.Application - INFO - Application.stop() complete
+2023-10-14 01:46:32,784 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getMe "HTTP/1.1 200 OK"
+2023-10-14 01:46:32,793 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 400 Bad Request"
+2023-10-14 01:46:32,840 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/deleteWebhook "HTTP/1.1 200 OK"
+2023-10-14 01:46:32,842 - apscheduler.scheduler - INFO - Scheduler started
+2023-10-14 01:46:32,842 - telegram.ext.Application - INFO - Application started
+2023-10-14 01:46:32,873 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:46:34,123 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:34,126 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:46:34,222 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:46:34,307 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:34,309 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:46:34,433 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:34,436 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:46:44,499 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:46:54,654 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:04,711 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:14,786 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:23,490 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:23,490 - telegram.ext.Application - INFO - Application is stopping. This might take a moment.
+2023-10-14 01:47:23,491 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2023-10-14 01:47:23,502 - telegram.ext.Application - INFO - Application.stop() complete
+2023-10-14 01:47:24,994 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getMe "HTTP/1.1 200 OK"
+2023-10-14 01:47:25,006 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 400 Bad Request"
+2023-10-14 01:47:25,051 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/deleteWebhook "HTTP/1.1 200 OK"
+2023-10-14 01:47:25,052 - apscheduler.scheduler - INFO - Scheduler started
+2023-10-14 01:47:25,052 - telegram.ext.Application - INFO - Application started
+2023-10-14 01:47:25,094 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:27,579 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:27,582 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:27,681 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:27,779 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:27,781 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:27,869 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:28,926 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:28,929 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:29,043 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:29,133 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:29,135 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:29,236 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:29,358 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:29,361 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:29,443 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:30,284 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:30,286 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:30,366 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:32,923 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:32,927 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:33,014 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:33,030 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:33,034 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:33,127 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:33,239 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:33,247 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:33,366 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:36,562 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:36,565 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:36,653 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:47:46,625 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:56,684 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:58,549 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:47:58,555 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:47:58,746 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:48:08,613 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:48:18,678 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:48:28,739 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:48:38,292 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:48:38,293 - telegram.ext.Application - INFO - Application is stopping. This might take a moment.
+2023-10-14 01:48:38,294 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2023-10-14 01:48:38,304 - telegram.ext.Application - INFO - Application.stop() complete
+2023-10-14 01:48:39,856 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getMe "HTTP/1.1 200 OK"
+2023-10-14 01:48:39,868 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 400 Bad Request"
+2023-10-14 01:48:39,908 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/deleteWebhook "HTTP/1.1 200 OK"
+2023-10-14 01:48:39,909 - apscheduler.scheduler - INFO - Scheduler started
+2023-10-14 01:48:39,909 - telegram.ext.Application - INFO - Application started
+2023-10-14 01:48:39,958 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:48:42,981 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:48:42,983 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:48:43,056 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:48:43,058 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:48:43,096 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:48:43,253 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:48:44,094 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:48:44,097 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:48:44,184 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:48:44,357 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:48:44,362 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:48:44,423 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:48:44,426 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:48:44,450 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:48:44,534 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:48:54,491 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:49:03,139 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:49:03,139 - telegram.ext.Application - INFO - Application is stopping. This might take a moment.
+2023-10-14 01:49:03,140 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2023-10-14 01:49:03,151 - telegram.ext.Application - INFO - Application.stop() complete
+2023-10-14 01:49:04,673 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getMe "HTTP/1.1 200 OK"
+2023-10-14 01:49:04,716 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 400 Bad Request"
+2023-10-14 01:49:04,729 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/deleteWebhook "HTTP/1.1 200 OK"
+2023-10-14 01:49:04,729 - apscheduler.scheduler - INFO - Scheduler started
+2023-10-14 01:49:04,730 - telegram.ext.Application - INFO - Application started
+2023-10-14 01:49:04,799 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:49:07,435 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:49:07,436 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:49:07,528 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:49:08,286 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:49:08,290 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:49:08,390 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:49:08,434 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:49:08,436 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:49:08,516 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:49:18,493 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:49:28,552 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:49:38,613 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:49:48,672 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:49:58,734 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:08,794 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:10,430 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:10,433 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:10,659 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:11,532 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:11,536 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:11,650 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:12,628 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:12,632 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:12,743 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:12,819 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:12,821 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:12,919 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:15,206 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:15,209 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:15,308 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:15,530 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:15,534 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:15,637 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:15,661 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:15,664 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:15,743 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:16,963 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:16,966 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:17,037 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:17,040 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:17,160 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:17,317 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:17,320 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:17,322 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:17,377 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:17,380 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:17,522 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:17,524 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:17,534 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:17,550 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:17,586 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:17,589 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-14 01:50:17,693 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:17,738 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/sendMessage "HTTP/1.1 200 OK"
+2023-10-14 01:50:27,647 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:37,783 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:47,858 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:50:57,921 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:51:08,096 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:51:18,155 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:51:28,271 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:51:38,332 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:51:48,390 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:51:58,449 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:52:08,512 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:52:18,642 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:52:28,703 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:52:38,761 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:52:48,828 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:52:58,911 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"
+2023-10-14 01:53:09,029 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot6306869964:AAHOBsBqXnnLAoCn-edg47CuncGyJ0kqeLs/getUpdates "HTTP/1.1 200 OK"

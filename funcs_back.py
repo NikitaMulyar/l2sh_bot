@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import asyncio
+
 import telegram
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Bot
 from data.user_to_extra import Extra_to_User
@@ -13,6 +15,25 @@ import numpy as np
 
 
 bot = Bot(BOT_TOKEN)
+
+
+def throttle(func):
+    def wrapper(*args, **kwargs):
+        now_ = datetime.now()
+        last_time = args[2].user_data.get('last_time')
+        if not last_time:
+            args[2].user_data['last_time'] = now_
+            asyncio.gather(func(*args, **kwargs))
+        elif last_time + timedelta(seconds=0.5) <= now_:
+            args[2].user_data['last_time'] = now_
+            asyncio.gather(func(*args, **kwargs))
+        else:
+            asyncio.gather(trottle_ans(*args, **kwargs))
+    return wrapper
+
+
+async def trottle_ans(*args, **kwargs):
+    await args[1].message.reply_text('🧨 Воу-воу, помедленнее! Ты Молния Маквин что-ли?')
 
 
 async def timetable_kbrd():

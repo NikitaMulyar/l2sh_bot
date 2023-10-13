@@ -2,6 +2,7 @@ from funcs_back import *
 
 
 class Profile:
+    @throttle
     async def get_profile(self, update, context):
         if context.user_data.get('in_conversation'):
             return
@@ -24,6 +25,7 @@ class Profile:
 
 
 class Support:
+    @throttle
     async def get_supp(self, update, context):
         if context.user_data.get('in_conversation'):
             return
