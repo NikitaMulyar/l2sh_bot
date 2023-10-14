@@ -31,8 +31,8 @@ def main():
     except Exception:
         pass
 
-    asyncio.gather(write_all(bot, '🔋Бот был перезапущен. Все диалоги сброшены. '
-                                             'Необходимо использовать команду /start', all_=True))
+    # asyncio.gather(write_all(bot, '🔋Бот был перезапущен. Все диалоги сброшены. '
+    #                                          'Необходимо использовать команду /start', all_=True))
     asyncio.gather(extract_timetable_for_students_10_11())
     asyncio.gather(extract_timetable_for_students_6_9())
     application = Application.builder().token(BOT_TOKEN).build()
