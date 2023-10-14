@@ -90,6 +90,10 @@ async def get_timetable_for_user_6_9(context, class_):
     # !!!!!!!!!!!!!!!!!!!
     now_ = datetime.now()  # - timedelta(hours=3)
     day = now_.weekday()
+    if day == 6:
+        timetable_, day = await extract_timetable_for_day_6_9(0, class_)
+        context.user_data['NEXT_DAY_TT'] = True
+        return timetable_, 0
     timetable_, day = await extract_timetable_for_day_6_9(day, class_)
     last_les_end_h, last_les_end_m = map(int,
                                          timetable_.index.values[-1].split(' - ')[-1]
@@ -97,8 +101,11 @@ async def get_timetable_for_user_6_9(context, class_):
     # !!!!!!!!!!!!!!!!!!!!!
     h, m = now_.hour, now_.minute
     if (h, m) > (last_les_end_h, last_les_end_m):
-        timetable_, day = await extract_timetable_for_day_6_9(day + 1, class_)
         context.user_data['NEXT_DAY_TT'] = True
+        if day == 5:
+            timetable_, day = await extract_timetable_for_day_6_9(0, class_)
+            return timetable_, 0
+        timetable_, day = await extract_timetable_for_day_6_9(day + 1, class_)
         # Флажок, чтобы расписание на следующий день не выделялось, если завтра больше уроков
     else:
         context.user_data['NEXT_DAY_TT'] = False
@@ -124,14 +131,21 @@ async def get_timetable_for_user(context, full_name, class_):
         return pd.DataFrame(), -1
     now_ = datetime.now()  # - timedelta(hours=3)
     day = now_.weekday()
+    if day == 6:
+        timetable_, day = await extract_timetable_for_day(0, full_name, class_)
+        context.user_data['NEXT_DAY_TT'] = True
+        return timetable_, 0
     timetable_, day = await extract_timetable_for_day(day, full_name, class_)
     last_les_end_h, last_les_end_m = map(int,
                                          timetable_.index.values[-1].split(' - ')[-1]
                                          .split(':'))
     h, m = now_.hour, now_.minute
     if (h, m) > (last_les_end_h, last_les_end_m):
-        timetable_, day = await extract_timetable_for_day(day + 1, full_name, class_)
         context.user_data['NEXT_DAY_TT'] = True
+        if day == 5:
+            timetable_, day = await extract_timetable_for_day(0, full_name, class_)
+            return timetable_, 0
+        timetable_, day = await extract_timetable_for_day(day + 1, full_name, class_)
         # Флажок, чтобы расписание на следующий день не выделялось, если завтра больше уроков
     else:
         context.user_data['NEXT_DAY_TT'] = False
@@ -141,6 +155,9 @@ async def get_timetable_for_user(context, full_name, class_):
 async def get_edits_in_timetable(next_day_tt):
     # filename format: DD.MM.YYYY
     time_ = datetime.now()
+    if next_day_tt and time_.weekday() == 5:
+        time_ = time_ + timedelta(days=1)
+        next_day_tt = '2DAYS'
     day_ = str(time_.day).rjust(2, '0')
     month_ = str(time_.month).rjust(2, '0')
     today_file = f'{day_}.{month_}.{time_.year}.pdf'
@@ -165,7 +182,10 @@ async def get_edits_in_timetable(next_day_tt):
         day = "*Изменения на сегодня*"
         path_ = path_to_changes + today_file
     else:
-        day = "*Изменения на завтра*"
+        if next_day_tt == '2DAYS':
+            day = "*Изменения на послезавтра*"
+        else:
+            day = "*Изменения на завтра*"
         path_ = path_to_changes + tomorrow_file
     day = prepare_for_markdown('🔔') + day + prepare_for_markdown('🔔\n')
     dfs = []

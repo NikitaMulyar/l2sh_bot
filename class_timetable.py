@@ -74,8 +74,7 @@ class GetTimetable:
                                     res.append([f"{class__}, ", number_of_lesson,
                                                 subject])  # Отмена урока, длина 3
                         else:
-                            if user.number in df.iloc[j]['Класс'] and user.grade[-1] in df.iloc[j][
-                                'Класс']:
+                            if user.number in df.iloc[j]['Класс'] and user.grade[-1] in df.iloc[j]['Класс']:
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
                                 res.append([f"{class__}, ", number_of_lesson,
                                             df.iloc[j]['Замены кабинетов'],
@@ -257,7 +256,10 @@ class GetTimetable:
                     t += '\n'
                 except Exception as e:
                     continue
-            if self.day_num[update.message.text] == datetime.now().weekday():
+            if self.day_num[update.message.text] == 0 and datetime.now().weekday() == 5:
+                context.user_data['NEXT_DAY_TT'] = True
+                t += await self.get_edits(context, user)
+            elif self.day_num[update.message.text] == datetime.now().weekday():
                 context.user_data['NEXT_DAY_TT'] = False
                 t += await self.get_edits(context, user)
             elif self.day_num[update.message.text] == datetime.now().weekday() + 1:
