@@ -13,7 +13,9 @@ import numpy as np
 import asyncio
 
 
+db_session.global_init("database/telegram_bot.db")
 bot = Bot(BOT_TOKEN)
+db_sess = db_session.create_session()
 
 
 def throttle(func):
@@ -53,7 +55,6 @@ async def extra_school_timetable_kbrd():
 
 
 async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
-    db_sess = db_session.create_session()
     all_users = db_sess.query(User).filter(User.grade != "АДМИН").all()
     if all_:
         all_users = db_sess.query(User).all()
@@ -225,7 +226,6 @@ def prepare_for_markdown(text):
 
 
 def put_to_db(update, name, surname, grade):
-    db_sess = db_session.create_session()
     user__id = update.message.from_user.id
     num = grade
     if num != 'АДМИН':
@@ -242,11 +242,9 @@ def put_to_db(update, name, surname, grade):
         db_sess.add(user)
         db_sess.commit()
     db_sess.commit()
-    db_sess.close()
 
 
 def update_db(update, name, surname, grade):
-    db_sess = db_session.create_session()
     user__id = update.message.from_user.id
     user = db_sess.query(User).filter(User.telegram_id == user__id).first()
     user.surname = surname
@@ -256,13 +254,11 @@ def update_db(update, name, surname, grade):
     if grade == 'АДМИН':
         user.number = 'АДМИН'
     db_sess.commit()
-    db_sess.close()
 
 
 def extra_lessons_return(id, button_text):
     days = {"Пн": "Понедельник", "Вт": "Вторник", "Ср": "Среда", "Чт": "Четверг", "Пт": "Пятница", "Сб": "Суббота"}
     day = days[button_text]
-    db_sess = db_session.create_session()
     extra_lessons = db_sess.query(Extra_to_User).filter(Extra_to_User.user_id == id).all()
     full_text = []
     for extra_lesson in extra_lessons:
@@ -280,5 +276,4 @@ def extra_lessons_return(id, button_text):
                 place = f"{extra.place} кабинет"
             text += f'🏫 Место проведения: {place} 🏫\n'
             full_text.append(text)
-    db_sess.close()
     return "".join(full_text)

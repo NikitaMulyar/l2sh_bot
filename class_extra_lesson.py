@@ -7,7 +7,6 @@ from data.user_to_extra import *
 class Extra_Lessons:
     def __init__(self):
         days = {0: "Понедельник", 1: "Вторник", 2: "Среда", 3: "Четверг", 4: "Пятница", 5: "Суббота"}
-        db_sess = db_session.create_session()
         self.count = {}
         for i in range(6):
             counter = 0
@@ -36,13 +35,11 @@ class Extra_Lessons:
                     k += 6
             self.count[i + 6] = counter
         db_sess.commit()
-        db_sess.close()
 
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
         user__id = update.message.from_user.id
-        db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
         if user.grade == 'АДМИН':
             await update.message.reply_text(f'⚠️У админов нет доступа к расписанию.')
@@ -56,8 +53,6 @@ class Extra_Lessons:
         return await self.choose_extra(update, context)
 
     async def choose_extra(self, update, context):
-
-        db_sess = db_session.create_session()
         try:
             user__id = update.message.from_user.id
         except Exception:
@@ -77,7 +72,6 @@ class Extra_Lessons:
             lesson = list(db_sess.query(Extra).filter(Extra.grade == grade).all())[context.user_data['choose_count']]
             context.user_data['choose_count'] += 1
         context.user_data['lesson'] = lesson
-        db_sess.close()
         place = ""
         if "зал" in lesson.place or "онлайн" in lesson.place:
             place = lesson.place
@@ -97,7 +91,6 @@ class Extra_Lessons:
         query = update.callback_query
         await query.answer()
         num = query.data
-        db_sess = db_session.create_session()
         user__id = query.from_user.id
         extra = db_sess.query(Extra_to_User).filter(Extra_to_User.user_id == user__id,
                                                     Extra_to_User.extra_id == context.user_data[
@@ -110,7 +103,6 @@ class Extra_Lessons:
             if bool(extra):
                 db_sess.delete(extra)
         db_sess.commit()
-        db_sess.close()
         await self.choose_extra(update, context)
 
     async def get_out(self, update, context):

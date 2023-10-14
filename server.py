@@ -111,5 +111,5 @@ def main():
 
 
 if __name__ == '__main__':
-    db_session.global_init("database/telegram_bot.db")
     main()
+    db_sess.close()

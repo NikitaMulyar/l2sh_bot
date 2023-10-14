@@ -12,7 +12,6 @@ class LoadTimetables:
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
-        db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
         await update.message.reply_text('Прервать загрузку расписаний: /end_load')
         if user and user.grade == 'АДМИН':
@@ -81,7 +80,6 @@ class LoadEditsTT:
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
-        db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
         await update.message.reply_text('Прервать загрузку расписаний: /end_changes')
         if user and user.grade == 'АДМИН':

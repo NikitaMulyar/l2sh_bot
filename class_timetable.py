@@ -111,7 +111,6 @@ class GetTimetable:
     async def get_timetable(self, update, context):
         if context.user_data.get('in_conversation'):
             return
-        db_sess = db_session.create_session()
         user__id = update.message.from_user.id
         if not db_sess.query(User).filter(User.telegram_id == user__id).first():
             await update.message.reply_text(f'⚠️Для начала заполни свои данные: /start')

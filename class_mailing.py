@@ -31,10 +31,8 @@ class MailTo:
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
-        db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
         if not user:
-            db_sess.close()
             await update.message.reply_text(
                 f'Ты даже не заполнил(а) свои данные. Напиши /start и заполни свои данные')
             return ConversationHandler.END
@@ -44,10 +42,8 @@ class MailTo:
                 'Выберите параллель, к которой будет обращена рассылка:',
                 reply_markup=await self.mailing_parallels_kbrd())
             context.user_data['in_conversation'] = True
-            db_sess.close()
             return self.step_parallel
         await update.message.reply_text('Введите пароль админа:')
-        db_sess.close()
         context.user_data['in_conversation'] = True
         return self.step_pswrd
 
@@ -98,7 +94,6 @@ class MailTo:
 
     async def get_text(self, update, context):
         context.user_data['MESSAGE'] = update.message.text
-        db_sess = db_session.create_session()
         all_users = db_sess.query(User).filter(User.grade != 'АДМИН').all()
         author = db_sess.query(User).filter(User.chat_id == update.message.chat.id).first()
         if context.user_data['PARAL'] != 'Всем':
