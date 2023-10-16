@@ -191,6 +191,9 @@ async def get_edits_in_timetable(next_day_tt):
         path_ = path_to_changes + tomorrow_file
     day = prepare_for_markdown('🔔') + day + prepare_for_markdown('🔔\n')
     dfs = []
+    cabs = ['Класс', 'Урок №', 'Урок по расписанию', 'Замены кабинетов']
+    lessons = ['Класс', 'Урок №', 'Урок по расписанию', 'Замены']
+    fl_first_time = True
     with pdfplumber.open(path_) as pdf:
         tables = []
         for page in pdf.pages:
@@ -199,40 +202,44 @@ async def get_edits_in_timetable(next_day_tt):
                 tables.append(t[0])
             elif len(t) > 1:
                 tables.extend(t)
-        i = 1
-        j = 1
         for table in tables:
             df = pd.DataFrame(table[1:], columns=table[0])
-            # на случай, если много изменений :)
-            if df.empty and len(dfs):
-                if j == 1:
-                    for k in range(len(table)):
-                        if len(table[k]) == 5:
-                            table[k] = table[k][:3] + ["//".join(table[k][3:])]
-                        else:
-                            table[k] = table[k][:3] + [table[k][3] + "//"]
-                    j += 1
-
+            df = df.fillna('')
+            df = df.rename(columns={None: 'Замена2', 'Замена': 'Замены',
+                                    'Замена кабинета': 'Замены кабинетов',
+                                    "№\nурока": "Урок №",
+                                    "№ урока": "Урок №",
+                                    'Замена\nкабинета': 'Замены кабинетов',
+                                    'Урок по\nрасписанию': 'Урок по расписанию',
+                                    'Урок и кабинет по\nрасписанию': 'Урок по расписанию',
+                                    'Урок и кабинет\nпо расписанию': 'Урок по расписанию'})
+            if fl_first_time:
+                df['Замены'] = df['Замены'] + '//' + df['Замена2']
+                df.drop('Замена2', axis=1, inplace=True)
+                fl_first_time = False
+            fl_cabs = False
+            fl_lessons = False
+            for i in range(len(cabs)):
+                if cabs[i] != df.columns.values[i]:
+                    fl_cabs = True
+                    break
+            for i in range(len(lessons)):
+                if lessons[i] != df.columns.values[i]:
+                    fl_lessons = True
+                    break
+            if fl_lessons and fl_cabs:
+                for k in range(len(table)):
+                    if len(table[k]) == 5:
+                        table[k] = table[k][:3] + ["//".join(table[k][3:])]
+                    else:
+                        table[k] = table[k][:3] + [table[k][3] + "//"]
                 df = pd.DataFrame(table, columns=list(dfs[-1].columns.values))
                 df = df.fillna('')
                 last = dfs[-1].index.values[-1]
                 for ind in df.index.values:
                     df = df.rename(index={ind: last + ind + 1})
                 dfs[-1] = pd.concat([dfs[-1], df], axis='rows')
-                # dfs[-1] = dfs[-1].merge(df)
             else:
-                df = df.fillna('')
-                df = df.rename(columns={None: 'Замена2', 'Замена': 'Замены',
-                                        'Замена кабинета': 'Замены кабинетов',
-                                        "№\nурока": "№ урока",
-                                        'Замена\nкабинета': 'Замены кабинетов',
-                                        'Урок по\nрасписанию': 'Урок по расписанию',
-                                        'Урок и кабинет по\nрасписанию': 'Урок по расписанию',
-                                        'Урок и кабинет\nпо расписанию': 'Урок по расписанию'})
-                if i == 1:
-                    df['Замены'] = df['Замены'] + '//' + df['Замена2']
-                    df.drop('Замена2', axis=1, inplace=True)
-                i += 1
                 dfs.append(df)
     return dfs, day
 
