@@ -71,8 +71,9 @@ class GetTimetable:
                                                     df.iloc[j][
                                                         'Урок по расписанию']])  # Все указано, длина 5
                                 else:
+                                    tmp = " ".join(df.iloc[j]['Урок по расписанию'].split('\n'))
                                     res.append([f"{class__}, ", number_of_lesson,
-                                                subject])  # Отмена урока, длина 3
+                                                subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
                         else:
                             if user.number in df.iloc[j]['Класс'] and user.grade[-1] in df.iloc[j]['Класс']:
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
