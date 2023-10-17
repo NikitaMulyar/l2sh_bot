@@ -194,6 +194,7 @@ async def get_edits_in_timetable(next_day_tt):
     cabs = ['Класс', 'Урок №', 'Урок по расписанию', 'Замены кабинетов']
     lessons = ['Класс', 'Урок №', 'Урок по расписанию', 'Замены']
     fl_first_time = True
+    are_working_with_cabs = False
     with pdfplumber.open(path_) as pdf:
         tables = []
         for page in pdf.pages:
@@ -202,7 +203,14 @@ async def get_edits_in_timetable(next_day_tt):
                 tables.append(t[0])
             elif len(t) > 1:
                 tables.extend(t)
+        """from pprint import pprint
+        pprint(tables[1][7])
+        pprint(tables[2])
+        pprint(tables[3])"""
         for table in tables:
+            if len(table[0]) < 3:
+                continue
+                # какие-то беды с парсингом
             df = pd.DataFrame(table[1:], columns=table[0])
             df = df.fillna('')
             df = df.rename(columns={None: 'Замена2', 'Замена': 'Замены',
@@ -214,9 +222,17 @@ async def get_edits_in_timetable(next_day_tt):
                                     'Урок и кабинет по\nрасписанию': 'Урок по расписанию',
                                     'Урок и кабинет\nпо расписанию': 'Урок по расписанию'})
             if fl_first_time:
-                df['Замены'] = df['Замены'] + '//' + df['Замена2']
-                df.drop('Замена2', axis=1, inplace=True)
+                try:
+                    df['Замены'] = df['Замены'] + '//' + df['Замена2']
+                    df.drop('Замена2', axis=1, inplace=True)
+                except Exception:
+                    pass
                 fl_first_time = False
+            if "Замены кабинетов" in df.columns.values:
+                are_working_with_cabs = True
+                for k in range(len(table)):
+                    if table[k].count(None) == 2:
+                        table[k] = [table[k][0], '', '', table[k][1]]
             fl_cabs = False
             fl_lessons = False
             for i in range(len(cabs)):
@@ -227,12 +243,19 @@ async def get_edits_in_timetable(next_day_tt):
                 if lessons[i] != df.columns.values[i]:
                     fl_lessons = True
                     break
-            if fl_lessons and fl_cabs:
+            if fl_lessons and fl_cabs and not are_working_with_cabs:
                 for k in range(len(table)):
                     if len(table[k]) == 5:
                         table[k] = table[k][:3] + ["//".join(table[k][3:])]
                     else:
                         table[k] = table[k][:3] + [table[k][3] + "//"]
+                df = pd.DataFrame(table, columns=list(dfs[-1].columns.values))
+                df = df.fillna('')
+                last = dfs[-1].index.values[-1]
+                for ind in df.index.values:
+                    df = df.rename(index={ind: last + ind + 1})
+                dfs[-1] = pd.concat([dfs[-1], df], axis='rows')
+            elif fl_lessons and fl_cabs and are_working_with_cabs:
                 df = pd.DataFrame(table, columns=list(dfs[-1].columns.values))
                 df = df.fillna('')
                 last = dfs[-1].index.values[-1]

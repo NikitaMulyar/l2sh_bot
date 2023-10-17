@@ -15,14 +15,20 @@ async def extract_timetable_for_students_10_11(classes=None):
             reader = PyPDF2.PdfReader(path_to_timetables + i)
             for page in reader.pages:
                 info = page.extract_text().split('\n')[-1].split()
-                yield " ".join(info[2:-1]), info[0]
+                if len(info) == 4:
+                    yield " ".join(info[2:]), info[0]
+                else:
+                    yield " ".join(info[2:-1]), info[0]
 
     def get_all_students():
         for i in os.listdir(path_to_timetables)[1:]:
             reader = PyPDF2.PdfReader(path_to_timetables + i)
             for page in reader.pages:
                 info = page.extract_text().split('\n')[-1].split()
-                yield " ".join(info[2:-1]), info[0]
+                if len(info) == 4:
+                    yield " ".join(info[2:]), info[0]
+                else:
+                    yield " ".join(info[2:-1]), info[0]
 
     async def get_number_of_student_page(full_name, class_):
         if not os.path.exists(path_to_timetables + class_):

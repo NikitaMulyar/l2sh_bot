@@ -78,8 +78,7 @@ class GetTimetable:
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
                                 res.append([f"{class__}, ", number_of_lesson,
                                             df.iloc[j]['Замены кабинетов'],
-                                            df.iloc[j][
-                                                'Урок по расписанию']])  # Изменения кабинетов, длина 4
+                                            df.iloc[j]['Урок по расписанию']])  # Изменения кабинетов, длина 4
                     sorted_res = sorted(res, key=lambda x: x[1])
                     text = '_' + prepare_for_markdown(df.columns.values[-1]) + '_\n'
                     flag = False
@@ -95,9 +94,12 @@ class GetTimetable:
                                     f'{line[0]}{line[1]} урок(и): {line[2]}\n(Урок по расписанию: '
                                     f'{urok_po_rasp})\n\n')
                         elif len(line) == 4:  # Замены каб.
-                            text += prepare_for_markdown(
-                                f'{line[0]}{line[1]} урок(и): {line[2]}\n(Урок по расписанию: '
-                                f'{urok_po_rasp})\n\n')
+                            if line[2] == urok_po_rasp == '':
+                                text += prepare_for_markdown(f'{line[0]}{line[1]}\n\n')
+                            else:
+                                text += prepare_for_markdown(
+                                    f'{line[0]}{line[1]} урок(и): {line[2]}\n(Урок по расписанию: '
+                                    f'{urok_po_rasp})\n\n')
                         else:
                             text += prepare_for_markdown(
                                 f'{line[0]}{line[1]} урок(и): {line[2]} (учитель: {line[3]})'
