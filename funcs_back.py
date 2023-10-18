@@ -222,11 +222,10 @@ async def get_edits_in_timetable(next_day_tt):
                                     'Урок и кабинет по\nрасписанию': 'Урок по расписанию',
                                     'Урок и кабинет\nпо расписанию': 'Урок по расписанию'})
             if fl_first_time:
-                try:
+                cols_vals = df.columns.values
+                if 'Замены' in cols_vals:
                     df['Замены'] = df['Замены'] + '//' + df['Замена2']
                     df.drop('Замена2', axis=1, inplace=True)
-                except Exception:
-                    pass
                 fl_first_time = False
             if "Замены кабинетов" in df.columns.values:
                 are_working_with_cabs = True
