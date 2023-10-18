@@ -13,7 +13,7 @@ from timetables_csv import *
 
 logging.basicConfig(
     filename='out/logs.log', filemode='a',
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.ERROR
 )
 logger = logging.getLogger(__name__)
 
