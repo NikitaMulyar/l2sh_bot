@@ -269,7 +269,7 @@ class GetTimetable:
             await update.message.reply_text('Выбери интересующий тебя день',
                                             reply_markup=await extra_school_timetable_kbrd())
             context.user_data['EXTRA_CLICKED'] = True
-        elif context.user_data['EXTRA_CLICKED'] and update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
+        elif context.user_data.get('EXTRA_CLICKED') and update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
             context.user_data['EXTRA_CLICKED'] = False
             extra_text = extra_lessons_return(update.message.from_user.id, update.message.text)
             text = prepare_for_markdown(extra_text)
