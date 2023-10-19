@@ -53,9 +53,9 @@ class Extra_Lessons:
         return await self.choose_extra(update, context)
 
     async def choose_extra(self, update, context):
-        try:
+        if update.message:
             user__id = update.message.from_user.id
-        except Exception:
+        else:
             user__id = update.callback_query.from_user.id
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
         grade = user.number
@@ -81,9 +81,9 @@ class Extra_Lessons:
         keyboard = [[InlineKeyboardButton("Да", callback_data="1"),
                      InlineKeyboardButton("Нет", callback_data="2")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        try:
+        if update.message:
             await update.message.reply_text(text, reply_markup=reply_markup)
-        except Exception:
+        else:
             await update.callback_query.edit_message_text(text, reply_markup=reply_markup)
         return 1
 
@@ -103,7 +103,7 @@ class Extra_Lessons:
             if bool(extra):
                 db_sess.delete(extra)
         db_sess.commit()
-        await self.choose_extra(update, context)
+        return await self.choose_extra(update, context)
 
     async def get_out(self, update, context):
         await update.message.reply_text('🌟 Загрузка кружков завершена! Большое спасибо за твой '
