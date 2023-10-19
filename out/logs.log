@@ -1,0 +1,241 @@
+2023-10-19 19:51:52,151 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 19:51:52,154 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 19:51:52,235 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 19:51:52,236 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 19:51:55,915 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 19:51:58,039 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 19:52:46,679 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 19:52:49,903 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 19:54:23,142 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 19:54:24,574 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 19:54:24,966 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=BadRequest('Message is too long')>
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\class_timetable.py", line 316, in get_timetable
+    await update.message.reply_text(text_res,
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\_message.py", line 1095, in reply_text
+    return await self.get_bot().send_message(
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_extbot.py", line 2631, in send_message
+    return await super().send_message(
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\_bot.py", line 519, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\_bot.py", line 840, in send_message
+    return await self._send_message(
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_extbot.py", line 529, in _send_message
+    result = await super()._send_message(
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\_bot.py", line 697, in _send_message
+    result = await self._post(
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\_bot.py", line 607, in _post
+    return await self._do_post(
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_extbot.py", line 347, in _do_post
+    return await super()._do_post(
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\_bot.py", line 635, in _do_post
+    return await request.post(
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\request\_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\request\_baserequest.py", line 325, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message is too long
+2023-10-19 20:05:26,018 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:05:26,025 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyError('EXTRA_CLICKED')>
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\class_timetable.py", line 276, in get_timetable
+    elif context.user_data['EXTRA_CLICKED'] and update.message.text in ['Ïí', 'Âò', 'Ñð', '×ò', 'Ïò', 'Ñá']:
+KeyError: 'EXTRA_CLICKED'
+2023-10-19 20:05:29,281 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:05:29,284 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyError('EXTRA_CLICKED')>
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\class_timetable.py", line 276, in get_timetable
+    elif context.user_data['EXTRA_CLICKED'] and update.message.text in ['Ïí', 'Âò', 'Ñð', '×ò', 'Ïò', 'Ñá']:
+KeyError: 'EXTRA_CLICKED'
+2023-10-19 20:06:46,161 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:06:46,165 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyError('EXTRA_CLICKED')>
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\class_timetable.py", line 276, in get_timetable
+    elif context.user_data['EXTRA_CLICKED'] and update.message.text in ['Ïí', 'Âò', 'Ñð', '×ò', 'Ïò', 'Ñá']:
+KeyError: 'EXTRA_CLICKED'
+2023-10-19 20:06:59,265 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:06:59,269 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyError('EXTRA_CLICKED')>
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\class_timetable.py", line 276, in get_timetable
+    elif context.user_data['EXTRA_CLICKED'] and update.message.text in ['Ïí', 'Âò', 'Ñð', '×ò', 'Ïò', 'Ñá']:
+KeyError: 'EXTRA_CLICKED'
+2023-10-19 20:08:50,471 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:08:52,188 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:08:53,157 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:08:54,635 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:08:56,306 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:09:04,220 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:09:06,496 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:19:16,236 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:19:17,197 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:19:19,038 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:19:20,331 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:20:11,433 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-19 20:20:12,548 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_application.py", line 1195, in process_update
+    await coroutine
+  File "D:\Matthew\IT\l2sh_bot2\venv\lib\site-packages\telegram\ext\_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
