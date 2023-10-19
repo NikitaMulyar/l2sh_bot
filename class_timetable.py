@@ -43,10 +43,7 @@ class GetTimetable:
                 for df in edits_in_tt:
                     res = []
                     for j in df.index.values:
-                        try:
-                            number_of_lesson = df.iloc[j]['№ урока']
-                        except Exception:
-                            number_of_lesson = df.iloc[j]['Урок №']
+                        number_of_lesson = " ".join(df.iloc[j]['Урок №'].split('\n'))
                         if 'Замены' in df.columns.values:
                             if j == 0:
                                 continue

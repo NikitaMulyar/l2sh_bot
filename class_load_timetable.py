@@ -92,8 +92,8 @@ class LoadEditsTT:
 
     async def get_pswrd(self, update, context):
         if update.message.text != password:
-            await update.message.reply_text('Неверный пароль. Загрузка расписаний прервана. '
-                                            'Начать сначала: /load')
+            await update.message.reply_text('Неверный пароль. Загрузка изменений прервана. '
+                                            'Начать сначала: /changes')
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
         await update.message.reply_text(f'Укажите дату изменений в расписании (формат: ДД.ММ.ГГГГ):')
@@ -109,19 +109,19 @@ class LoadEditsTT:
 
     async def load_pdf(self, update, context):
         file_info = await bot.get_file(update.message.document.file_id)
-        # await clear_the_changes_folder()
         await file_info.download_to_drive(path_to_changes + f"{context.user_data['changes_date']}.pdf")
-        await update.message.reply_text('Файл загружен. Проведена рассылка всем ученикам об обновлении расписаний.')
+        await save_edits_in_timetable_csv(context.user_data['changes_date'])
         await write_all(bot, prepare_for_markdown('❕') + '_*Уважаемые лицеисты\!*_' +
                         prepare_for_markdown(
                             '\nВ боте появились изменения в расписании на ближайший учебный день. '
                             'Пожалуйста, проверьте ваше расписание на ближайший учебный день!'),
                         parse_mode='MarkdownV2')
+        await update.message.reply_text('Файл загружен. Проведена рассылка всем ученикам об обновлении расписаний.')
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
 
     async def end_setting(self, update, context):
-        await update.message.reply_text('Загрузка изменений в расписании прервана',
+        await update.message.reply_text('Загрузка изменений прервана',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
