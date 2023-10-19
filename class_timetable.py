@@ -301,16 +301,23 @@ class GetTimetable:
                 reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
         elif update.message.text == '🎭Все кружки🎭':
             context.user_data['EXTRA_CLICKED'] = False
+            list_text_res = []
             text_res = ""
             for day, day_number in self.day_num.items():
                 extra_text = extra_lessons_return(update.message.from_user.id, day)
                 text = prepare_for_markdown(extra_text)
                 if text != "":
                     text_res += f'_*{self.days2[day_number]}*_\n{text}\n'
+                if len(text_res) > 3800:
+                    list_text_res.append(text_res)
+                    text_res = ""
+            list_text_res.append(text_res)
             if text_res == '':
                 await update.message.reply_text(
                     f'*Ты еще не записывался\(лась\) на кружки\.*',
                     reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
                 return
-            await update.message.reply_text(text_res,
-                reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+            for el in list_text_res:
+                if el:
+                    await update.message.reply_text(el,
+                                                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
