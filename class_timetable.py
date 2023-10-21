@@ -261,7 +261,7 @@ class GetTimetable:
             elif self.day_num[update.message.text] == datetime.now().weekday():
                 context.user_data['NEXT_DAY_TT'] = False
                 t += await self.get_edits(context, user)
-            elif self.day_num[update.message.text] == datetime.now().weekday() + 1:
+            elif self.day_num[update.message.text] == (datetime.now().weekday() + 1) % 7:
                 context.user_data['NEXT_DAY_TT'] = True
                 t += await self.get_edits(context, user)
             await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
