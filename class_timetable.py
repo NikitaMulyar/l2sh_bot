@@ -41,17 +41,18 @@ class GetTimetable:
                 'сегодня' in for_which_day and not context.user_data.get('NEXT_DAY_TT')):
             if len(edits_in_tt) != 0:
                 for df in edits_in_tt:
+                    print(df.to_string())
                     res = []
                     for j in df.index.values:
                         number_of_lesson = " ".join(df.iloc[j]['Урок №'].split('\n'))
                         if 'Замены' in df.columns.values:
-                            if j == 0:
+                            if df.iloc[j]['Урок №'] == '' and j == 0:
                                 continue
                             if user.number in df.iloc[j]['Класс'] and user.grade[-1] in df.iloc[j][
                                 'Класс']:
                                 subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
                                 subject = " ".join(subject.split('\n'))
-                                class__ = "".join(df.iloc[j]['Класс'].split('\n'))
+                                class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
                                 if teacher_cabinet != '':
                                     teacher_cabinet = teacher_cabinet.split('\n')
                                     cabinet = teacher_cabinet[-1]
