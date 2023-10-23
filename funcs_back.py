@@ -250,9 +250,11 @@ async def save_edits_in_timetable_csv(date):
                                     'Урок и кабинет\nпо расписанию': 'Урок по расписанию'})
             if fl_first_time:
                 cols_vals = df.columns.values
-                if 'Замены' in cols_vals:
+                if 'Замена2' in cols_vals:
                     df['Замены'] = df['Замены'] + '//' + df['Замена2']
                     df.drop('Замена2', axis=1, inplace=True)
+                elif 'Замены' in cols_vals:
+                    df['Замены'] = df['Замены'] + '//'
                 fl_first_time = False
             if "Замены кабинетов" in df.columns.values:
                 are_working_with_cabs = True
