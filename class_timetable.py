@@ -41,7 +41,6 @@ class GetTimetable:
                 'сегодня' in for_which_day and not context.user_data.get('NEXT_DAY_TT')):
             if len(edits_in_tt) != 0:
                 for df in edits_in_tt:
-                    print(df.to_string())
                     res = []
                     for j in df.index.values:
                         number_of_lesson = " ".join(df.iloc[j]['Урок №'].split('\n'))
