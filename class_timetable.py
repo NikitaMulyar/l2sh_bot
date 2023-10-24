@@ -34,7 +34,7 @@ class GetTimetable:
                     '8\n15:45 - 16:30': ((15, 35),
                                          (16, 30))}
 
-    async def get_edits(self, context, user):
+    async def get_edits(self, context, user, lessons: dict):
         t = ""
         edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
         if ('завтра' in for_which_day and context.user_data['NEXT_DAY_TT'] or
@@ -83,6 +83,19 @@ class GetTimetable:
                     for line in sorted_res:
                         flag = True
                         urok_po_rasp = " ".join(line[-1].split("\n"))
+                        urok_num = line[1].split('-')
+                        fl = True
+                        print(line)
+                        for urok in urok_num:
+                            if lessons.get(urok):
+                                if not (lessons[urok][-1] in line[-1] or lessons[urok][0] in line[-1]):
+                                    fl = False
+                                    break
+                            else:
+                                fl = False
+                                break
+                        if not fl:
+                            continue
                         if len(line) == 3:
                             if 'отмена' in line[2].lower():
                                 text += prepare_for_markdown(
@@ -105,6 +118,7 @@ class GetTimetable:
                     if flag:
                         t += for_which_day
                         t += text
+        print(lessons.__str__())
         return t
 
     @throttle
@@ -121,6 +135,7 @@ class GetTimetable:
             return
         if update.message.text == '📚Расписание📚':
             context.user_data['NEXT_DAY_TT'] = False
+            lessons2 = {}
             if int(user.number) >= 10:
                 lessons, day = await get_timetable_for_user(context, f'{user.surname} {user.name}', user.grade)
             else:
@@ -179,6 +194,10 @@ class GetTimetable:
                             teachers = lesson_info[0]
                         t += prepare_for_markdown(
                             f'{lesson_name} - каб. {cabinet}\n(учитель: {teachers})\n')
+                        lesson_name2 = (lesson_name.strip(' (1)').strip(' (2)').strip(' (3)')
+                                        .strip(' (4)').strip(' (5)').strip(' (6)').strip(' (7)')
+                                        .strip(' (8)').strip(' (9)'))
+                        lessons2[key.split('\n')[0]] = (lesson_name2, teachers)
                         last_cab = cabinet
                     if start <= (time_now.hour, time_now.minute) < end and not context.user_data['NEXT_DAY_TT']:
                         t += '*_'
@@ -186,11 +205,12 @@ class GetTimetable:
                 except Exception as e:
                     continue
             t += '\n'
-            t += await self.get_edits(context, user)
+            t += await self.get_edits(context, user, lessons2)
             await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         elif (not context.user_data.get('EXTRA_CLICKED') and
               update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
             user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+            lessons2 = {}
             if int(user.number) >= 10:
                 lessons, day = await get_standard_timetable_for_user(f'{user.surname} {user.name}', user.grade,
                                                                      self.day_num[update.message.text])
@@ -243,6 +263,10 @@ class GetTimetable:
                             teachers = lesson_info[0]
                         t += prepare_for_markdown(
                             f'{lesson_name} - каб. {cabinet}\n(учитель: {teachers})\n')
+                        lesson_name2 = (lesson_name.strip(' (1)').strip(' (2)').strip(' (3)')
+                                        .strip(' (4)').strip(' (5)').strip(' (6)').strip(' (7)')
+                                        .strip(' (8)').strip(' (9)'))
+                        lessons2[key.split('\n')[0]] = (lesson_name2, teachers)
                         last_cab = cabinet
                         """if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
                         'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
@@ -257,13 +281,13 @@ class GetTimetable:
                     continue
             if self.day_num[update.message.text] == 0 and datetime.now().weekday() == 5:
                 context.user_data['NEXT_DAY_TT'] = True
-                t += await self.get_edits(context, user)
+                t += await self.get_edits(context, user, lessons2)
             elif self.day_num[update.message.text] == datetime.now().weekday():
                 context.user_data['NEXT_DAY_TT'] = False
-                t += await self.get_edits(context, user)
+                t += await self.get_edits(context, user, lessons2)
             elif self.day_num[update.message.text] == (datetime.now().weekday() + 1) % 7:
                 context.user_data['NEXT_DAY_TT'] = True
-                t += await self.get_edits(context, user)
+                t += await self.get_edits(context, user, lessons2)
             await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         elif update.message.text == '🎨Мои кружки🎨':
             await update.message.reply_text('Выбери интересующий тебя день',
