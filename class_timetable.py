@@ -184,7 +184,7 @@ class GetTimetable:
             t += '\n'
             edits_text = await self.get_edits(context, user)
             if edits_text:
-                t = title + '_' + prepare_for_markdown('❕Обратите внимание, что для Вашего класса есть изменения в расписании!\n\n') + '_' + t + edits_text
+                t = title + '_' + prepare_for_markdown('⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
             else:
                 t = title + '\n' + t + edits_text
             await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
@@ -261,7 +261,7 @@ class GetTimetable:
                 edits_text = await self.get_edits(context, user)
                 if edits_text:
                     t = title + '_' + prepare_for_markdown(
-                        '❕Обратите внимание, что для Вашего класса есть изменения в расписании!\n\n') + '_' + t + edits_text
+                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
                 else:
                     t = title + '\n' + t + edits_text
             elif self.day_num[update.message.text] == datetime.now().weekday():
@@ -269,7 +269,7 @@ class GetTimetable:
                 edits_text = await self.get_edits(context, user)
                 if edits_text:
                     t = title + '_' + prepare_for_markdown(
-                        '❕Обратите внимание, что для Вашего класса есть изменения в расписании!\n\n') + '_' + t + edits_text
+                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
                 else:
                     t = title + '\n' + t + edits_text
             elif self.day_num[update.message.text] == (datetime.now().weekday() + 1) % 7:
@@ -277,7 +277,7 @@ class GetTimetable:
                 edits_text = await self.get_edits(context, user)
                 if edits_text:
                     t = title + '_' + prepare_for_markdown(
-                        '❕Обратите внимание, что для Вашего класса есть изменения в расписании!\n\n') + '_' + t + edits_text
+                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
                 else:
                     t = title + '\n' + t + edits_text
             await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
