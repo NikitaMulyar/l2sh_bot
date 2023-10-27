@@ -34,7 +34,7 @@ class MailTo:
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
         if not user:
             await update.message.reply_text(
-                f'Ты даже не заполнил(а) свои данные. Напиши /start и заполни свои данные')
+                f'Вы даже не заполнили свои данные. Напишите /start и заполните свои данные')
             return ConversationHandler.END
         await update.message.reply_text('Прервать настройку рассылки: /end_mail')
         if user.grade == 'АДМИН':
@@ -61,7 +61,7 @@ class MailTo:
         if update.message.text == 'Всем':
             context.user_data['PARAL'] = update.message.text
             context.user_data['CLASS'] = update.message.text
-            await update.message.reply_text('Напишите сообщение для расслыки:',
+            await update.message.reply_text('Напишите сообщение для рассылки:',
                                             reply_markup=ReplyKeyboardRemove())
             return self.step_text
         if update.message.text not in self.parallels:

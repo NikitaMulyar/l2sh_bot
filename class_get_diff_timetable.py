@@ -127,8 +127,7 @@ class GetTimetable:
                 await update.message.reply_text(f'Ученика "{txt}" не найдено или отсутствует '
                                                 f'расписание для {class_txt} класса.')
                 return
-            title = f'*Расписание на _{self.days[day]}_*\n\n'
-            t = ""
+            t = f'*Расписание на _{self.days[day]}_*\n\n'
             time_now = datetime.now()  # - timedelta(hours=3)
             # !!!!!!!!!!!!!!!!!
             for txt_info, key in self.lessons_keys.items():
@@ -182,11 +181,7 @@ class GetTimetable:
                 except Exception as e:
                     continue
             t += '\n'
-            edits_text = await self.get_edits(context, user)
-            if edits_text:
-                t = title + '_' + prepare_for_markdown('❕Обратите внимание, что для Вашего класса есть изменения в расписании!\n\n') + '_' + t + edits_text
-            else:
-                t = title + '\n' + t + edits_text
+            t += await self.get_edits(context, user)
             await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         elif (not context.user_data.get('EXTRA_CLICKED') and
               update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
@@ -204,8 +199,7 @@ class GetTimetable:
                 await update.message.reply_text(f'Ученика "{txt}" не найдено или отсутствует '
                                                 f'расписание для {class_txt} класса.')
                 return ConversationHandler.END
-            title = f'*Расписание на _{self.days[day]}_*\n\n'
-            t = ""
+            t = f'*Расписание на _{self.days[day]}_*\n\n'
             for txt_info, key in self.lessons_keys.items():
                 try:
                     if int(user.number) >= 10:
@@ -213,7 +207,7 @@ class GetTimetable:
                     else:
                         pre_lesson_info = lessons.loc[key][day].split('###')
 
-                    t += prepare_for_markdown(txt_info)
+                    t += prepare_for_markdown(f'{txt_info}')
                     last_cab = ""
                     for lesson_info in pre_lesson_info:
                         lesson_info = lesson_info.split('\n')
@@ -258,28 +252,13 @@ class GetTimetable:
                     continue
             if self.day_num[update.message.text] == 0 and datetime.now().weekday() == 5:
                 context.user_data['NEXT_DAY_TT'] = True
-                edits_text = await self.get_edits(context, user)
-                if edits_text:
-                    t = title + '_' + prepare_for_markdown(
-                        '❕Обратите внимание, что для Вашего класса есть изменения в расписании!\n\n') + '_' + t + edits_text
-                else:
-                    t = title + '\n' + t + edits_text
+                t += await self.get_edits(context, user)
             elif self.day_num[update.message.text] == datetime.now().weekday():
                 context.user_data['NEXT_DAY_TT'] = False
-                edits_text = await self.get_edits(context, user)
-                if edits_text:
-                    t = title + '_' + prepare_for_markdown(
-                        '❕Обратите внимание, что для Вашего класса есть изменения в расписании!\n\n') + '_' + t + edits_text
-                else:
-                    t = title + '\n' + t + edits_text
+                t += await self.get_edits(context, user)
             elif self.day_num[update.message.text] == (datetime.now().weekday() + 1) % 7:
                 context.user_data['NEXT_DAY_TT'] = True
-                edits_text = await self.get_edits(context, user)
-                if edits_text:
-                    t = title + '_' + prepare_for_markdown(
-                        '❕Обратите внимание, что для Вашего класса есть изменения в расписании!\n\n') + '_' + t + edits_text
-                else:
-                    t = title + '\n' + t + edits_text
+                t += await self.get_edits(context, user)
             await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         elif update.message.text == '🎨Мои кружки🎨':
             await update.message.reply_text('Выбери интересующий тебя день',

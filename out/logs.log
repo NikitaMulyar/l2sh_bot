@@ -26272,3 +26272,238 @@ Traceback (most recent call last):
 TypeError: object NoneType can't be used in 'await' expression
 2023-10-27 19:19:45,422 - asyncio - ERROR - Task was destroyed but it is pending!
 task: <Task pending name='Application:6600430355:update_fetcher' coro=<Application._update_fetcher() running at /Users/nikita/PycharmProjects/pythonProject/venv/lib/python3.11/site-packages/telegram/ext/_application.py:1110> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+2023-10-27 22:40:25,230 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:40:29,531 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:44:59,264 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:45:09,070 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:48:37,248 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:48:48,206 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:49:02,849 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:49:06,832 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:49:13,089 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:52:49,886 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:52:53,665 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:55:26,031 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 22:55:29,413 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 23:10:47,299 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 23:10:47,510 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=BadRequest('Can't parse entities: character '>' is reserved and must be escaped with the preceding '\'')>
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_2/class_timetable.py", line 190, in get_timetable
+    await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_message.py", line 1095, in reply_text
+    return await self.get_bot().send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2631, in send_message
+    return await super().send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 519, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 840, in send_message
+    return await self._send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 529, in _send_message
+    result = await super()._send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 697, in _send_message
+    result = await self._post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 607, in _post
+    return await self._do_post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 347, in _do_post
+    return await super()._do_post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 635, in _do_post
+    return await request.post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 325, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Can't parse entities: character '>' is reserved and must be escaped with the preceding '\'
+2023-10-27 23:10:52,317 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 23:10:52,389 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=BadRequest('Can't parse entities: character '>' is reserved and must be escaped with the preceding '\'')>
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_2/class_timetable.py", line 190, in get_timetable
+    await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_message.py", line 1095, in reply_text
+    return await self.get_bot().send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2631, in send_message
+    return await super().send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 519, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 840, in send_message
+    return await self._send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 529, in _send_message
+    result = await super()._send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 697, in _send_message
+    result = await self._post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 607, in _post
+    return await self._do_post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 347, in _do_post
+    return await super()._do_post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 635, in _do_post
+    return await request.post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 325, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Can't parse entities: character '>' is reserved and must be escaped with the preceding '\'
+2023-10-27 23:12:46,597 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Application:5495619130:update_fetcher' coro=<Application._update_fetcher() running at /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py:1110> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+2023-10-27 23:12:48,062 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 23:15:00,205 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 23:16:13,836 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Application:5495619130:update_fetcher' coro=<Application._update_fetcher() running at /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py:1110> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+2023-10-27 23:16:15,307 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 23:16:16,920 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 23:16:18,796 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression
+2023-10-27 23:16:18,868 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=BadRequest('Can't parse entities: character '>' is reserved and must be escaped with the preceding '\'')>
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_2/class_timetable.py", line 283, in get_timetable
+    await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_message.py", line 1095, in reply_text
+    return await self.get_bot().send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2631, in send_message
+    return await super().send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 519, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 840, in send_message
+    return await self._send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 529, in _send_message
+    result = await super()._send_message(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 697, in _send_message
+    result = await self._post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 607, in _post
+    return await self._do_post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 347, in _do_post
+    return await super()._do_post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/_bot.py", line 635, in _do_post
+    return await request.post(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 325, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Can't parse entities: character '>' is reserved and must be escaped with the preceding '\'
+2023-10-27 23:17:19,930 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_application.py", line 1195, in process_update
+    await coroutine
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 153, in handle_update
+    return await self.callback(update, context)
+TypeError: object NoneType can't be used in 'await' expression

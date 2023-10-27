@@ -44,10 +44,10 @@ class Extra_Lessons:
         if user.grade == 'АДМИН':
             await update.message.reply_text(f'⚠️У админов нет доступа к расписанию.')
             return
-        await update.message.reply_text('🌟 Здесь ты можешь добавить кружки, которые хотел бы увидеть в '
+        await update.message.reply_text('🌟 Здесь Вы можете добавить кружки, которые хотели бы увидеть в '
                                         'своем расписании.\n'
-                                        'Если захочешь закончить, просто напиши: "/end_extra".\n'
-                                        'Давай начнем выбирать: ✨')
+                                        'Если захотите закончить, просто напишите: "/end_extra".\n'
+                                        'Давайте начнем выбирать: ✨')
         context.user_data['in_conversation'] = True
         context.user_data['choose_count'] = 0
         return await self.choose_extra(update, context)
@@ -61,8 +61,8 @@ class Extra_Lessons:
         grade = user.number
 
         if context.user_data['choose_count'] == self.count[int(grade)]:
-            await update.callback_query.edit_message_text('🌟 Загрузка кружков завершена! Большое спасибо за твой '
-                                                          'выбор! 🙌🏻 Теперь ты можешь видеть своё расписание с кружками.',
+            await update.callback_query.edit_message_text('🌟 Загрузка кружков завершена! Большое спасибо за Ваш '
+                                                          'выбор! 🙌🏻 Теперь Вы можете посмотреть своё расписание с кружками.',
                                                           reply_markup="")
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
@@ -106,8 +106,8 @@ class Extra_Lessons:
         return await self.choose_extra(update, context)
 
     async def get_out(self, update, context):
-        await update.message.reply_text('🌟 Загрузка кружков завершена! Большое спасибо за твой '
-                                        'выбор! 🙌🏻 Теперь ты можешь видеть своё расписание с кружками.',
+        await update.message.reply_text('🌟 Загрузка кружков завершена! Большое спасибо за Ваш '
+                                        'выбор! 🙌🏻 Теперь Вы можете посмотреть своё расписание с кружками.',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END

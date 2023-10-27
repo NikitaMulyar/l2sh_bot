@@ -19,18 +19,18 @@ class SetTimetable:
             user.chat_id = update.message.chat.id
             db_sess.commit()
             await update.message.reply_text(
-                'Привет! Я вижу, что ты уже есть в системе.\n'
-                'Теперь ты можешь пользоваться ботом.\n'
-                'Все команды бота доступны в синей кнопке "Меню"',
+                'Привет! Я вижу, что Вы уже есть в системе.\n'
+                'Теперь Вы можете пользоваться ботом.\n'
+                'Все команды бота доступны в кнопке "Меню"',
                 reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
         else:
-            await update.message.reply_text('Если вы из пед. состава, укажите вместо класса "АДМИН" (без кавычек)')
+            await update.message.reply_text('Если Вы из пед. состава, укажите вместо класса "АДМИН" (без кавычек)')
             await update.message.reply_text(
-                'Привет! В этом боте ты можешь узнавать свое расписание на день!\n'
-                'Но сначала немного формальностей: напиши свой класс (пример: 7Г)\n'
-                'Если захочешь остановить регистрацию, напиши: /end')
+                'Привет! В этом боте Вы можете узнавать свое расписание на день!\n'
+                'Но сначала немного формальностей: напишите свой класс (пример: 7Г)\n'
+                'Если захотите остановить регистрацию, напишите: /end')
             context.user_data['INFO'] = dict()
             return self.step_class
 
@@ -50,7 +50,7 @@ class SetTimetable:
             await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
             return self.step_class
         context.user_data['INFO']['Class'] = update.message.text
-        await update.message.reply_text(f'А теперь укажи свою фамилию (пример: Некрасов)')
+        await update.message.reply_text(f'А теперь укажите свою фамилию (пример: Некрасов)')
         return self.step_familia
 
     async def get_psw(self, update, context):
@@ -65,14 +65,14 @@ class SetTimetable:
 
     async def get_familia(self, update, context):
         context.user_data['INFO']['Familia'] = update.message.text
-        await update.message.reply_text(f'А теперь укажи(те) свое ПОЛНОЕ имя (пример: Николай)')
+        await update.message.reply_text(f'А теперь укажите свое ПОЛНОЕ имя (пример: Николай)')
         return self.step_name
 
     async def get_name(self, update, context):
         context.user_data['INFO']['Name'] = update.message.text
         put_to_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
                   context.user_data['INFO']['Class'])
-        await update.message.reply_text(f'Спасибо! Теперь ты можешь пользоваться ботом',
+        await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
@@ -80,5 +80,5 @@ class SetTimetable:
     async def end_setting(self, update, context):
         context.user_data['in_conversation'] = False
         context.user_data['INFO'] = dict()
-        await update.message.reply_text(f'Настройка данных ученика сброшена. Начать сначала: /start')
+        await update.message.reply_text(f'Регистрация в системе прервана. Начать сначала: /start')
         return ConversationHandler.END

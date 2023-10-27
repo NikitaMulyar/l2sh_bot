@@ -35,7 +35,7 @@ def throttle(func):
 
 
 async def trottle_ans(*args, **kwargs):
-    await args[1].message.reply_text('🧨 Воу-воу, помедленнее! Ты Молния Маквин, что-ли?')
+    await args[1].message.reply_text('🧨 Пожалуйста, пишите помедленнее!')
 
 
 async def timetable_kbrd():
@@ -62,9 +62,9 @@ async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
     for user in all_users:
         try:
             if parse_mode:
-                await bot.send_message(user.chat_id, text, parse_mode='MarkdownV2')
+                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
             else:
-                await bot.send_message(user.chat_id, text)
+                await asyncio.gather(bot.send_message(user.chat_id, text))
         except telegram.error.TelegramError:
             pass
 

@@ -8,12 +8,12 @@ class Profile:
             return
         user__id = update.message.from_user.id
         if not db_sess.query(User).filter(User.telegram_id == user__id).first():
-            await update.message.reply_text(f'Для начала заполни свои данные: /start')
+            await update.message.reply_text(f'Для начала заполните свои данные: /start')
             return
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
         if not user:
             await update.message.reply_text(
-                f'Ты даже не заполнил(а) свои данные. Напиши /start и заполни свои данные')
+                f'Вы даже не заполнили свои данные. Напиши /start и заполните свои данные')
             return
         t = f'📠*Ваш профиль*📠\n\n' + (f'Класс: {user.grade}\nИмя: {user.name}\n'
                                       f'Фамилия: {user.surname}')

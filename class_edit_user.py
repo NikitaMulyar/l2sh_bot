@@ -8,15 +8,15 @@ class Edit_User(SetTimetable):
         context.user_data['in_conversation'] = True
         user__id = update.message.from_user.id
         if db_sess.query(User).filter(User.telegram_id == user__id).first():
-            await update.message.reply_text('Если вы из пед. состава, укажите вместо класса "АДМИН" (без кавычек)')
-            await update.message.reply_text('Давай начнём изменять информацию о тебе.\n'
-                                            'Напиши свой класс: (пример: 7Г)\n'
-                                            'Если захочешь остановить изменения, напиши: /end_edit')
+            await update.message.reply_text('Если Вы из пед. состава, укажите вместо класса "АДМИН" (без кавычек)')
+            await update.message.reply_text('Давайте начнём изменять информацию о Вас.\n'
+                                            'Напишите свой класс: (пример: 7Г)\n'
+                                            'Если захотите остановить изменения, напишите: /end_edit')
             context.user_data['INFO'] = dict()
             return self.step_class
         else:
             context.user_data['in_conversation'] = False
-            await update.message.reply_text(f'Ты даже не заполнил(а) свои данные. Напиши /start и заполни свои данные')
+            await update.message.reply_text(f'Вы даже не заполнили свои данные. Напишите /start и заполните свои данные')
             return ConversationHandler.END
 
     async def get_psw(self, update, context):
@@ -41,7 +41,7 @@ class Edit_User(SetTimetable):
         context.user_data['INFO']['Name'] = update.message.text
         update_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
                   context.user_data['INFO']['Class'])
-        await update.message.reply_text(f'Спасибо! Теперь ты можешь пользоваться ботом',
+        await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
