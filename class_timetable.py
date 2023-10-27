@@ -84,13 +84,8 @@ class GetTimetable:
                         flag = True
                         urok_po_rasp = " ".join(line[-1].split("\n"))
                         if len(line) == 3:
-                            if 'отмена' in line[2].lower():
-                                text += prepare_for_markdown(
-                                    f'{line[0]}{line[1]} урок(и): {line[2]}\n\n')
-                            else:
-                                text += prepare_for_markdown(
-                                    f'{line[0]}{line[1]} урок(и): {line[2]}\n(Урок по расписанию: '
-                                    f'{urok_po_rasp})\n\n')
+                            text += prepare_for_markdown(
+                                f'{line[0]}{line[1]} урок(и): {line[2]}\n\n')
                         elif len(line) == 4:  # Замены каб.
                             if line[2] == urok_po_rasp == '':
                                 text += prepare_for_markdown(f'{line[0]}{line[1]}\n\n')
