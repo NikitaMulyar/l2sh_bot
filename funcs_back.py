@@ -34,6 +34,19 @@ def throttle(func):
     return wrapper
 
 
+def throttle2(func):
+    def wrapper(*args, **kwargs):
+        now_ = datetime.now()
+        last_time = args[2].user_data.get('last_time2')
+        if not last_time:
+            args[2].user_data['last_time2'] = now_
+            asyncio.gather(func(*args, **kwargs))
+        elif last_time + timedelta(seconds=0.5) <= now_:
+            args[2].user_data['last_time2'] = now_
+            asyncio.gather(func(*args, **kwargs))
+    return wrapper
+
+
 async def trottle_ans(*args, **kwargs):
     await args[1].message.reply_text('🧨 Пожалуйста, пишите помедленнее!')
 

@@ -2,7 +2,7 @@ from funcs_back import *
 from telegram.ext import ConversationHandler
 
 
-class GetTimetable:
+class GetTimetableForStudent:
     days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среду', 3: 'Четверг', 4: 'Пятницу', 5: 'Субботу'}
     days2 = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}
     day_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
@@ -15,26 +15,8 @@ class GetTimetable:
                     '6️⃣-й урок, 13:55 - 14:40:\n': '6\n13:55 - 14:40',
                     '7️⃣-й урок, 14:50 - 15:35:\n': '7\n14:50 - 15:35',
                     '8️⃣-й урок, 15:45 - 16:30:\n': '8\n15:45 - 16:30'}
-    for_datetime = {'0\n08:30 - 08:55': ((8, 20),
-                                         (8, 55)),
-                    '1\n09:00 - 09:45': ((8, 55),
-                                         (9, 45)),
-                    '2\n09:55 - 10:40': ((9, 45),
-                                         (10, 40)),
-                    '3\n10:50 - 11:35': ((10, 40),
-                                         (11, 35)),
-                    '4\n11:45 - 12:30': ((11, 35),
-                                         (12, 30)),
-                    '5\n12:50 - 13:35': ((12, 30),
-                                         (13, 35)),
-                    '6\n13:55 - 14:40': ((13, 35),
-                                         (14, 40)),
-                    '7\n14:50 - 15:35': ((14, 40),
-                                         (15, 35)),
-                    '8\n15:45 - 16:30': ((15, 35),
-                                         (16, 30))}
 
-    async def get_edits(self, context, user):
+    async def get_edits(self, context, student_class):
         t = ""
         edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
         if ('завтра' in for_which_day and context.user_data['NEXT_DAY_TT'] or
@@ -47,8 +29,7 @@ class GetTimetable:
                         if 'Замены' in df.columns.values:
                             if df.iloc[j]['Урок №'] == '' and j == 0:
                                 continue
-                            if user.number in df.iloc[j]['Класс'] and user.grade[-1] in df.iloc[j][
-                                'Класс']:
+                            if student_class[:-1] in df.iloc[j]['Класс'] and (student_class[-1] in df.iloc[j]['Класс'] or 'классы' in df.iloc[j]['Класс']):
                                 subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
                                 subject = " ".join(subject.split('\n'))
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
@@ -72,7 +53,7 @@ class GetTimetable:
                                     res.append([f"{class__}, ", number_of_lesson,
                                                 subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
                         else:
-                            if user.number in df.iloc[j]['Класс'] and user.grade[-1] in df.iloc[j]['Класс']:
+                            if student_class[:-1] in df.iloc[j]['Класс'] and (student_class[-1] in df.iloc[j]['Класс'] or 'классы' in df.iloc[j]['Класс']):
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
                                 res.append([f"{class__}, ", number_of_lesson,
                                             df.iloc[j]['Замены кабинетов'],
@@ -102,217 +83,157 @@ class GetTimetable:
                         t += text
         return t
 
-    @throttle
-    async def get_timetable(self, update, context):
-        if context.user_data.get('in_conversation'):
+    async def get_timetable(self, update, context, day_name, student_class, student_name, student_familia):
+        if int(student_class[:-1]) >= 10:
+            lessons, day = await get_standard_timetable_for_user(f'{student_familia} {student_name}',
+                                                                 student_class, self.day_num[day_name])
+        else:
+            lessons, day = await get_standard_timetable_for_user_6_9(student_class, self.day_num[day_name])
+        txt = (student_familia + ' ' + student_name + ' ' + student_class)
+        if lessons.empty:
+            class_txt = student_class
+            await update.message.reply_text(f'Ученика "{txt}" не найдено или отсутствует '
+                                            f'расписание для {class_txt} класса.')
             return
-        user__id = update.message.from_user.id
-        if not db_sess.query(User).filter(User.telegram_id == user__id).first():
-            await update.message.reply_text(f'⚠️Для начала заполните свои данные: /start')
-            return
-        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
-        if user.grade == 'АДМИН':
-            await update.message.reply_text(f'⚠️У админов нет доступа к расписанию.')
-            return
-        if update.message.text == '📚Расписание📚':
+        title = f'*Расписание на _{self.days[day]}_* для ученика {txt.strip(" ")}\n\n'
+        t = ""
+        edits_text = ""
+        context.user_data['NEXT_DAY_TT'] = False
+        if self.day_num[day_name] == 0 and datetime.now().weekday() == 5:
+            context.user_data['NEXT_DAY_TT'] = True
+            edits_text = await self.get_edits(context, student_class)
+        elif self.day_num[day_name] == datetime.now().weekday():
             context.user_data['NEXT_DAY_TT'] = False
-            if int(user.number) >= 10:
-                lessons, day = await get_timetable_for_user(context, f'{user.surname} {user.name}', user.grade)
-            else:
-                lessons, day = await get_timetable_for_user_6_9(context, user.grade)
-            if lessons.empty:
-                txt = (user.surname + ' ' + user.name + ' ' + user.grade)
-                class_txt = user.grade
+            edits_text = await self.get_edits(context, student_class)
+        elif self.day_num[day_name] == (datetime.now().weekday() + 1) % 7:
+            context.user_data['NEXT_DAY_TT'] = True
+            edits_text = await self.get_edits(context, student_class)
+        for txt_info, key in self.lessons_keys.items():
+            try:
+                if int(student_class[:-1]) >= 10:
+                    pre_lesson_info = lessons.loc[key].split('###')
+                else:
+                    pre_lesson_info = lessons.loc[key][day].split('###')
 
-                await update.message.reply_text(f'Ученика "{txt}" не найдено или отсутствует '
-                                                f'расписание для {class_txt} класса.')
-                return
-            t = f'*Расписание на _{self.days[day]}_*\n\n'
-            time_now = datetime.now()  # - timedelta(hours=3)
-            # !!!!!!!!!!!!!!!!!
-            for txt_info, key in self.lessons_keys.items():
-                try:
-                    if int(user.number) >= 10:
-                        pre_lesson_info = lessons.loc[key].split('###')
+                t += prepare_for_markdown(txt_info)
+                last_cab = ""
+                for lesson_info in pre_lesson_info:
+                    lesson_info = lesson_info.split('\n')
+                    if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
+                    'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
+                    'математика (1)', '(1)', 'физика (1)', 'эффекты (1)', 'математика (2)', 'математике']:
+                        if 'Эрлих И.Г.' in lesson_info[-1]:
+                            lesson_info = ['Эрлих И.Г.'] + [lesson_info[-2]] + [lesson_info[-1].split(' ')[-1]]
+                        lesson_name = lesson_info[-2]
+                        teachers = " ".join(lesson_info[:-2])
                     else:
-                        pre_lesson_info = lessons.loc[key][day].split('###')
-                    start, end = self.for_datetime[key]
-                    # Получили информацию об уроке: учитель, предмет, каб.
-                    # if type(pre_lesson_info) == str:
-                    #     pre_lesson_info = [pre_lesson_info]
-                    if start <= (time_now.hour, time_now.minute) < end and not context.user_data['NEXT_DAY_TT']:
-                        t += f'_*' + prepare_for_markdown(f'➡️ {txt_info}')
-                    else:
-                        t += prepare_for_markdown(f'{txt_info}')
-                    last_cab = ''
-                    for lesson_info in pre_lesson_info:
-                        lesson_info = lesson_info.split('\n')
-                        if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
-                        'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
-                        'математика (1)', '(1)', 'физика (1)', 'эффекты (1)', 'математика (2)', 'математике']:
-                            if 'Эрлих И.Г.' in lesson_info[-1]:
-                                lesson_info = ['Эрлих И.Г.'] + [lesson_info[-2]] + [lesson_info[-1].split(' ')[-1]]
-                            lesson_name = lesson_info[-2]
-                            teachers = " ".join(lesson_info[:-2])
-                        else:
-                            if 'Эрлих И.Г.' in lesson_info[-1]:
-                                lesson_info = ['Эрлих И.Г.'] + lesson_info[-3:-1] + [lesson_info[-1].split(' ')[-1]]
-                            lesson_name = " ".join(lesson_info[-3:-1])
-                            teachers = " ".join(lesson_info[:-3])
-                        cabinet = lesson_info[-1]
-                        if 'В' in lesson_name and 'Т' in lesson_name and 'Э.' in lesson_name and 'К.' in lesson_name:
-                            one_more_teacher_VTEK = (lesson_name.replace('В', '').replace('Т', '').
-                                                     replace('Э.', '.').replace('К.', '.'))
-                            teachers += " " + one_more_teacher_VTEK
-                            lesson_name = 'ВТЭК'
-                        elif lesson_name == 'И.Н. ВТЭК':
-                            lesson_name = 'ВТЭК'
-                            teachers += " И.Н."
-                        if len(lesson_info) == 2:
-                            cabinet = last_cab
-                            lesson_name = lesson_info[-1]
-                            teachers = lesson_info[0]
-                        t += prepare_for_markdown(
-                            f'{lesson_name} - каб. {cabinet}\n(учитель: {teachers})\n')
-                        last_cab = cabinet
-                    if start <= (time_now.hour, time_now.minute) < end and not context.user_data['NEXT_DAY_TT']:
-                        t += '*_'
-                    t += '\n'
-                except Exception as e:
-                    continue
-            t += '\n'
-            t += await self.get_edits(context, user)
-            await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
-        elif (not context.user_data.get('EXTRA_CLICKED') and
-              update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
-            user = db_sess.query(User).filter(User.telegram_id == user__id).first()
-            if int(user.number) >= 10:
-                lessons, day = await get_standard_timetable_for_user(f'{user.surname} {user.name}', user.grade,
-                                                                     self.day_num[update.message.text])
-            else:
-                lessons, day = await get_standard_timetable_for_user_6_9(user.grade,
-                                                                         self.day_num[update.message.text])
-            if lessons.empty:
-                txt = (user.surname + ' ' + user.name + ' ' + user.grade)
-                class_txt = user.grade
+                        if 'Эрлих И.Г.' in lesson_info[-1]:
+                            lesson_info = ['Эрлих И.Г.'] + lesson_info[-3:-1] + [lesson_info[-1].split(' ')[-1]]
+                        lesson_name = " ".join(lesson_info[-3:-1])
+                        teachers = " ".join(lesson_info[:-3])
+                    cabinet = lesson_info[-1]
+                    if 'В' in lesson_name and 'Т' in lesson_name and 'Э.' in lesson_name and 'К.' in lesson_name:
+                        one_more_teacher_VTEK = (lesson_name.replace('В', '').replace('Т', '').
+                                                 replace('Э.', '.').replace('К.', '.'))
+                        teachers += " " + one_more_teacher_VTEK
+                        lesson_name = 'ВТЭК'
+                    elif lesson_name == 'И.Н. ВТЭК':
+                        lesson_name = 'ВТЭК'
+                        teachers += " И.Н."
+                    if len(lesson_info) == 2:
+                        cabinet = last_cab
+                        lesson_name = lesson_info[-1]
+                        teachers = lesson_info[0]
+                    t += prepare_for_markdown(
+                        f'{lesson_name} - каб. {cabinet}\n(учитель: {teachers})\n')
+                    last_cab = cabinet
+                t += '\n'
+            except Exception as e:
+                continue
 
-                await update.message.reply_text(f'Ученика "{txt}" не найдено или отсутствует '
-                                                f'расписание для {class_txt} класса.')
-                return ConversationHandler.END
-            t = f'*Расписание на _{self.days[day]}_*\n\n'
-            for txt_info, key in self.lessons_keys.items():
-                try:
-                    if int(user.number) >= 10:
-                        pre_lesson_info = lessons.loc[key].split('###')
-                    else:
-                        pre_lesson_info = lessons.loc[key][day].split('###')
+        if edits_text:
+            t = title + '_' + prepare_for_markdown(
+                f'⚠️Обратите внимание, что для {student_class} ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
+        else:
+            t = title + '\n' + t + edits_text
+        await update.message.reply_text(t, parse_mode='MarkdownV2')
 
-                    t += prepare_for_markdown(f'{txt_info}')
-                    last_cab = ""
-                    for lesson_info in pre_lesson_info:
-                        lesson_info = lesson_info.split('\n')
-                        if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
-                        'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
-                        'математика (1)', '(1)', 'физика (1)', 'эффекты (1)', 'математика (2)', 'математике']:
-                            if 'Эрлих И.Г.' in lesson_info[-1]:
-                                lesson_info = ['Эрлих И.Г.'] + [lesson_info[-2]] + [lesson_info[-1].split(' ')[-1]]
-                            lesson_name = lesson_info[-2]
-                            teachers = " ".join(lesson_info[:-2])
-                        else:
-                            if 'Эрлих И.Г.' in lesson_info[-1]:
-                                lesson_info = ['Эрлих И.Г.'] + lesson_info[-3:-1] + [lesson_info[-1].split(' ')[-1]]
-                            lesson_name = " ".join(lesson_info[-3:-1])
-                            teachers = " ".join(lesson_info[:-3])
-                        cabinet = lesson_info[-1]
-                        if 'В' in lesson_name and 'Т' in lesson_name and 'Э.' in lesson_name and 'К.' in lesson_name:
-                            one_more_teacher_VTEK = (lesson_name.replace('В', '').replace('Т', '').
-                                                     replace('Э.', '.').replace('К.', '.'))
-                            teachers += " " + one_more_teacher_VTEK
-                            lesson_name = 'ВТЭК'
-                        elif lesson_name == 'И.Н. ВТЭК':
-                            lesson_name = 'ВТЭК'
-                            teachers += " И.Н."
-                        if len(lesson_info) == 2:
-                            cabinet = last_cab
-                            lesson_name = lesson_info[-1]
-                            teachers = lesson_info[0]
-                        t += prepare_for_markdown(
-                            f'{lesson_name} - каб. {cabinet}\n(учитель: {teachers})\n')
-                        last_cab = cabinet
-                        """if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
-                        'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
-                        'математика (1)', '(1)', 'физика (1)', 'эффекты (1)', 'математика (2)', 'математике']:
-                            t += prepare_for_markdown(
-                                f'{lesson_info[-2]} - каб. {lesson_info[-1]}\n(учитель: {" ".join(lesson_info[:-2])})\n')
-                        else:
-                            t += prepare_for_markdown(
-                                f'{" ".join(lesson_info[-3:-1])} - каб. {lesson_info[-1]}\n(учитель: {" ".join(lesson_info[:-3])})\n')"""
-                    t += '\n'
-                except Exception as e:
-                    continue
-            if self.day_num[update.message.text] == 0 and datetime.now().weekday() == 5:
-                context.user_data['NEXT_DAY_TT'] = True
-                t += await self.get_edits(context, user)
-            elif self.day_num[update.message.text] == datetime.now().weekday():
-                context.user_data['NEXT_DAY_TT'] = False
-                t += await self.get_edits(context, user)
-            elif self.day_num[update.message.text] == (datetime.now().weekday() + 1) % 7:
-                context.user_data['NEXT_DAY_TT'] = True
-                t += await self.get_edits(context, user)
-            await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
-        elif update.message.text == '🎨Мои кружки🎨':
-            await update.message.reply_text('Выбери интересующий тебя день',
-                                            reply_markup=await extra_school_timetable_kbrd())
-            context.user_data['EXTRA_CLICKED'] = True
-        elif context.user_data.get('EXTRA_CLICKED') and update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
-            context.user_data['EXTRA_CLICKED'] = False
-            extra_text = extra_lessons_return(update.message.from_user.id, update.message.text)
-            text = prepare_for_markdown(extra_text)
-            if text == '':
-                await update.message.reply_text(
-                    f'*Кружков на {self.days[self.day_num[update.message.text]].lower()} нет*',
-                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-                return
-            await update.message.reply_text(
-                f'*Кружки на {self.days[self.day_num[update.message.text]].lower()}*\n\n{text}',
-                reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-        elif update.message.text == '♟️Сегодня♟️':
-            today = datetime.now().weekday()
-            context.user_data['EXTRA_CLICKED'] = False
-            if today == 6:
-                await update.message.reply_text(f'*В воскресенье нужно отдыхать\! Кружков нет\.*',
-                                                reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-                return
-            days = {value: key for key, value in self.day_num.items()}
-            extra_text = extra_lessons_return(update.message.from_user.id, days[today])
-            text = prepare_for_markdown(extra_text)
-            if text == '':
-                await update.message.reply_text(
-                    f'*Кружков на {self.days[today].lower()} нет*',
-                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-                return
-            await update.message.reply_text(
-                f'*Кружки на {self.days[today].lower()}*\n\n{text}',
-                reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-        elif update.message.text == '🎭Все кружки🎭':
-            context.user_data['EXTRA_CLICKED'] = False
-            list_text_res = []
-            text_res = ""
-            for day, day_number in self.day_num.items():
-                extra_text = extra_lessons_return(update.message.from_user.id, day)
-                text = prepare_for_markdown(extra_text)
-                if text != "":
-                    text_res += f'_*{self.days2[day_number]}*_\n{text}\n'
-                if len(text_res) > 3800:
-                    list_text_res.append(text_res)
-                    text_res = ""
-            list_text_res.append(text_res)
-            if text_res == '':
-                await update.message.reply_text(
-                    f'*Ты еще не записывался\(лась\) на кружки\.*',
-                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-                return
-            for el in list_text_res:
-                if el:
-                    await update.message.reply_text(el,
-                                                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+
+class CheckStudentTT:
+    classes = ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД']
+    step_class = 1
+    step_familia = 2
+    step_name = 3
+    step_date = 4
+    get_tt = GetTimetableForStudent()
+
+    async def classes_buttons(self):
+        classes = [['6А', '6Б', '6В']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(7, 12)]
+        kbd = ReplyKeyboardMarkup(classes, resize_keyboard=True)
+        return kbd
+
+    async def days_buttons(self):
+        arr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
+        kbd = ReplyKeyboardMarkup([arr], resize_keyboard=True)
+        return kbd
+
+    async def start(self, update, context):
+        if context.user_data.get('in_conversation'):
+            return ConversationHandler.END
+        context.user_data['in_conversation'] = True
+        await update.message.reply_text('С помощью этой команды можно быстро посмотреть расписание '
+                                        'какого-то класса или ученика. Выберите из списка интересуемый класс.\n'
+                                        'Прерваться: /end_check',
+                                        reply_markup=await self.classes_buttons())
+        context.user_data['INFO'] = dict()
+        return self.step_class
+
+    async def get_class(self, update, context):
+        if update.message.text not in self.classes:
+            await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
+            return self.step_class
+        context.user_data['INFO']['Class'] = update.message.text
+        if "6" <= update.message.text[:-1] <= "9":
+            kbrd = await self.days_buttons()
+            await update.message.reply_text('Выберите день недели для расписания',
+                                            reply_markup=kbrd)
+            context.user_data['INFO']['Name'] = ''
+            context.user_data['INFO']['Familia'] = ''
+            return self.step_date
+        await update.message.reply_text(f'Укажите фамилию учащегося (пример: Некрасов)')
+        return self.step_familia
+
+    async def get_familia(self, update, context):
+        context.user_data['INFO']['Familia'] = update.message.text
+        await update.message.reply_text(f'Укажите ПОЛНОЕ имя учащегося (пример: Николай)')
+        return self.step_name
+
+    async def get_name(self, update, context):
+        context.user_data['INFO']['Name'] = update.message.text
+        kbrd = await self.days_buttons()
+        await update.message.reply_text('Выберите день недели для расписания',
+                                        reply_markup=kbrd)
+        return self.step_date
+
+    @throttle2
+    async def get_day(self, update, context):
+        if update.message.text not in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
+            kbrd = await self.days_buttons()
+            await update.message.reply_text('Выберите день недели для расписания',
+                                            reply_markup=kbrd)
+            return self.step_date
+        context.user_data['INFO']['Day'] = update.message.text
+        await self.get_tt.get_timetable(update, context,
+                                           context.user_data['INFO']['Day'],
+                                           context.user_data['INFO']['Class'],
+                                           context.user_data['INFO']['Name'],
+                                           context.user_data['INFO']['Familia'])
+        await update.message.reply_text('Выберите день или закончите выбор командой: /end_check')
+        return self.step_date
+
+    async def end_checking(self, update, context):
+        context.user_data['in_conversation'] = False
+        context.user_data['INFO'] = dict()
+        await update.message.reply_text(f'Поиск ученика прерван. Начать сначала: /check',
+                                        reply_markup=await timetable_kbrd())
+        return ConversationHandler.END

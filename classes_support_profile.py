@@ -24,7 +24,5 @@ class Profile:
 class Support:
     @throttle
     async def get_supp(self, update, context):
-        if context.user_data.get('in_conversation'):
-            return
         await update.message.reply_text('Чат тех-поддержки: @help_group_l2sh',
                                         reply_markup=await timetable_kbrd())

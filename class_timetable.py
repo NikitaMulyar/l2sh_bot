@@ -47,8 +47,7 @@ class GetTimetable:
                         if 'Замены' in df.columns.values:
                             if df.iloc[j]['Урок №'] == '' and j == 0:
                                 continue
-                            if user.number in df.iloc[j]['Класс'] and user.grade[-1] in df.iloc[j][
-                                'Класс']:
+                            if user.number in df.iloc[j]['Класс'] and (user.grade[-1] in df.iloc[j]['Класс'] or 'классы' in df.iloc[j]['Класс']):
                                 subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
                                 subject = " ".join(subject.split('\n'))
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
@@ -72,7 +71,7 @@ class GetTimetable:
                                     res.append([f"{class__}, ", number_of_lesson,
                                                 subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
                         else:
-                            if user.number in df.iloc[j]['Класс'] and user.grade[-1] in df.iloc[j]['Класс']:
+                            if user.number in df.iloc[j]['Класс'] and (user.grade[-1] in df.iloc[j]['Класс'] or 'классы' in df.iloc[j]['Класс']):
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
                                 res.append([f"{class__}, ", number_of_lesson,
                                             df.iloc[j]['Замены кабинетов'],
@@ -206,6 +205,17 @@ class GetTimetable:
                 return ConversationHandler.END
             title = f'*Расписание на _{self.days[day]}_*\n\n'
             t = ""
+            edits_text = ""
+            context.user_data['NEXT_DAY_TT'] = False
+            if self.day_num[update.message.text] == 0 and datetime.now().weekday() == 5:
+                context.user_data['NEXT_DAY_TT'] = True
+                edits_text = await self.get_edits(context, user)
+            elif self.day_num[update.message.text] == datetime.now().weekday():
+                context.user_data['NEXT_DAY_TT'] = False
+                edits_text = await self.get_edits(context, user)
+            elif self.day_num[update.message.text] == (datetime.now().weekday() + 1) % 7:
+                context.user_data['NEXT_DAY_TT'] = True
+                edits_text = await self.get_edits(context, user)
             for txt_info, key in self.lessons_keys.items():
                 try:
                     if int(user.number) >= 10:
@@ -256,30 +266,11 @@ class GetTimetable:
                     t += '\n'
                 except Exception as e:
                     continue
-            if self.day_num[update.message.text] == 0 and datetime.now().weekday() == 5:
-                context.user_data['NEXT_DAY_TT'] = True
-                edits_text = await self.get_edits(context, user)
-                if edits_text:
-                    t = title + '_' + prepare_for_markdown(
-                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
-                else:
-                    t = title + '\n' + t + edits_text
-            elif self.day_num[update.message.text] == datetime.now().weekday():
-                context.user_data['NEXT_DAY_TT'] = False
-                edits_text = await self.get_edits(context, user)
-                if edits_text:
-                    t = title + '_' + prepare_for_markdown(
-                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
-                else:
-                    t = title + '\n' + t + edits_text
-            elif self.day_num[update.message.text] == (datetime.now().weekday() + 1) % 7:
-                context.user_data['NEXT_DAY_TT'] = True
-                edits_text = await self.get_edits(context, user)
-                if edits_text:
-                    t = title + '_' + prepare_for_markdown(
-                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
-                else:
-                    t = title + '\n' + t + edits_text
+            if edits_text:
+                t = title + '_' + prepare_for_markdown(
+                    '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
+            else:
+                t = title + '\n' + t + edits_text
             await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         elif update.message.text == '🎨Мои кружки🎨':
             await update.message.reply_text('Выбери интересующий тебя день',

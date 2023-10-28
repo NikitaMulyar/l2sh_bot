@@ -9,6 +9,7 @@ from class_load_timetable import *
 from classes_support_profile import *
 from class_extra_lesson import *
 from timetables_csv import *
+from class_get_diff_timetable import *
 
 
 try:
@@ -103,11 +104,22 @@ def main():
     sup_hadler = CommandHandler('support', sup.get_supp)
     prof_handler = CommandHandler('profile', prof.get_profile)
     timetable_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, timetable__.get_timetable)
+    check_ = CheckStudentTT()
+    checking_handler = ConversationHandler(
+        entry_points=[CommandHandler('check', check_.start)],
+        states={
+            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_class)],
+            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_familia)],
+            3: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_name)],
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_day)]
+        },
+        fallbacks=[CommandHandler('end_check', check_.end_checking)]
+    )
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
                                        4: [mailto_handler], 5: [load_tt_handler],
                                        6: [prof_handler], 7: [sup_hadler],
                                        8: [load_changes_in_tt_handler],
-                                       9: [config_extra]})
+                                       9: [config_extra], 10: [checking_handler]})
     application.run_polling()
 
 

@@ -8,10 +8,11 @@ class Edit_User(SetTimetable):
         context.user_data['in_conversation'] = True
         user__id = update.message.from_user.id
         if db_sess.query(User).filter(User.telegram_id == user__id).first():
-            await update.message.reply_text('Если Вы из пед. состава, укажите вместо класса "АДМИН" (без кавычек)')
+            await update.message.reply_text('Если Вы из пед. состава, выберите "АДМИН"')
             await update.message.reply_text('Давайте начнём изменять информацию о Вас.\n'
-                                            'Напишите свой класс: (пример: 7Г)\n'
-                                            'Если захотите остановить изменения, напишите: /end_edit')
+                                            'Выберите свой класс.\n'
+                                            'Если захотите остановить изменения, напишите: /end_edit',
+                                            reply_markup=await self.classes_buttons())
             context.user_data['INFO'] = dict()
             return self.step_class
         else:
@@ -22,7 +23,7 @@ class Edit_User(SetTimetable):
     async def get_psw(self, update, context):
         if update.message.text != password:
             await update.message.reply_text('Неверный пароль. Настройка данных прервана. '
-                                            'Начать сначала: /edit')
+                                            'Начать сначала: /edit', reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             context.user_data['INFO'] = dict()
             return ConversationHandler.END
@@ -49,5 +50,6 @@ class Edit_User(SetTimetable):
     async def end_setting(self, update, context):
         context.user_data['in_conversation'] = False
         context.user_data['INFO'] = dict()
-        await update.message.reply_text(f'Настройка данных ученика сброшена. Начать сначала: /edit')
+        await update.message.reply_text(f'Настройка данных ученика сброшена. Начать сначала: /edit',
+                                        reply_markup=await timetable_kbrd())
         return ConversationHandler.END
