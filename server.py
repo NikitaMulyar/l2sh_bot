@@ -36,6 +36,7 @@ def main():
     #                                          'Необходимо использовать команду /start', all_=True))
     asyncio.gather(extract_timetable_for_students_10_11())
     asyncio.gather(extract_timetable_for_students_6_9())
+    asyncio.gather(extract_timetable_for_teachers())
     application = Application.builder().token(BOT_TOKEN).build()
     # .post_init(post_init)
     # loop = asyncio.new_event_loop()
