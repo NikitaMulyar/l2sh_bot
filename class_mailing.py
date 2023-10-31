@@ -11,6 +11,7 @@ class MailTo:
     step_parallel = 2
     step_class = 3
     step_text = 4
+    step_attachments = 5
 
     async def mailing_parallels_kbrd(self):
         btns = []
@@ -25,6 +26,11 @@ class MailTo:
         for i in self.classes[parallel]:
             btns.append(KeyboardButton(i))
         kbd = ReplyKeyboardMarkup([btns, [KeyboardButton(f'Всем')]],
+                                  resize_keyboard=True)
+        return kbd
+
+    async def attachments_kbrd(self):
+        kbd = ReplyKeyboardMarkup([['📧Готово📧']],
                                   resize_keyboard=True)
         return kbd
 
@@ -94,6 +100,51 @@ class MailTo:
 
     async def get_text(self, update, context):
         context.user_data['MESSAGE'] = update.message.text
+        text_ = 'Прикрепите вложения по желанию\.\n*⚠️Инструкция по прикреплению файлов*\n' + \
+            prepare_for_markdown('1. Суммарный размер файлов не может превышать 10МБ.\n'
+                                 '2. Можно прикрепить не более 10 файлов (если будет отправлено более '
+                                 '10 файлов, бот отправит только первые 10).\n'
+                                 '3. При прикреплении тяжелых файлов (которые достигают лимит), '
+                                 'рассылка может замедлиться, и бот не будет отвечать до 3 минут.\n'
+                                 '4. ⚠️Если вы захотите завершить прикрепление файлов, нажмите на кнопку "Готово"')
+        await update.message.reply_text(text_, reply_markup=await self.attachments_kbrd(),
+                                        parse_mode='MarkdownV2')
+        await bot.send_photo(update.message.chat.id, 'instruction.jpg')
+        context.user_data['ATTACHMENTS'] = []
+        context.user_data['FILES_SIZE'] = 0
+        return self.step_attachments
+
+    async def get_attachments(self, update, context):
+        context.user_data['ATTACHMENTS'].append(update.message.document.file_id)
+        file_info = await bot.get_file(update.message.document.file_id)
+        if file_info.file_size / 1024 / 1024 > 10:
+            await update.message.reply_text('Файл слишком большой. Загрузка файлов продолжается. '
+                                            'Если вы хотите завершить прикрепление файлов, '
+                                            'нажмите на кнопку "Готово"')
+            return self.step_attachments
+        context.user_data['FILES_SIZE'] += file_info.file_size
+        if context.user_data['FILES_SIZE'] / 1024 / 1024 > 10:
+            len_ = len(context.user_data['ATTACHMENTS']) - 1
+            await update.message.reply_text(f'Достигнут лимит по общему размеру файлов. '
+                                            f'Будут отправлены только первые {len_}.')
+            context.user_data['ATTACHMENTS'] = context.user_data['ATTACHMENTS'][:-1]
+            return await self.send_message(update, context)
+        if len(context.user_data['ATTACHMENTS']) == 10:
+            await update.message.reply_text('Достигнут лимит по количеству файлов. '
+                                            'Будут отправлены только первые 10.')
+            context.user_data['ATTACHMENTS'] = context.user_data['ATTACHMENTS'][:10]
+            return await self.send_message(update, context)
+        await update.message.reply_text('Загрузка файлов продолжается. '
+                                        'Если вы хотите завершить прикрепление файлов, '
+                                        'нажмите на кнопку "Готово"')
+        return self.step_attachments
+
+    async def get_ready(self, update, context):
+        if update.message.text == '📧Готово📧':
+            return await self.send_message(update, context)
+        return self.step_attachments
+
+    async def send_message(self, update, context):
         all_users = db_sess.query(User).filter(User.grade != 'АДМИН').all()
         author = db_sess.query(User).filter(User.chat_id == update.message.chat.id).first()
         if context.user_data['PARAL'] != 'Всем':
@@ -107,10 +158,16 @@ class MailTo:
         mail_text = (mailbox_ + '*Новое сообщение\!*' + mailbox_ + prepare_for_markdown('\n\n') +
                      prepare_for_markdown(context.user_data['MESSAGE']) +
                      f'\n\nОт {author.surname} {author.name}\, {author.grade}')
+        arr = []
+        for file in context.user_data['ATTACHMENTS']:
+            arr.append(telegram.InputMediaDocument(media=file))
         for user in all_users:
             try:
-                await bot.send_message(user.chat_id, mail_text,
-                                       parse_mode='MarkdownV2')
+                if len(arr) >= 2:
+                    await bot.send_media_group(user.chat_id, arr, caption=mail_text, parse_mode='MarkdownV2')
+                else:
+                    await bot.send_document(user.chat_id, context.user_data['ATTACHMENTS'][0],
+                                            caption=mail_text, parse_mode='MarkdownV2')
             except Exception:
                 pass
         context.user_data['in_conversation'] = False

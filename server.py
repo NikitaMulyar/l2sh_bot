@@ -75,10 +75,14 @@ def main():
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_psw)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_parallel)],
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_class)],
-            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_text)]
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_text)],
+            5: [MessageHandler(filters.Document.ALL, mail_dialog.get_attachments),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_ready)]
         },
         fallbacks=[CommandHandler('end_mail', mail_dialog.end_mailing)]
     )
+    # | filters.PHOTO | filters.ATTACHMENT | filters.USER_ATTACHMENT |
+    #                                filters.AUDIO | filters.VIDEO
     load_tt_handler = ConversationHandler(
         entry_points=[CommandHandler('load', load_tt.start)],
         states={1: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_tt.get_pswrd)],

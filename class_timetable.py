@@ -55,7 +55,7 @@ class GetTimetable:
                                     teacher_cabinet = teacher_cabinet.split('\n')
                                     cabinet = teacher_cabinet[-1]
                                     teacher = " ".join(teacher_cabinet[:-1])
-                                    if cabinet.count('.') == 2:
+                                    if cabinet.count('.') == 2 and 'зал' not in cabinet:
                                         # Учитель
                                         res.append([f"{class__}, ", number_of_lesson, subject,
                                                     cabinet,
