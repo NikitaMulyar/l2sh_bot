@@ -8,7 +8,9 @@ import pdfplumber
 import os
 import numpy as np
 from datetime import datetime
+from data import db_session
 import csv
+from funcs_back import *
 
 days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}
 
@@ -89,3 +91,33 @@ async def extract_teacher_timetable_for_day(day, full_name):
     df = df[df[day2] != '--']
     df = df.set_index(df['Unnamed: 1'].values)
     return df, day
+
+
+def extra_lessons_teachers_return(id, button_text):
+    days = {"Пн": "Понедельник", "Вт": "Вторник", "Ср": "Среда", "Чт": "Четверг", "Пт": "Пятница", "Сб": "Суббота"}
+    day = days[button_text]
+    user = db_sess.query(User).filter(User.telegram_id == id).first()
+    extra_lessons = db_sess.query(Extra).filter(Extra.teacher.like(f'{user.surname}%'), day == Extra.day).all()
+    full_text = []
+    extra_was = []
+    for extra_lesson in extra_lessons:
+        if extra_lesson.title in extra_was:
+            continue
+        text = "⤵️\n"
+        ex = db_sess.query(Extra).filter(Extra.teacher.like(f'{user.surname}%'), Extra.title == extra_lesson.title,
+                                         Extra.time == extra_lesson.time).all()
+        classes = []
+        for el in ex:
+            if str(el.grade) not in classes:
+                classes.append(str(el.grade))
+        extra_was.append(extra_lesson.title)
+        text += f"📚 {extra_lesson.title} ({'/'.join(classes)} класс)📚\n"
+        text += f"🕝 {extra_lesson.time} 🕝\n"
+        place = ""
+        if "зал" in extra_lesson.place or "online" in extra_lesson.place:
+            place = extra_lesson.place
+        else:
+            place = f"{extra_lesson.place} кабинет"
+        text += f'🏫 Место проведения: {place} 🏫\n'
+        full_text.append(text)
+    return "".join(full_text)

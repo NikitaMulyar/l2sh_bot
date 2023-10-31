@@ -21,16 +21,26 @@ class Extra_Lessons:
                         place = extra_lessons[k + 4][j]
                         for l in range(1, 4):
                             if not pd.isnull(extra_lessons[k + l][j]):
-                                if ("-" in extra_lessons[k + l][j] and "." in extra_lessons[k + l][j]) or (
+                                if ("-" in extra_lessons[k + l][j] and (
+                                        "." in extra_lessons[k + l][j] or ":" in extra_lessons[k + l][j])) or (
                                         "переменах" in extra_lessons[k + l][j]):
                                     time = extra_lessons[k + l][j]
-                                elif "Код" not in extra_lessons[k + l][j]:
+                                elif "Код" not in extra_lessons[k + l][j] and all(
+                                        el.isalpha() for el in "".join(extra_lessons[k + l][j].replace(".", "").split())):
                                     teacher = extra_lessons[k + l][j]
+                                    break
                         day = days[j]
+                        if teacher == "Фёдоров К. Е.":
+                            teacher = "Федоров К. Е."
                         extra = Extra(title=title, time=time, day=day, teacher=teacher, place=place, grade=i + 6)
                         if not bool(db_sess.query(Extra).filter(Extra.title == title, Extra.grade == i + 6,
                                                                 Extra.day == day).first()):
                             db_sess.add(extra)
+                        else:
+                            extra = db_sess.query(Extra).filter(Extra.title == title, Extra.grade == i + 6,
+                                                                Extra.day == day).first()
+                            extra.teacher = teacher
+                            extra.time = time
                         counter += 1
                     k += 6
             self.count[i + 6] = counter
