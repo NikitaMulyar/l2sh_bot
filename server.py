@@ -9,6 +9,7 @@ from class_load_timetable import *
 from classes_support_profile import *
 from class_extra_lesson import *
 from timetables_csv import *
+from class_get_diff_timetable import *
 
 
 try:
@@ -36,6 +37,7 @@ def main():
     #                                          'Необходимо использовать команду /start', all_=True))
     asyncio.gather(extract_timetable_for_students_10_11())
     asyncio.gather(extract_timetable_for_students_6_9())
+    asyncio.gather(extract_timetable_for_teachers())
     application = Application.builder().token(BOT_TOKEN).build()
     # .post_init(post_init)
     # loop = asyncio.new_event_loop()
@@ -54,7 +56,8 @@ def main():
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_class)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_familia)],
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_name)],
-            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_psw)]
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_psw)],
+            5: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_third_name)]
         },
         fallbacks=[CommandHandler('end', start_dialog.end_setting)]
     )
@@ -64,7 +67,8 @@ def main():
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_class)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_familia)],
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_name)],
-            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_psw)]
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_psw)],
+            5: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_third_name)]
         },
         fallbacks=[CommandHandler('end_edit', edit_user_class.end_setting)]
     )
@@ -74,7 +78,9 @@ def main():
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_psw)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_parallel)],
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_class)],
-            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_text)]
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_text)],
+            5: [MessageHandler(filters.Document.ALL, mail_dialog.get_attachments),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_ready)]
         },
         fallbacks=[CommandHandler('end_mail', mail_dialog.end_mailing)]
     )
@@ -103,11 +109,22 @@ def main():
     sup_hadler = CommandHandler('support', sup.get_supp)
     prof_handler = CommandHandler('profile', prof.get_profile)
     timetable_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, timetable__.get_timetable)
+    check_ = CheckStudentTT()
+    checking_handler = ConversationHandler(
+        entry_points=[CommandHandler('check', check_.start)],
+        states={
+            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_class)],
+            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_familia)],
+            3: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_name)],
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_day)]
+        },
+        fallbacks=[CommandHandler('end_check', check_.end_checking)]
+    )
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
                                        4: [mailto_handler], 5: [load_tt_handler],
                                        6: [prof_handler], 7: [sup_hadler],
                                        8: [load_changes_in_tt_handler],
-                                       9: [config_extra]})
+                                       9: [config_extra], 10: [checking_handler]})
     application.run_polling()
 
 

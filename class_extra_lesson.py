@@ -16,21 +16,30 @@ class Extra_Lessons:
                 k = 1
                 while k <= length:
                     if not pd.isnull(extra_lessons[k][j]):
-
                         title = extra_lessons[k][j]
                         place = extra_lessons[k + 4][j]
                         for l in range(1, 4):
                             if not pd.isnull(extra_lessons[k + l][j]):
-                                if ("-" in extra_lessons[k + l][j] and "." in extra_lessons[k + l][j]) or (
+                                if ("-" in extra_lessons[k + l][j] and (
+                                        "." in extra_lessons[k + l][j] or ":" in extra_lessons[k + l][j])) or (
                                         "переменах" in extra_lessons[k + l][j]):
                                     time = extra_lessons[k + l][j]
-                                elif "Код" not in extra_lessons[k + l][j]:
+                                elif "Код" not in extra_lessons[k + l][j] and all(
+                                        el.isalpha() for el in
+                                        "".join(extra_lessons[k + l][j].replace(".", "").replace(",", "").split())):
                                     teacher = extra_lessons[k + l][j]
+                                    break
                         day = days[j]
+                        teacher = teacher.replace('ё', 'е')
                         extra = Extra(title=title, time=time, day=day, teacher=teacher, place=place, grade=i + 6)
                         if not bool(db_sess.query(Extra).filter(Extra.title == title, Extra.grade == i + 6,
                                                                 Extra.day == day).first()):
                             db_sess.add(extra)
+                        else:
+                            extra = db_sess.query(Extra).filter(Extra.title == title, Extra.grade == i + 6,
+                                                                Extra.day == day).first()
+                            extra.teacher = teacher
+                            extra.time = time
                         counter += 1
                     k += 6
             self.count[i + 6] = counter
@@ -42,12 +51,12 @@ class Extra_Lessons:
         user__id = update.message.from_user.id
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
         if user.grade == 'АДМИН':
-            await update.message.reply_text(f'⚠️У админов нет доступа к расписанию.')
+            await update.message.reply_text(f'Вы не можете записываться на кружки.')
             return
-        await update.message.reply_text('🌟 Здесь ты можешь добавить кружки, которые хотел бы увидеть в '
+        await update.message.reply_text('🌟 Здесь Вы можете добавить кружки, которые хотели бы увидеть в '
                                         'своем расписании.\n'
-                                        'Если захочешь закончить, просто напиши: "/end_extra".\n'
-                                        'Давай начнем выбирать: ✨')
+                                        'Если захотите закончить, просто напишите: "/end_extra".\n'
+                                        'Давайте начнем выбирать: ✨')
         context.user_data['in_conversation'] = True
         context.user_data['choose_count'] = 0
         return await self.choose_extra(update, context)
@@ -61,8 +70,8 @@ class Extra_Lessons:
         grade = user.number
 
         if context.user_data['choose_count'] == self.count[int(grade)]:
-            await update.callback_query.edit_message_text('🌟 Загрузка кружков завершена! Большое спасибо за твой '
-                                                          'выбор! 🙌🏻 Теперь ты можешь видеть своё расписание с кружками.',
+            await update.callback_query.edit_message_text('🌟 Загрузка кружков завершена! Большое спасибо за Ваш '
+                                                          'выбор! 🙌🏻 Теперь Вы можете посмотреть своё расписание с кружками.',
                                                           reply_markup="")
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
@@ -106,8 +115,8 @@ class Extra_Lessons:
         return await self.choose_extra(update, context)
 
     async def get_out(self, update, context):
-        await update.message.reply_text('🌟 Загрузка кружков завершена! Большое спасибо за твой '
-                                        'выбор! 🙌🏻 Теперь ты можешь видеть своё расписание с кружками.',
+        await update.message.reply_text('🌟 Загрузка кружков завершена! Большое спасибо за Ваш '
+                                        'выбор! 🙌🏻 Теперь Вы можете посмотреть своё расписание с кружками.',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
