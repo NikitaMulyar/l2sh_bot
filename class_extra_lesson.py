@@ -16,7 +16,6 @@ class Extra_Lessons:
                 k = 1
                 while k <= length:
                     if not pd.isnull(extra_lessons[k][j]):
-
                         title = extra_lessons[k][j]
                         place = extra_lessons[k + 4][j]
                         for l in range(1, 4):
@@ -26,7 +25,8 @@ class Extra_Lessons:
                                         "переменах" in extra_lessons[k + l][j]):
                                     time = extra_lessons[k + l][j]
                                 elif "Код" not in extra_lessons[k + l][j] and all(
-                                        el.isalpha() for el in "".join(extra_lessons[k + l][j].replace(".", "").split())):
+                                        el.isalpha() for el in
+                                        "".join(extra_lessons[k + l][j].replace(".", "").replace(",", "").split())):
                                     teacher = extra_lessons[k + l][j]
                                     break
                         day = days[j]

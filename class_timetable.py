@@ -135,12 +135,16 @@ class GetTimetable:
                         for lesson_info in pre_lesson_info:
                             lesson_info = lesson_info.split('\n')
                             cabinet = lesson_info[-1]
-                            if "Олимпиадное" in lesson_info[1]:
-                                lesson_name = " ".join(lesson_info[1:3])
-                                classes = lesson_info[0]
-                            else:
-                                lesson_name = lesson_info[-2]
-                                classes = "/".join(lesson_info[:-2])
+                            classes = ""
+                            lesson_name = []
+                            for el in lesson_info[:-1:]:
+                                for grades in ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД']:
+                                    if grades in el:
+                                        classes += el
+                                        break
+                                else:
+                                    lesson_name.append(el)
+                            lesson_name = " ".join(lesson_name)
                             t += prepare_for_markdown(
                                 f'{lesson_name} - каб. {cabinet}\n(классы: {classes})\n')
                         if start <= (time_now.hour, time_now.minute) < end and not context.user_data['NEXT_DAY_TT']:
@@ -167,12 +171,16 @@ class GetTimetable:
                         for lesson_info in pre_lesson_info:
                             lesson_info = lesson_info.split('\n')
                             cabinet = lesson_info[-1]
-                            if "Олимпиадное" in lesson_info[1]:
-                                lesson_name = " ".join(lesson_info[1:3])
-                                classes = lesson_info[0]
-                            else:
-                                lesson_name = lesson_info[-2]
-                                classes = "/".join(lesson_info[:-2])
+                            classes = ""
+                            lesson_name = []
+                            for el in lesson_info[:-1:]:
+                                for grades in ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД']:
+                                    if grades in el:
+                                        classes += el
+                                        break
+                                else:
+                                    lesson_name.append(el)
+                            lesson_name = " ".join(lesson_name)
                             t += prepare_for_markdown(
                                 f'{lesson_name} - каб. {cabinet}\n(классы: {classes})\n')
                         t += '\n'
