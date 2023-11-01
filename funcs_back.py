@@ -34,8 +34,21 @@ def throttle(func):
     return wrapper
 
 
+def throttle2(func):
+    def wrapper(*args, **kwargs):
+        now_ = datetime.now()
+        last_time = args[2].user_data.get('last_time2')
+        if not last_time:
+            args[2].user_data['last_time2'] = now_
+            asyncio.gather(func(*args, **kwargs))
+        elif last_time + timedelta(seconds=0.5) <= now_:
+            args[2].user_data['last_time2'] = now_
+            asyncio.gather(func(*args, **kwargs))
+    return wrapper
+
+
 async def trottle_ans(*args, **kwargs):
-    await args[1].message.reply_text('🧨 Воу-воу, помедленнее! Ты Молния Маквин, что-ли?')
+    await args[1].message.reply_text('🧨 Пожалуйста, пишите помедленнее!')
 
 
 async def timetable_kbrd():
@@ -62,9 +75,21 @@ async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
     for user in all_users:
         try:
             if parse_mode:
-                await bot.send_message(user.chat_id, text, parse_mode='MarkdownV2')
+                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
             else:
-                await bot.send_message(user.chat_id, text)
+                await asyncio.gather(bot.send_message(user.chat_id, text))
+        except telegram.error.TelegramError:
+            pass
+
+
+async def write_admins(bot: telegram.Bot, text, parse_mode=None):
+    all_users = db_sess.query(User).filter(User.grade == "АДМИН").all()
+    for user in all_users:
+        try:
+            if parse_mode:
+                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
+            else:
+                await asyncio.gather(bot.send_message(user.chat_id, text))
         except telegram.error.TelegramError:
             pass
 
