@@ -35,9 +35,9 @@ logger = logging.getLogger(__name__)
 def main():
     # asyncio.gather(write_all(bot, '🔋Бот был перезапущен. Все диалоги сброшены. '
     #                                          'Необходимо использовать команду /start', all_=True))
-    asyncio.gather(extract_timetable_for_students_10_11())
-    asyncio.gather(extract_timetable_for_students_6_9())
-    asyncio.gather(extract_timetable_for_teachers())
+    #asyncio.gather(extract_timetable_for_students_10_11())
+    #asyncio.gather(extract_timetable_for_students_6_9())
+    #asyncio.gather(extract_timetable_for_teachers())
     application = Application.builder().token(BOT_TOKEN).build()
     # .post_init(post_init)
     # loop = asyncio.new_event_loop()
@@ -56,7 +56,8 @@ def main():
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_class)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_familia)],
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_name)],
-            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_psw)]
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_psw)],
+            5: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_third_name)]
         },
         fallbacks=[CommandHandler('end', start_dialog.end_setting)]
     )
@@ -66,7 +67,8 @@ def main():
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_class)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_familia)],
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_name)],
-            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_psw)]
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_psw)],
+            5: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_third_name)]
         },
         fallbacks=[CommandHandler('end_edit', edit_user_class.end_setting)]
     )

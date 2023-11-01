@@ -8,6 +8,7 @@ class SetTimetable:
     step_familia = 2
     step_name = 3
     step_pswrd = 4
+    step_third_name = 5
     classes = ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД']
 
     async def classes_buttons(self):
@@ -80,7 +81,20 @@ class SetTimetable:
 
     async def get_name(self, update, context):
         context.user_data['INFO']['Name'] = update.message.text
+        if context.user_data['INFO']['Class'] == 'АДМИН':
+            await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
+            return self.step_third_name
         put_to_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
+                  context.user_data['INFO']['Class'])
+        await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
+                                        reply_markup=await timetable_kbrd())
+        context.user_data['in_conversation'] = False
+        return ConversationHandler.END
+
+    async def get_third_name(self, update, context):
+        context.user_data['INFO']['Otchestvo'] = update.message.text
+        put_to_db(update, context.user_data['INFO']['Name'] + ' ' +
+                  context.user_data['INFO']['Otchestvo'], context.user_data['INFO']['Familia'],
                   context.user_data['INFO']['Class'])
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())

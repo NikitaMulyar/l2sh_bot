@@ -31,6 +31,10 @@ class Edit_User(SetTimetable):
         return self.step_familia
 
     async def get_name(self, update, context):
+        context.user_data['INFO']['Name'] = update.message.text
+        if context.user_data['INFO']['Class'] == 'АДМИН':
+            await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
+            return self.step_third_name
         user__id = update.message.from_user.id
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
         if user.grade != context.user_data['INFO']['Class']:
@@ -39,8 +43,26 @@ class Edit_User(SetTimetable):
                 db_sess.delete(extra_lesson)
             db_sess.commit()
             await update.message.reply_text('Вы поменяли класс, поэтому все настройки кружков сброшены')
-        context.user_data['INFO']['Name'] = update.message.text
         update_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
+                  context.user_data['INFO']['Class'])
+        await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
+                                        reply_markup=await timetable_kbrd())
+        context.user_data['in_conversation'] = False
+        return ConversationHandler.END
+
+    async def get_third_name(self, update, context):
+        context.user_data['INFO']['Otchestvo'] = update.message.text
+        user__id = update.message.from_user.id
+        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+        if user.grade != context.user_data['INFO']['Class']:
+            extra_lessons = db_sess.query(Extra_to_User).filter(
+                Extra_to_User.user_id == user__id).all()
+            for extra_lesson in extra_lessons:
+                db_sess.delete(extra_lesson)
+            db_sess.commit()
+            await update.message.reply_text('Вы поменяли класс, поэтому все настройки кружков сброшены')
+        update_db(update, context.user_data['INFO']['Name'] + ' ' +
+                  context.user_data['INFO']['Otchestvo'], context.user_data['INFO']['Familia'],
                   context.user_data['INFO']['Class'])
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
@@ -50,6 +72,6 @@ class Edit_User(SetTimetable):
     async def end_setting(self, update, context):
         context.user_data['in_conversation'] = False
         context.user_data['INFO'] = dict()
-        await update.message.reply_text(f'Настройка данных ученика сброшена. Начать сначала: /edit',
+        await update.message.reply_text(f'Изменение данных сброшено. Начать сначала: /edit',
                                         reply_markup=await timetable_kbrd())
         return ConversationHandler.END

@@ -82,6 +82,18 @@ async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
             pass
 
 
+async def write_admins(bot: telegram.Bot, text, parse_mode=None):
+    all_users = db_sess.query(User).filter(User.grade == "АДМИН").all()
+    for user in all_users:
+        try:
+            if parse_mode:
+                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
+            else:
+                await asyncio.gather(bot.send_message(user.chat_id, text))
+        except telegram.error.TelegramError:
+            pass
+
+
 async def extract_timetable_for_day_6_9(day, class_):
     df = pd.read_csv(path_to_timetables_csv + f'{class_}.csv')
     df = df.iloc[day].to_frame()

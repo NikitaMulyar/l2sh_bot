@@ -18,7 +18,7 @@ class MailTo:
         for i in self.parallels:
             btns.append(KeyboardButton(i))
 
-        kbd = ReplyKeyboardMarkup([btns, [KeyboardButton('Всем')]], resize_keyboard=True)
+        kbd = ReplyKeyboardMarkup([btns, [KeyboardButton('АДМИН')], [KeyboardButton('Всем')]], resize_keyboard=True)
         return kbd
 
     async def mailing_classes_kbrd(self, parallel):
@@ -59,12 +59,13 @@ class MailTo:
                                             'Начать сначала: /mailing')
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
-        await update.message.reply_text('Выберите параллель, к которой будет обращена рассылка:',
+        await update.message.reply_text('Выберите параллель, к которой будет обращена рассылка\n'
+                                        '⚠️Для рассылки учителям выберите "АДМИН":',
                                         reply_markup=await self.mailing_parallels_kbrd())
         return self.step_parallel
 
     async def get_parallel(self, update, context):
-        if update.message.text == 'Всем':
+        if update.message.text == 'Всем' or update.message.text == 'АДМИН':
             context.user_data['PARAL'] = update.message.text
             context.user_data['CLASS'] = update.message.text
             await update.message.reply_text('Напишите сообщение для рассылки:',
@@ -145,15 +146,18 @@ class MailTo:
         return self.step_attachments
 
     async def send_message(self, update, context):
-        all_users = db_sess.query(User).filter(User.grade != 'АДМИН').all()
         author = db_sess.query(User).filter(User.chat_id == update.message.chat.id).first()
-        if context.user_data['PARAL'] != 'Всем':
-            # context.user_data['PARAL'] in User.grade
-            all_users = (db_sess.query(User).
-                         filter(User.number == context.user_data['PARAL']).all())
-            if context.user_data['CLASS'] != 'Всем':
-                all_users = db_sess.query(User).filter(
-                    context.user_data['CLASS'] == User.grade).all()
+        if context.user_data['PARAL'] == 'АДМИН':
+            all_users = db_sess.query(User).filter(User.grade == 'АДМИН').all()
+        else:
+            all_users = db_sess.query(User).filter(User.grade != 'АДМИН').all()
+            if context.user_data['PARAL'] != 'Всем':
+                # context.user_data['PARAL'] in User.grade
+                all_users = (db_sess.query(User).
+                             filter(User.number == context.user_data['PARAL']).all())
+                if context.user_data['CLASS'] != 'Всем':
+                    all_users = db_sess.query(User).filter(
+                        context.user_data['CLASS'] == User.grade).all()
         mailbox_ = prepare_for_markdown('📬')
         mail_text = (mailbox_ + '*Новое сообщение\!*' + mailbox_ + prepare_for_markdown('\n\n') +
                      prepare_for_markdown(context.user_data['MESSAGE']) +
