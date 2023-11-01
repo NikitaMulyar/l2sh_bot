@@ -30,8 +30,7 @@ class Extra_Lessons:
                                     teacher = extra_lessons[k + l][j]
                                     break
                         day = days[j]
-                        if teacher == "Фёдоров К. Е.":
-                            teacher = "Федоров К. Е."
+                        teacher = teacher.replace('ё', 'е')
                         extra = Extra(title=title, time=time, day=day, teacher=teacher, place=place, grade=i + 6)
                         if not bool(db_sess.query(Extra).filter(Extra.title == title, Extra.grade == i + 6,
                                                                 Extra.day == day).first()):
@@ -52,7 +51,7 @@ class Extra_Lessons:
         user__id = update.message.from_user.id
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
         if user.grade == 'АДМИН':
-            await update.message.reply_text(f'⚠️У админов нет доступа к расписанию.')
+            await update.message.reply_text(f'Вы не можете записываться на кружки.')
             return
         await update.message.reply_text('🌟 Здесь Вы можете добавить кружки, которые хотели бы увидеть в '
                                         'своем расписании.\n'

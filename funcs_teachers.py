@@ -1,32 +1,13 @@
 # -*- coding: utf-8 -*-
-import asyncio
-
-import PyPDF2
-from consts import *
-import pandas as pd
-import pdfplumber
-import os
-import numpy as np
-from datetime import datetime
-from data import db_session
-import csv
 from funcs_back import *
+
 
 days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}
 
 
-# async def
-# path_pdf = 'teachers.pdf'
-# with pdfplumber.open(path_pdf) as pdf:
-#     page = pdf.pages[0]
-#     table = page.extract_table()
-#     df = pd.DataFrame(table[1:], columns=table[0])
-#     for i in df.columns.values:
-#         df[i].ffill(axis=0, inplace=True)
-#     print(df.to_string())
 async def extract_timetable_for_teachers():
     def get_all_teachers():
-        reader = PyPDF2.PdfReader("timetables/teachers.pdf")
+        reader = PyPDF2.PdfReader(f"{path_to_timetables}teachers.pdf")
         i = -1
         for page in reader.pages:
             i += 1
@@ -35,7 +16,7 @@ async def extract_timetable_for_teachers():
             yield " ".join(info[1:3]), i
 
     async def save_timetable_csv(full_name, page_n):
-        with pdfplumber.open("timetables/teachers.pdf") as pdf:
+        with pdfplumber.open(f"{path_to_timetables}teachers.pdf") as pdf:
             page = pdf.pages[page_n]
             table = page.extract_table()
             df = pd.DataFrame(table[1:], columns=table[0])
