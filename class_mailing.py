@@ -169,12 +169,16 @@ class MailTo:
             try:
                 if len(arr) >= 2:
                     await bot.send_media_group(user.chat_id, arr, caption=mail_text, parse_mode='MarkdownV2')
-                else:
+                elif len(arr) == 1:
                     await bot.send_document(user.chat_id, context.user_data['ATTACHMENTS'][0],
                                             caption=mail_text, parse_mode='MarkdownV2')
+                else:
+                    await bot.send_message(user.chat_id, mail_text, parse_mode='MarkdownV2')
             except Exception:
                 pass
         context.user_data['in_conversation'] = False
+        context.user_data['ATTACHMENTS'] = []
+        context.user_data['FILES_SIZE'] = 0
         p, c = context.user_data['PARAL'], context.user_data['CLASS']
         await update.message.reply_text(f'Сообщение:\n"{mail_text}"\n\nбыло отправлено в '
                                         f'параллель "{p}", класс: "{c}"', parse_mode='MarkdownV2')
