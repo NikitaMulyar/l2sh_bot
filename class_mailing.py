@@ -150,7 +150,7 @@ class MailTo:
         if context.user_data['PARAL'] == 'АДМИН':
             all_users = db_sess.query(User).filter(User.grade == 'АДМИН').all()
         else:
-            all_users = db_sess.query(User).filter(User.grade != 'АДМИН').all()
+            all_users = db_sess.query(User).all()
             if context.user_data['PARAL'] != 'Всем':
                 # context.user_data['PARAL'] in User.grade
                 all_users = (db_sess.query(User).
@@ -176,7 +176,6 @@ class MailTo:
                     await bot.send_message(user.chat_id, mail_text, parse_mode='MarkdownV2')
             except Exception:
                 pass
-        context.user_data['in_conversation'] = False
         context.user_data['ATTACHMENTS'] = []
         context.user_data['FILES_SIZE'] = 0
         p, c = context.user_data['PARAL'], context.user_data['CLASS']
@@ -184,6 +183,7 @@ class MailTo:
                                         f'параллель "{p}", класс: "{c}"', parse_mode='MarkdownV2')
         await update.message.reply_text('Настройка рассылки окончена. Начать сначала: /mail',
                                         reply_markup=await timetable_kbrd())
+        context.user_data['in_conversation'] = False
         return ConversationHandler.END
 
     async def end_mailing(self, update, context):

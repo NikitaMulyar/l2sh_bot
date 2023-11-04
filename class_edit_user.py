@@ -70,8 +70,8 @@ class Edit_User(SetTimetable):
         return ConversationHandler.END
 
     async def end_setting(self, update, context):
-        context.user_data['in_conversation'] = False
-        context.user_data['INFO'] = dict()
         await update.message.reply_text(f'Изменение данных сброшено. Начать сначала: /edit',
                                         reply_markup=await timetable_kbrd())
+        context.user_data['in_conversation'] = False
+        context.user_data['INFO'] = dict()
         return ConversationHandler.END
