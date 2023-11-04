@@ -54,11 +54,13 @@ class LoadTimetables:
         #await write_all(bot, prepare_for_markdown('❕') + '_*Бот будет недоступен в течение 1-2 минут\.*_\n' +
         #                prepare_for_markdown(f"Производится загрузка нового расписания для {context.user_data['filename']} класса."),
         #                parse_mode='MarkdownV2')
+        if context.user_data['filename'] == 'Учителя':
+            context.user_data['filename'] = 'teachers'
         await file_info.download_to_drive(path_to_timetables +
                                           f"{context.user_data['filename']}.pdf")
         if context.user_data['filename'] == '6-9':
             await extract_timetable_for_students_6_9()
-        elif context.user_data['filename'] == 'Учителя':
+        elif context.user_data['filename'] == 'teachers':
             await extract_timetable_for_teachers()
             context.user_data['FILE_UPLOADED2'] = True
         else:
@@ -71,6 +73,7 @@ class LoadTimetables:
         return self.step_class
 
     async def end_setting(self, update, context):
+        fl1 = 0
         if context.user_data.get('FILE_UPLOADED2'):
             await write_admins(bot, prepare_for_markdown('❗️') + '_*Уважаемые учителя\!*_' +
                             prepare_for_markdown(
@@ -79,14 +82,16 @@ class LoadTimetables:
             await update.message.reply_text(
                 'Загрузка расписаний завершена. Проведена рассылка всем админам об обновлении расписаний. Начать сначала: /load',
                 reply_markup=await timetable_kbrd())
-        elif context.user_data.get('FILE_UPLOADED'):
+            fl1 += 1
+        if context.user_data.get('FILE_UPLOADED'):
             await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
                             prepare_for_markdown('\nОбновлены расписания. Пожалуйста, проверьте ваше расписание!'),
                             parse_mode='MarkdownV2', all_=True)
             await update.message.reply_text(
                 'Загрузка расписаний завершена. Проведена рассылка всем ученикам об обновлении расписаний. Начать сначала: /load',
                 reply_markup=await timetable_kbrd())
-        else:
+            fl1 += 1
+        if fl1 == 0:
             await update.message.reply_text('Загрузка расписаний завершена. Начать сначала: /load', reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['FILE_UPLOADED'] = False
