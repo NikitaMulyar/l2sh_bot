@@ -78,7 +78,7 @@ class GetTimetable:
                                             df.iloc[j]['Замены кабинетов'],
                                             df.iloc[j]['Урок по расписанию']])  # Изменения кабинетов, длина 4
                     sorted_res = sorted(res, key=lambda x: x[1])
-                    text = '_' + prepare_for_markdown(df.columns.values[-1]) + '_\n'
+                    text = '_' + prepare_for_markdown(df.columns.values[-1]) + '_\n\n'
                     flag = False
                     for line in sorted_res:
                         flag = True

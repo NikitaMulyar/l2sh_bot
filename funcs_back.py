@@ -247,15 +247,48 @@ async def save_edits_in_timetable_csv(date):
     # filename format: DD.MM.YYYY
     path_ = path_to_changes + date + '.pdf'
     dfs = []
-    cabs = ['Класс', 'Урок №', 'Урок по расписанию', 'Замены кабинетов']
-    lessons = ['Класс', 'Урок №', 'Урок по расписанию', 'Замены']
+    cabs = ['Урок №', 'Класс', 'Урок по расписанию', 'Замены кабинетов']
+    lessons = ['Урок №', 'Класс', 'Урок по расписанию', 'Замены']
+    cabs2 = ['Класс', 'Урок №', 'Урок по расписанию', 'Замены кабинетов']
+    lessons2 = ['Класс', 'Урок №', 'Урок по расписанию', 'Замены']
     fl_first_time = True
     are_working_with_cabs = False
     with pdfplumber.open(path_) as pdf:
         tables = []
         for page in pdf.pages:
             t = page.extract_tables()
-            if len(t) == 1:
+            t2 = []
+            for i in range(len(t)):
+                arr = []
+                for j in range(len(t[i])):
+                    cnt = 0
+                    flag = False
+                    for el in t[i][j]:
+                        if not el:
+                            cnt += 1
+                        if el and 'Изменения' in el:
+                            flag = True
+                    if cnt == 5 and arr and all([isinstance(Q, str) and not Q for Q in t[i][j]]):
+                        t2.append(arr)
+                        arr = []
+                        continue
+                    elif cnt == 4 and flag:
+                        continue
+                    else:
+                        if t[i][j][1] or t[i][j][3] and 'Предмет' == t[i][j][3]:
+                            arr.append(t[i][j])
+                        else:
+                            for el in range(len(t[i][j])):
+                                if t[i][j][el]:
+                                    arr[-1][el] += '\n' + t[i][j][el]
+            if arr:
+                t2.append(arr)
+            if t2:
+                if len(t2) == 1:
+                    tables.append(t2[0])
+                else:
+                    tables.extend(t2)
+            elif len(t) == 1:
                 tables.append(t[0])
             elif len(t) > 1:
                 tables.extend(t)
@@ -264,6 +297,7 @@ async def save_edits_in_timetable_csv(date):
                 continue
                 # какие-то беды с парсингом
             df = pd.DataFrame(table[1:], columns=table[0])
+            df.dropna(how='all', axis=1, inplace=True)
             df = df.fillna('')
             df = df.rename(columns={None: 'Замена2', 'Замена': 'Замены',
                                     'Замена кабинета': 'Замены кабинетов',
@@ -289,11 +323,11 @@ async def save_edits_in_timetable_csv(date):
             fl_cabs = False
             fl_lessons = False
             for i in range(len(cabs)):
-                if cabs[i] != df.columns.values[i]:
+                if cabs[i] != df.columns.values[i] and df.columns.values[i] != cabs2[i]:
                     fl_cabs = True
                     break
             for i in range(len(lessons)):
-                if lessons[i] != df.columns.values[i]:
+                if lessons[i] != df.columns.values[i] and df.columns.values[i] != lessons2[i]:
                     fl_lessons = True
                     break
             if fl_lessons and fl_cabs and not are_working_with_cabs:
@@ -357,6 +391,7 @@ async def save_edits_in_timetable_csv(date):
                 last = dfs[-1].index.values[-1]
                 for ind in df.index.values:
                     df = df.rename(index={ind: last + ind + 1})
+                dfs[-1] = pd.concat([dfs[-1], df], axis='rows')
             else:
                 indexes = df.index.values
                 if 'Замены' in df.columns.values:
@@ -402,6 +437,14 @@ async def save_edits_in_timetable_csv(date):
                                 df.loc[curr_ind] = [classes[i], urok_num[i], urok_po_rasp[i], zameny[i]]
                                 curr_ind += 1
                 dfs.append(df)
+    try:
+        os.remove(path_to_changes + f'{date}_lessons.csv')
+    except Exception:
+        pass
+    try:
+        os.remove(path_to_changes + f'{date}_cabinets.csv')
+    except Exception:
+        pass
     for i in range(len(dfs)):
         dfs[i] = dfs[i].sort_values(['Урок №'])
         name = 'cabinets'
