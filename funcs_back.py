@@ -254,33 +254,59 @@ async def save_edits_in_timetable_csv(date):
     fl_first_time = True
     are_working_with_cabs = False
     with pdfplumber.open(path_) as pdf:
-        tables = []
-        for page in pdf.pages:
-            t = page.extract_tables()
+        try:
+            tables = []
+            t = []
+            for page in pdf.pages:
+                t2 = page.extract_tables()
+                t.extend(t2[0])
+            arr = []
             t2 = []
-            for i in range(len(t)):
-                arr = []
-                for j in range(len(t[i])):
-                    cnt = 0
-                    flag = False
-                    for el in t[i][j]:
-                        if not el:
-                            cnt += 1
-                        if el and 'Изменения' in el:
-                            flag = True
-                    if cnt == 5 and arr and all([isinstance(Q, str) and not Q for Q in t[i][j]]):
-                        t2.append(arr)
-                        arr = []
-                        continue
-                    elif cnt == 4 and flag:
-                        continue
+            flag_started_lesson = False
+            flag_was_space_str = False
+            days = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
+            for j in range(len(t)):
+                cnt = 0
+                flag = False
+                for el in t[j]:
+                    if not el:
+                        cnt += 1
+                    if el and ('Изменения' in el or any([ddd in el for ddd in days])):
+                        flag = True
+                    if isinstance(el, str) and not el:
+                        flag_was_space_str = True
+                if cnt == 5 and arr and all(
+                        [isinstance(Q, str) and not Q for Q in t[j]]):
+                    t2.append(arr)
+                    arr = []
+                    continue
+                elif flag:
+                    continue
+                else:
+                    if t[j][1] and not flag_started_lesson or t[j][3] and 'Предмет' == t[j][3]:
+                        tmp = t[j]
+                        for i in range(len(tmp)):
+                            if tmp[i]:
+                                tmp[i] = tmp[i].strip(' ').strip('\n').strip(' ').strip('\n')
+                        arr.append(tmp)
+                    elif t[j][0] and all([isinstance(Q, str) and not Q for Q in t[j][1:]]):
+                        tmp = t[j]
+                        for i in range(len(tmp)):
+                            if tmp[i]:
+                                tmp[i] = tmp[i].strip(' ').strip('\n').strip(' ').strip('\n')
+                        arr.append(tmp)
+                        flag_started_lesson = True
                     else:
-                        if t[i][j][1] or t[i][j][3] and 'Предмет' == t[i][j][3]:
-                            arr.append(t[i][j])
-                        else:
-                            for el in range(len(t[i][j])):
-                                if t[i][j][el]:
-                                    arr[-1][el] += '\n' + t[i][j][el]
+                        for el in range(len(t[j])):
+                            if t[j][el]:
+                                try:
+                                    arr[-1][el] += '\n' + t[j][el]
+                                    arr[-1][el] = arr[-1][el].strip(' ').strip('\n').strip(' ').strip('\n')
+                                except Exception:
+                                    print(j, el)
+                        flag_started_lesson = False
+            if not flag_was_space_str:
+                raise Exception
             if arr:
                 t2.append(arr)
             if t2:
@@ -292,6 +318,15 @@ async def save_edits_in_timetable_csv(date):
                 tables.append(t[0])
             elif len(t) > 1:
                 tables.extend(t)
+        except Exception as e:
+            print(e)
+            tables = []
+            for page in pdf.pages:
+                t = page.extract_tables()
+                if len(t) == 1:
+                    tables.append(t[0])
+                elif len(t) > 1:
+                    tables.extend(t)
         for table in tables:
             if len(table[0]) < 3:
                 continue
