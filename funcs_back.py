@@ -281,7 +281,10 @@ async def save_edits_in_timetable_csv(date):
                     arr = []
                     continue
                 elif flag:
-                    continue
+                    if arr:
+                        t2.append(arr)
+                        arr = []
+                        continue
                 else:
                     if t[j][1] and not flag_started_lesson or t[j][3] and 'Предмет' == t[j][3]:
                         tmp = t[j]
