@@ -176,18 +176,19 @@ class MailTo:
                 else:
                     await bot.send_message(user.chat_id, mail_text, parse_mode='MarkdownV2')
             except Exception as e:
-                if e not in didnt_send:
-                    didnt_send[e] = 1
+                if e.__str__() not in didnt_send:
+                    didnt_send[e.__str__()] = 1
                 else:
-                    didnt_send[e] += 1
+                    didnt_send[e.__str__()] += 1
                 continue
         context.user_data['ATTACHMENTS'] = []
         context.user_data['FILES_SIZE'] = 0
         p, c = context.user_data['PARAL'], context.user_data['CLASS']
+        t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])
         try:
             await update.message.reply_text(prepare_for_markdown(f'Сообщение:\n') + mail_text +
                                             prepare_for_markdown(f'\n\nбыло отправлено в параллель "{p}", класс: "{c}"'), parse_mode='MarkdownV2')
-            await update.message.reply_text('Настройка рассылки окончена. Начать сначала: /mail',
+            await update.message.reply_text(f'Настройка рассылки окончена.\n{t}\nНачать сначала: /mail',
                                             reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
