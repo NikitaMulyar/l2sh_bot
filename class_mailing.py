@@ -101,7 +101,6 @@ class MailTo:
 
     async def get_text(self, update, context):
         context.user_data['MESSAGE'] = update.message.text_markdown_v2
-        print(update.message.text_markdown_v2)
         text_ = 'Прикрепите вложения по желанию\.\n*⚠️Инструкция по прикреплению файлов*\n' + \
             prepare_for_markdown('1. Суммарный размер файлов не может превышать 10МБ.\n'
                                  '2. Можно прикрепить не более 10 файлов (если будет отправлено более '
@@ -161,7 +160,7 @@ class MailTo:
                         context.user_data['CLASS'] == User.grade).all()
         mailbox_ = prepare_for_markdown('📬')
         mail_text = (mailbox_ + '*Новое сообщение\!*' + mailbox_ + prepare_for_markdown('\n\n') +
-                     prepare_for_markdown(context.user_data['MESSAGE']) +
+                     context.user_data['MESSAGE'] +
                      prepare_for_markdown(f'\n\nОт {author.surname} {author.name}, {author.grade}'))
         arr = []
         for file in context.user_data['ATTACHMENTS']:
