@@ -163,6 +163,7 @@ class MailTo:
                      context.user_data['MESSAGE'] +
                      prepare_for_markdown(f'\n\nОт {author.surname} {author.name}, {author.grade}'))
         arr = []
+        didnt_send = {}
         for file in context.user_data['ATTACHMENTS']:
             arr.append(telegram.InputMediaDocument(media=file))
         for user in all_users:
@@ -174,17 +175,25 @@ class MailTo:
                                             caption=mail_text, parse_mode='MarkdownV2')
                 else:
                     await bot.send_message(user.chat_id, mail_text, parse_mode='MarkdownV2')
-            except Exception:
-                pass
+            except Exception as e:
+                if e not in didnt_send:
+                    didnt_send[e] = 1
+                else:
+                    didnt_send[e] += 1
+                continue
         context.user_data['ATTACHMENTS'] = []
         context.user_data['FILES_SIZE'] = 0
         p, c = context.user_data['PARAL'], context.user_data['CLASS']
-        await update.message.reply_text(f'Сообщение:\n"{mail_text}"\n\nбыло отправлено в '
-                                        f'параллель "{p}", класс: "{c}"', parse_mode='MarkdownV2')
-        await update.message.reply_text('Настройка рассылки окончена. Начать сначала: /mail',
-                                        reply_markup=await timetable_kbrd())
-        context.user_data['in_conversation'] = False
-        return ConversationHandler.END
+        try:
+            await update.message.reply_text(prepare_for_markdown(f'Сообщение:\n') + mail_text +
+                                            prepare_for_markdown(f'\n\nбыло отправлено в параллель "{p}", класс: "{c}"'), parse_mode='MarkdownV2')
+            await update.message.reply_text('Настройка рассылки окончена. Начать сначала: /mail',
+                                            reply_markup=await timetable_kbrd())
+            context.user_data['in_conversation'] = False
+            return ConversationHandler.END
+        except Exception as e:
+            await update.message.reply_text(f'Ошибка: {e}. Попробуйте исправить текст и отправьте его заново. ❗️НЕЛЬЗЯ использовать нижнее подчеркивание и зачеркивание!')
+            return self.step_text
 
     async def end_mailing(self, update, context):
         await update.message.reply_text('Настройка рассылки прервана. Начать сначала: /mail',
