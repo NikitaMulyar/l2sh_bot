@@ -247,93 +247,73 @@ async def save_edits_in_timetable_csv(date):
     # filename format: DD.MM.YYYY
     path_ = path_to_changes + date + '.pdf'
     dfs = []
-    cabs = ['Урок №', 'Класс', 'Урок по расписанию', 'Замены кабинетов']
-    lessons = ['Урок №', 'Класс', 'Урок по расписанию', 'Замены']
-    cabs2 = ['Класс', 'Урок №', 'Урок по расписанию', 'Замены кабинетов']
-    lessons2 = ['Класс', 'Урок №', 'Урок по расписанию', 'Замены']
     fl_first_time = True
-    are_working_with_cabs = False
     with pdfplumber.open(path_) as pdf:
-        try:
-            tables = []
-            t = []
-            for page in pdf.pages:
-                t2 = page.extract_tables()
-                t.extend(t2[0])
-            arr = []
-            t2 = []
-            flag_started_lesson = False
-            flag_was_space_str = False
-            days = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
-            for j in range(len(t)):
-                cnt = 0
-                flag = False
-                for el in t[j]:
-                    if not el:
-                        cnt += 1
-                    if el and ('Изменения' in el or any([ddd in el for ddd in days])):
-                        flag = True
-                    if isinstance(el, str) and not el:
-                        flag_was_space_str = True
-                if cnt == 5 and arr and all(
-                        [isinstance(Q, str) and not Q for Q in t[j]]):
+        tables = []
+        t = []
+        for page in pdf.pages:
+            t2 = page.extract_tables()
+            t.extend(t2[0])
+        arr = []
+        t2 = []
+        flag_started_lesson = False
+        days = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
+        for j in range(len(t)):
+            cnt = 0
+            flag = False
+            for el in t[j]:
+                if not el:
+                    cnt += 1
+                if el and ('Изменения' in el or any([ddd in el for ddd in days])):
+                    flag = True
+            if cnt == 5 and arr and all(
+                    [isinstance(Q, str) and not Q for Q in t[j]]):
+                t2.append(arr)
+                arr = []
+                continue
+            elif flag:
+                if arr:
                     t2.append(arr)
                     arr = []
                     continue
-                elif flag:
-                    if arr:
-                        t2.append(arr)
-                        arr = []
-                        continue
+            else:
+                if t[j][1] and not flag_started_lesson or 'Предмет' == t[j][3]:
+                    tmp = t[j]
+                    if 'Замен' in tmp[3] and tmp[4] is not None:
+                        tmp[3] += tmp[4]
+                        tmp[4] = None
+                    for i in range(len(tmp)):
+                        if tmp[i]:
+                            tmp[i] = tmp[i].strip(' ').strip('\n').strip(' ').strip('\n')
+                    arr.append(tmp)
+                elif t[j][0] and all([isinstance(Q, str) and not Q for Q in t[j][1:]]):
+                    tmp = t[j]
+                    for i in range(len(tmp)):
+                        if tmp[i]:
+                            tmp[i] = tmp[i].strip(' ').strip('\n').strip(' ').strip('\n')
+                    arr.append(tmp)
+                    flag_started_lesson = True
                 else:
-                    if t[j][1] and not flag_started_lesson or t[j][3] and 'Предмет' == t[j][3]:
-                        tmp = t[j]
-                        for i in range(len(tmp)):
-                            if tmp[i]:
-                                tmp[i] = tmp[i].strip(' ').strip('\n').strip(' ').strip('\n')
-                        arr.append(tmp)
-                    elif t[j][0] and all([isinstance(Q, str) and not Q for Q in t[j][1:]]):
-                        tmp = t[j]
-                        for i in range(len(tmp)):
-                            if tmp[i]:
-                                tmp[i] = tmp[i].strip(' ').strip('\n').strip(' ').strip('\n')
-                        arr.append(tmp)
-                        flag_started_lesson = True
-                    else:
-                        for el in range(len(t[j])):
-                            if t[j][el]:
-                                try:
-                                    arr[-1][el] += '\n' + t[j][el]
-                                    arr[-1][el] = arr[-1][el].strip(' ').strip('\n').strip(' ').strip('\n')
-                                except Exception:
-                                    print(j, el)
-                        flag_started_lesson = False
-            if not flag_was_space_str:
-                raise Exception
-            if arr:
-                t2.append(arr)
-            if t2:
-                if len(t2) == 1:
-                    tables.append(t2[0])
-                else:
-                    tables.extend(t2)
-            elif len(t) == 1:
-                tables.append(t[0])
-            elif len(t) > 1:
-                tables.extend(t)
-        except Exception as e:
-            print(e)
-            tables = []
-            for page in pdf.pages:
-                t = page.extract_tables()
-                if len(t) == 1:
-                    tables.append(t[0])
-                elif len(t) > 1:
-                    tables.extend(t)
+                    for el in range(len(t[j])):
+                        if t[j][el]:
+                            try:
+                                arr[-1][el] += '\n' + t[j][el]
+                                arr[-1][el] = arr[-1][el].strip(' ').strip('\n').strip(' ').strip('\n')
+                            except Exception:
+                                print(j, el)
+                    flag_started_lesson = False
+        if arr:
+            t2.append(arr)
+        if t2:
+            if len(t2) == 1:
+                tables.append(t2[0])
+            else:
+                tables.extend(t2)
+        elif len(t) == 1:
+            tables.append(t[0])
+        elif len(t) > 1:
+            tables.extend(t)
         for table in tables:
-            if len(table[0]) < 3:
-                continue
-                # какие-то беды с парсингом
             df = pd.DataFrame(table[1:], columns=table[0])
             df.dropna(how='all', axis=1, inplace=True)
             df = df.fillna('')
@@ -345,43 +325,27 @@ async def save_edits_in_timetable_csv(date):
                                     'Замена\nкабинета': 'Замены кабинетов',
                                     'Урок по\nрасписанию': 'Урок по расписанию',
                                     'Урок и кабинет по\nрасписанию': 'Урок по расписанию',
-                                    'Урок и кабинет\nпо расписанию': 'Урок по расписанию'})
+                                    'Урок и кабинет\nпо расписанию': 'Урок по расписанию',
+                                    'None': 'Замена2'})
+            cols_vals = df.columns.values
             if fl_first_time:
-                cols_vals = df.columns.values
                 if 'Замена2' in cols_vals:
                     df['Замены'] = df['Замены'] + '//' + df['Замена2']
                     df.drop('Замена2', axis=1, inplace=True)
                 elif 'Замены' in cols_vals:
                     df['Замены'] = df['Замены'] + '//'
                 fl_first_time = False
-            if "Замены кабинетов" in df.columns.values:
-                are_working_with_cabs = True
+            if "Замены кабинетов" in cols_vals:
+                if 'Замена2' in cols_vals:
+                    df['Замены кабинетов'] = df['Замены кабинетов'] + df['Замена2']
+                    df = df.rename(columns={'Замена2': None})
+                    df[None] = ''
+                    df.drop(labels=[None], axis=1, inplace=True)
                 for k in range(len(table)):
                     if table[k].count(None) == 2:
                         table[k] = [table[k][0], '', '', table[k][1]]
-            fl_cabs = False
-            fl_lessons = False
-            for i in range(len(cabs)):
-                if cabs[i] != df.columns.values[i] and df.columns.values[i] != cabs2[i]:
-                    fl_cabs = True
-                    break
-            for i in range(len(lessons)):
-                if lessons[i] != df.columns.values[i] and df.columns.values[i] != lessons2[i]:
-                    fl_lessons = True
-                    break
-            if fl_lessons and fl_cabs and not are_working_with_cabs:
-                for k in range(len(table)):
-                    if len(table[k]) == 5:
-                        table[k] = table[k][:3] + ["//".join(table[k][3:])]
-                    else:
-                        table[k] = table[k][:3] + [table[k][3] + "//"]
-                df = pd.DataFrame(table, columns=list(dfs[-1].columns.values))
-                df = df.fillna('')
-                last = dfs[-1].index.values[-1]
-                for ind in df.index.values:
-                    df = df.rename(index={ind: last + ind + 1})
-                # Далее: если формат такой, какой был 19.10.2023
-                indexes = df.index.values
+            indexes = df.index.values
+            if 'Замены' in df.columns.values:
                 curr_ind = indexes[-1] + 1
                 for line in indexes:
                     if line == 0:
@@ -423,59 +387,7 @@ async def save_edits_in_timetable_csv(date):
                         for i in range(1, len(urok_num)):
                             df.loc[curr_ind] = [classes[i], urok_num[i], urok_po_rasp[i], zameny[i]]
                             curr_ind += 1
-                dfs[-1] = pd.concat([dfs[-1], df], axis='rows')
-            elif fl_lessons and fl_cabs and are_working_with_cabs:
-                df = pd.DataFrame(table, columns=list(dfs[-1].columns.values))
-                df = df.fillna('')
-                last = dfs[-1].index.values[-1]
-                for ind in df.index.values:
-                    df = df.rename(index={ind: last + ind + 1})
-                dfs[-1] = pd.concat([dfs[-1], df], axis='rows')
-            else:
-                indexes = df.index.values
-                if 'Замены' in df.columns.values:
-                    curr_ind = indexes[-1] + 1
-                    for line in indexes:
-                        if line == 0:
-                            continue
-                        classes = df.loc[line]['Класс'].split('\n')
-                        urok_num = df.loc[line]['Урок №'].split('\n')
-                        urok_po_rasp = df.loc[line]['Урок по расписанию'].split('\n')
-                        zameny = df.loc[line]['Замены'].split('\n')
-                        summ = 0
-                        for i in ['6', '7', '8', '9', '10', '11']:
-                            for cl in classes:
-                                summ += cl.count(i)
-                        if summ > 1:
-                            urok_num = urok_num * summ
-                            zameny = zameny * summ
-                            df.at[line, 'Класс'] = classes[0]
-                            df.at[line, 'Урок по расписанию'] = urok_po_rasp[0]
-                            df.at[line, 'Урок №'] = urok_num[0]
-                            df.at[line, 'Замены'] = zameny[0]
-                            for i in range(1, summ):
-                                df.loc[curr_ind] = [classes[i], urok_num[i], urok_po_rasp[i], zameny[i]]
-                                curr_ind += 1
-                        elif len(urok_num) != 1:
-                            classes = classes * len(urok_num)
-                            zameny_ = "\n".join(zameny)
-                            lesson, teacher_ = zameny_.split('//')
-                            lesson = lesson.split('\n')
-                            teacher_ = teacher_.split('\n')
-                            teacher = []
-                            zameny = []
-                            for i in range(0, len(teacher_), 2):
-                                teacher.append(f"{teacher_[i]}\n{teacher_[i + 1]}")
-                            for i in range(len(urok_num)):
-                                zameny.append(f"{lesson[i]}//{teacher[i]}")
-                            df.at[line, 'Класс'] = classes[0]
-                            df.at[line, 'Урок по расписанию'] = urok_po_rasp[0]
-                            df.at[line, 'Урок №'] = urok_num[0]
-                            df.at[line, 'Замены'] = zameny[0]
-                            for i in range(1, len(urok_num)):
-                                df.loc[curr_ind] = [classes[i], urok_num[i], urok_po_rasp[i], zameny[i]]
-                                curr_ind += 1
-                dfs.append(df)
+            dfs.append(df)
     try:
         os.remove(path_to_changes + f'{date}_lessons.csv')
     except Exception:
