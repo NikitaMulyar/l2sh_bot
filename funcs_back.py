@@ -279,6 +279,8 @@ async def save_edits_in_timetable_csv(date):
             else:
                 if t[j][1] and not flag_started_lesson or 'Предмет' == t[j][3]:
                     tmp = t[j]
+                    while len(tmp) != 5:
+                        tmp.append(None)
                     if 'Замен' in tmp[3] and tmp[4] is not None:
                         tmp[3] += tmp[4]
                         tmp[4] = None
