@@ -54,7 +54,7 @@ class MailTo:
         return self.step_pswrd
 
     async def get_psw(self, update, context):
-        if update.message.text != password:
+        if my_hash(update.message.text) != password_hash:
             await update.message.reply_text('Неверный пароль. Настройка рассылки прервана. '
                                             'Начать сначала: /mailing')
             context.user_data['in_conversation'] = False

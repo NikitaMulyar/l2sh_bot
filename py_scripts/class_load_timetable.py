@@ -31,7 +31,7 @@ class LoadTimetables:
         return self.step_pswrd
 
     async def get_pswrd(self, update, context):
-        if update.message.text != password:
+        if my_hash(update.message.text) != password_hash:
             await update.message.reply_text('Неверный пароль. Загрузка расписаний прервана. '
                                             'Начать сначала: /load')
             context.user_data['in_conversation'] = False
@@ -203,7 +203,7 @@ class LoadEditsTT:
         return self.step_pswrd
 
     async def get_pswrd(self, update, context):
-        if update.message.text != password:
+        if my_hash(update.message.text) != password_hash:
             await update.message.reply_text('Неверный пароль. Загрузка изменений прервана. '
                                             'Начать сначала: /changes',
                                             reply_markup=await timetable_kbrd())
