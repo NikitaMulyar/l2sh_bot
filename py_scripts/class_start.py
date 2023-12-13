@@ -1,6 +1,6 @@
 from telegram.ext import ConversationHandler
 from telegram import ReplyKeyboardRemove
-from funcs_back import *
+from py_scripts.funcs_back import *
 
 
 class SetTimetable:
@@ -64,7 +64,7 @@ class SetTimetable:
         return self.step_familia
 
     async def get_psw(self, update, context):
-        if hash(update.message.text) != password_hash:
+        if my_hash(update.message.text) != password_hash:
             await update.message.reply_text('Неверный пароль. Настройка данных прервана. '
                                             'Начать сначала: /start',
                                             reply_markup=await timetable_kbrd())

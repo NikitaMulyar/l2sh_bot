@@ -1,6 +1,5 @@
-from funcs_back import *
 from telegram.ext import ConversationHandler
-from funcs_teachers import *
+from py_scripts.funcs_teachers import *
 
 
 class GetTimetable:
@@ -327,6 +326,7 @@ class GetTimetable:
                     t = title + '_' + prepare_for_markdown('⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
                 else:
                     t = title + '\n' + t + edits_text
+                print(t)
                 await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
             elif (not context.user_data.get('EXTRA_CLICKED') and
                   update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):

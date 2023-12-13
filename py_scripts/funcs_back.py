@@ -12,9 +12,11 @@ import string
 from config import *
 import numpy as np
 import asyncio
+import os
+from py_scripts.consts import *
 
 
-db_session.global_init("../database/telegram_bot.db")
+db_session.global_init("database/telegram_bot.db")
 bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
 

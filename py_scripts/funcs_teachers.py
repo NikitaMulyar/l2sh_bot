@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from funcs_back import *
+from py_scripts.funcs_back import *
 
 
 days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}

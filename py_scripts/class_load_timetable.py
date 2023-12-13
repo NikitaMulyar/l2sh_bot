@@ -1,7 +1,7 @@
 from telegram.ext import ConversationHandler
-from funcs_back import *
+from py_scripts.funcs_back import *
 from timetables_csv import *
-from funcs_teachers import *
+from py_scripts.funcs_teachers import *
 
 
 class LoadTimetables:

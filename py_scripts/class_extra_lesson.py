@@ -1,6 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
-from funcs_back import *
+from py_scripts.funcs_back import *
 from sqlalchemy_scripts.user_to_extra import *
 
 
@@ -10,7 +10,7 @@ class Extra_Lessons:
         self.count = {}
         for i in range(6):
             counter = 0
-            extra_lessons = pd.read_excel('extra.xlsx', sheet_name=i, usecols=[2, 4, 6, 8, 10, 12]).values
+            extra_lessons = pd.read_excel('data/extra.xlsx', sheet_name=i, usecols=[2, 4, 6, 8, 10, 12]).values
             length = len(extra_lessons)
             for j in range(6):
                 k = 1

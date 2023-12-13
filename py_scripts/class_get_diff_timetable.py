@@ -1,4 +1,4 @@
-from funcs_back import *
+from py_scripts.funcs_back import *
 from telegram.ext import ConversationHandler
 
 
