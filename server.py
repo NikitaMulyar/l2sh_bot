@@ -1,15 +1,13 @@
-import asyncio
 import logging
 from telegram.ext import Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler
-from class_timetable import *
-from class_edit_user import *
-from class_mailing import *
-from class_start import *
-from class_load_timetable import *
-from classes_support_profile import *
-from class_extra_lesson import *
-from timetables_csv import *
-from class_get_diff_timetable import *
+from py_scripts.class_timetable import *
+from py_scripts.class_edit_user import *
+from py_scripts.class_mailing import *
+from py_scripts.class_start import *
+from py_scripts.class_load_timetable import *
+from py_scripts.classes_support_profile import *
+from py_scripts.class_extra_lesson import *
+from py_scripts.class_get_diff_timetable import *
 
 
 try:

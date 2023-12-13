@@ -2,10 +2,10 @@
 import pandas as pd
 import telegram
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Bot
-from data.user_to_extra import Extra_to_User
-from data.extra_lessons import Extra
-from data import db_session
-from data.users import User
+from sqlalchemy.user_to_extra import Extra_to_User
+from sqlalchemy.extra_lessons import Extra
+from sqlalchemy import db_session
+from sqlalchemy.users import User
 from datetime import datetime, timedelta
 from timetables_csv import *
 import string
@@ -14,7 +14,7 @@ import numpy as np
 import asyncio
 
 
-db_session.global_init("database/telegram_bot.db")
+db_session.global_init("../database/telegram_bot.db")
 bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
 

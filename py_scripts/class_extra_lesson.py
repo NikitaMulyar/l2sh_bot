@@ -1,7 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
 from funcs_back import *
-from data.user_to_extra import *
+from sqlalchemy.user_to_extra import *
 
 
 class Extra_Lessons:
