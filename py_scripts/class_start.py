@@ -64,7 +64,7 @@ class SetTimetable:
         return self.step_familia
 
     async def get_psw(self, update, context):
-        if update.message.text != password:
+        if hash(update.message.text) != password_hash:
             await update.message.reply_text('Неверный пароль. Настройка данных прервана. '
                                             'Начать сначала: /start',
                                             reply_markup=await timetable_kbrd())

@@ -2,10 +2,10 @@
 import pandas as pd
 import telegram
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Bot
-from sqlalchemy.user_to_extra import Extra_to_User
-from sqlalchemy.extra_lessons import Extra
-from sqlalchemy import db_session
-from sqlalchemy.users import User
+from sqlalchemy_scripts.user_to_extra import Extra_to_User
+from sqlalchemy_scripts.extra_lessons import Extra
+from sqlalchemy_scripts import db_session
+from sqlalchemy_scripts.users import User
 from datetime import datetime, timedelta
 from timetables_csv import *
 import string

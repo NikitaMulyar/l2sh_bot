@@ -21,7 +21,7 @@ class Edit_User(SetTimetable):
             return ConversationHandler.END
 
     async def get_psw(self, update, context):
-        if update.message.text != password:
+        if hash(update.message.text) != password_hash:
             await update.message.reply_text('Неверный пароль. Настройка данных прервана. '
                                             'Начать сначала: /edit', reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
