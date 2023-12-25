@@ -14,9 +14,10 @@ import numpy as np
 import asyncio
 import os
 from py_scripts.consts import *
+import pdfplumber
 
 
-db_session.global_init("database/telegram_bot.db")
+db_session.global_init("database/telegram_bot2.db")
 bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
 

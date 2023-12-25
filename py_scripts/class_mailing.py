@@ -110,7 +110,7 @@ class MailTo:
                                  '4. ⚠️Если вы захотите завершить прикрепление файлов, нажмите на кнопку "Готово"')
         await update.message.reply_text(text_, reply_markup=await self.attachments_kbrd(),
                                         parse_mode='MarkdownV2')
-        await bot.send_photo(update.message.chat.id, 'instruction.jpg')
+        await bot.send_photo(update.message.chat.id, 'data/instruction.jpg')
         context.user_data['ATTACHMENTS'] = []
         context.user_data['FILES_SIZE'] = 0
         return self.step_attachments
