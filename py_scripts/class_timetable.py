@@ -6,32 +6,32 @@ class GetTimetable:
     days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среду', 3: 'Четверг', 4: 'Пятницу', 5: 'Субботу'}
     days2 = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}
     day_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
-    lessons_keys = {'0️⃣-й урок, 8:30 - 8:55:\n': '0\n08:30 - 08:55',
-                    '1️⃣-й урок, 9:00 - 9:45:\n': '1\n09:00 - 09:45',
-                    '2️⃣-й урок, 9:55 - 10:40:\n': '2\n09:55 - 10:40',
-                    '3️⃣-й урок, 10:50 - 11:35:\n': '3\n10:50 - 11:35',
-                    '4️⃣-й урок, 11:45 - 12:30:\n': '4\n11:45 - 12:30',
-                    '5️⃣-й урок, 12:50 - 13:35:\n': '5\n12:50 - 13:35',
-                    '6️⃣-й урок, 13:55 - 14:40:\n': '6\n13:55 - 14:40',
-                    '7️⃣-й урок, 14:50 - 15:35:\n': '7\n14:50 - 15:35',
-                    '8️⃣-й урок, 15:45 - 16:30:\n': '8\n15:45 - 16:30'}
-    for_datetime = {'0\n08:30 - 08:55': ((8, 20),
+    lessons_keys = {'0️⃣-й урок, 8:30 - 8:55:\r\n': '0\r\n08:30 - 08:55',
+                    '1️⃣-й урок, 9:00 - 9:45:\r\n': '1\r\n09:00 - 09:45',
+                    '2️⃣-й урок, 9:55 - 10:40:\r\n': '2\r\n09:55 - 10:40',
+                    '3️⃣-й урок, 10:50 - 11:35:\r\n': '3\r\n10:50 - 11:35',
+                    '4️⃣-й урок, 11:45 - 12:30:\r\n': '4\r\n11:45 - 12:30',
+                    '5️⃣-й урок, 12:50 - 13:35:\r\n': '5\r\n12:50 - 13:35',
+                    '6️⃣-й урок, 13:55 - 14:40:\r\n': '6\r\n13:55 - 14:40',
+                    '7️⃣-й урок, 14:50 - 15:35:\r\n': '7\r\n14:50 - 15:35',
+                    '8️⃣-й урок, 15:45 - 16:30:\r\n': '8\r\n15:45 - 16:30'}
+    for_datetime = {'0\r\n08:30 - 08:55': ((8, 20),
                                            (8, 55)),
-                    '1\n09:00 - 09:45': ((8, 55),
+                    '1\r\n09:00 - 09:45': ((8, 55),
                                            (9, 45)),
-                    '2\n09:55 - 10:40': ((9, 45),
+                    '2\r\n09:55 - 10:40': ((9, 45),
                                            (10, 40)),
-                    '3\n10:50 - 11:35': ((10, 40),
+                    '3\r\n10:50 - 11:35': ((10, 40),
                                            (11, 35)),
-                    '4\n11:45 - 12:30': ((11, 35),
+                    '4\r\n11:45 - 12:30': ((11, 35),
                                            (12, 30)),
-                    '5\n12:50 - 13:35': ((12, 30),
+                    '5\r\n12:50 - 13:35': ((12, 30),
                                            (13, 35)),
-                    '6\n13:55 - 14:40': ((13, 35),
+                    '6\r\n13:55 - 14:40': ((13, 35),
                                            (14, 40)),
-                    '7\n14:50 - 15:35': ((14, 40),
+                    '7\r\n14:50 - 15:35': ((14, 40),
                                            (15, 35)),
-                    '8\n15:45 - 16:30': ((15, 35),
+                    '8\r\n15:45 - 16:30': ((15, 35),
                                            (16, 30))}
 
     async def get_edits(self, context, user):
@@ -156,6 +156,9 @@ class GetTimetable:
                 t += '\n'
                 # t += await self.get_edits(context, user) СДЕЛАЙ ИЗМЕНЕНИЯ
                 await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+                ######Вывод кружков вместе с расписанием
+                await extra_send_near(update, context, flag=True)
+                ####################
             elif (not context.user_data.get('EXTRA_CLICKED') and
                   update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
                 user = db_sess.query(User).filter(User.telegram_id == user__id).first()
@@ -198,6 +201,9 @@ class GetTimetable:
                     context.user_data['NEXT_DAY_TT'] = True
                     t += await self.get_edits(context, user)"""
                 await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+                ######Вывод кружков вместе с расписанием
+                await extra_send_day(update, flag=True)
+                ####################
             elif update.message.text == '🎨Мои кружки🎨':
                 await update.message.reply_text('Выберите интересующий Вас день',
                                                 reply_markup=await extra_school_timetable_kbrd())
@@ -333,6 +339,9 @@ class GetTimetable:
                 else:
                     t = title + '\n' + t + edits_text
                 await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+                ####Вывод кружков вместе с расписанием
+                await extra_send_near(update, context)
+                ##########
             elif (not context.user_data.get('EXTRA_CLICKED') and
                   update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
                 user = db_sess.query(User).filter(User.telegram_id == user__id).first()
@@ -421,6 +430,9 @@ class GetTimetable:
                 else:
                     t = title + '\n' + t + edits_text
                 await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+                ######Вывод кружков вместе с расписанием
+                await extra_send_day(update)
+                ####################
             elif update.message.text == '🎨Мои кружки🎨':
                 await update.message.reply_text('Выберите интересующий Вас день',
                                                 reply_markup=await extra_school_timetable_kbrd())
