@@ -31,15 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    # asyncio.gather(write_all(bot, '🔋Бот был перезапущен. Все диалоги сброшены. '
-    #                                          'Необходимо использовать команду /start', all_=True))
-    #asyncio.gather(extract_timetable_for_students_10_11())
-    #asyncio.gather(extract_timetable_for_students_6_9())
-    #asyncio.gather(extract_timetable_for_teachers())
     application = Application.builder().token(BOT_TOKEN).build()
-    # .post_init(post_init)
-    # loop = asyncio.new_event_loop()
-    # asyncio.set_event_loop(loop)
     start_dialog = SetTimetable()
     timetable__ = GetTimetable()
     edit_user_class = Edit_User()

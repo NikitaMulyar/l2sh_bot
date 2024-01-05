@@ -132,9 +132,15 @@ class GetTimetableForStudent:
                         lesson_name = " ".join(lesson_info[-3:-1])
                         teachers = " ".join(lesson_info[:-3])
                     cabinet = lesson_info[-1]
-                    if 'В' in lesson_name and 'Т' in lesson_name and 'Э.' in lesson_name and 'К.' in lesson_name:
+                    if 'В' in lesson_name and 'Т' in lesson_name and 'Э.' in lesson_name and 'К.' in lesson_name or \
+                            'В' in lesson_name and 'Т.' in lesson_name and 'Э.' in lesson_name and 'К' in lesson_name:
                         one_more_teacher_VTEK = (lesson_name.replace('В', '').replace('Т', '').
-                                                 replace('Э.', '.').replace('К.', '.'))
+                                                 replace('Э.', '.').replace('К.', '.').replace('Т.',
+                                                                                               '.'))
+                        cnt = sum([int(i in 'АБВГДЕËЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ') for i in
+                                   one_more_teacher_VTEK])
+                        if cnt > 3:
+                            one_more_teacher_VTEK = one_more_teacher_VTEK[:-1]
                         teachers += " " + one_more_teacher_VTEK
                         lesson_name = 'ВТЭК'
                     elif lesson_name == 'И.Н. ВТЭК':

@@ -9,7 +9,7 @@ from sqlalchemy_scripts.users import User
 from datetime import datetime, timedelta
 from timetables_csv import *
 import string
-from config import *
+from py_scripts.config import *
 import numpy as np
 import asyncio
 import os
@@ -17,7 +17,7 @@ from py_scripts.consts import *
 import pdfplumber
 
 
-db_session.global_init("database/telegram_bot2.db")
+db_session.global_init("database/telegram_bot.db")
 bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
 
@@ -72,6 +72,7 @@ async def extra_school_timetable_kbrd():
 
 
 async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
+    didnt_send = {}
     all_users = db_sess.query(User).filter(User.grade != "АДМИН").all()
     if all_:
         all_users = db_sess.query(User).all()
@@ -81,11 +82,20 @@ async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
                 await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
             else:
                 await asyncio.gather(bot.send_message(user.chat_id, text))
-        except telegram.error.TelegramError:
-            pass
+        except Exception as e:
+            if e.__str__() not in didnt_send:
+                didnt_send[e.__str__()] = 1
+            else:
+                didnt_send[e.__str__()] += 1
+            continue
+    t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])
+    if t:
+        t = '❗️Сообщение не было отправлено некоторым пользователям по следующим причинам:\n' + t
+    return t
 
 
 async def write_admins(bot: telegram.Bot, text, parse_mode=None):
+    didnt_send = {}
     all_users = db_sess.query(User).filter(User.grade == "АДМИН").all()
     for user in all_users:
         try:
@@ -93,8 +103,16 @@ async def write_admins(bot: telegram.Bot, text, parse_mode=None):
                 await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
             else:
                 await asyncio.gather(bot.send_message(user.chat_id, text))
-        except telegram.error.TelegramError:
-            pass
+        except Exception as e:
+            if e.__str__() not in didnt_send:
+                didnt_send[e.__str__()] = 1
+            else:
+                didnt_send[e.__str__()] += 1
+            continue
+    t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])
+    if t:
+        t = '❗️Сообщение не было отправлено некоторым пользователям по следующим причинам:\n' + t
+    return t
 
 
 async def extract_timetable_for_day_6_9(day, class_):
@@ -284,7 +302,7 @@ async def save_edits_in_timetable_csv(date):
                     tmp = t[j]
                     while len(tmp) != 5:
                         tmp.append(None)
-                    if 'Замен' in tmp[3] and tmp[4] is not None:
+                    if tmp[3] and 'Замен' in tmp[3] and tmp[4] is not None:
                         tmp[3] += tmp[4]
                         tmp[4] = None
                     for i in range(len(tmp)):

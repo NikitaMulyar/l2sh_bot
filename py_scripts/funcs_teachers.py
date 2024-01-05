@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from py_scripts.funcs_back import *
+import PyPDF2
 
 
 days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}
@@ -19,9 +20,14 @@ async def extract_timetable_for_teachers():
         with pdfplumber.open(f"{path_to_timetables}teachers.pdf") as pdf:
             page = pdf.pages[page_n]
             table = page.extract_table()
-            df = pd.DataFrame(table[1:], columns=table[0])
-            for col in df.columns.values:
-                df.loc[df[col] == '', col] = '--'
+            try:
+                df = pd.DataFrame(table[1:], columns=table[0])
+                for col in df.columns.values:
+                    df.loc[df[col] == '', col] = '--'
+            except Exception:
+                df = pd.DataFrame(table[2:], columns=table[1])
+                for col in df.columns.values:
+                    df.loc[df[col] == '', col] = '--'
             df.ffill(axis=0, inplace=True)
             df.to_csv(path_to_timetables_csv + f'{full_name}.csv')
 

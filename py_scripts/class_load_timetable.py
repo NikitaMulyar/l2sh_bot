@@ -1,6 +1,7 @@
 from telegram.ext import ConversationHandler
+from telegram import Message
 from py_scripts.funcs_back import *
-from timetables_csv import *
+from py_scripts.timetables_csv import *
 from py_scripts.funcs_teachers import *
 
 
@@ -8,10 +9,10 @@ class LoadTimetables:
     step_pswrd = 1
     step_class = 2
     step_file = 3
-    classes = ['6-9'] + [f'{i}{j}' for i in range(10, 12) for j in 'АБВГД'] + ['Учителя']
+    classes = ['6-9', '10-11', 'Учителя']
 
     async def classes_buttons(self):
-        arr = [['6-9']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(10, 12)] + [['Учителя']]
+        arr = [['6-9', '10-11']] + [['Учителя']]
         kbd = ReplyKeyboardMarkup(arr, resize_keyboard=True)
         return kbd
 
@@ -21,8 +22,7 @@ class LoadTimetables:
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
         await update.message.reply_text('Прервать загрузку расписаний: /end_load')
         if user and user.grade == 'АДМИН':
-            await update.message.reply_text(f'Выберите нужный класс\n⚠️Для 6-9 классов нужно выбрать "6-9", для '
-                                        f'загрузки учительского расписания - "Учителя"',
+            await update.message.reply_text(f'Выберите нужный класс',
                                             reply_markup=await self.classes_buttons())
             context.user_data['in_conversation'] = True
             return self.step_class
@@ -36,8 +36,7 @@ class LoadTimetables:
                                             'Начать сначала: /load')
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
-        await update.message.reply_text(f'Выберите нужный класс\n⚠️Для 6-9 классов нужно выбрать "6-9", для '
-                                        f'загрузки учительского расписания - "Учителя"',
+        await update.message.reply_text(f'Выберите нужный класс',
                                         reply_markup=await self.classes_buttons())
         return self.step_class
 
@@ -51,44 +50,47 @@ class LoadTimetables:
 
     async def load_pdf(self, update, context):
         file_info = await bot.get_file(update.message.document.file_id)
-        #await write_all(bot, prepare_for_markdown('❕') + '_*Бот будет недоступен в течение 1-2 минут\.*_\n' +
-        #                prepare_for_markdown(f"Производится загрузка нового расписания для {context.user_data['filename']} класса."),
-        #                parse_mode='MarkdownV2')
         if context.user_data['filename'] == 'Учителя':
             context.user_data['filename'] = 'teachers'
         await file_info.download_to_drive(path_to_timetables +
                                           f"{context.user_data['filename']}.pdf")
-        if context.user_data['filename'] == '6-9':
-            await extract_timetable_for_students_6_9()
-        elif context.user_data['filename'] == 'teachers':
-            await extract_timetable_for_teachers()
-            context.user_data['FILE_UPLOADED2'] = True
-        else:
-            await extract_timetable_for_students_10_11([context.user_data['filename']])
-        await update.message.reply_text('Файл загружен. Завершить: /end_load')
-        context.user_data['FILE_UPLOADED'] = True
-        await update.message.reply_text(f'Выберите нужный класс\n⚠️Для 6-9 классов нужно выбрать "6-9", для '
-                                        f'загрузки учительского расписания - "Учителя"',
+        msg_ = await update.message.reply_text('⏳ *Идет формирование расписаний в боте\, время ожидания \- 10\-20 секунд\.\.\.*', parse_mode='MarkdownV2')
+        try:
+            if context.user_data['filename'] == '6-9':
+                await extract_timetable_for_students_6_9()
+                context.user_data['FILE_UPLOADED'] = True
+            elif context.user_data['filename'] == 'teachers':
+                await extract_timetable_for_teachers()
+                context.user_data['FILE_UPLOADED2'] = True
+            else:
+                await extract_timetable_for_students_10_11()
+                context.user_data['FILE_UPLOADED'] = True
+            await bot.delete_message(update.message.chat.id, msg_.id)
+            await update.message.reply_text('Файл загружен. Завершить: /end_load')
+        except Exception as e:
+            await bot.delete_message(update.message.chat.id, msg_.id)
+            await update.message.reply_text(f'При попытке сформировать расписание произошла ошибка: {e}. Проверьте формат файла.')
+        await update.message.reply_text(f'Выберите нужный класс',
                                         reply_markup=await self.classes_buttons())
         return self.step_class
 
     async def end_setting(self, update, context):
         fl1 = 0
         if context.user_data.get('FILE_UPLOADED2'):
-            await write_admins(bot, prepare_for_markdown('❗️') + '_*Уважаемые учителя\!*_' +
+            res = await write_admins(bot, prepare_for_markdown('❗️') + '_*Уважаемые учителя\!*_' +
                             prepare_for_markdown(
-                                '\nОбновлены ваши расписания. Они уже доступны к просмотру.'),
+                                '\nОбновлены расписания пед. состава. Они уже доступны к просмотру.'),
                             parse_mode='MarkdownV2')
             await update.message.reply_text(
-                'Загрузка расписаний завершена. Проведена рассылка всем админам об обновлении расписаний. Начать сначала: /load',
+                f'Загрузка расписаний завершена. Проведена рассылка всем учителям об обновлении расписаний.\n{res}\nНачать сначала: /load',
                 reply_markup=await timetable_kbrd())
             fl1 += 1
         if context.user_data.get('FILE_UPLOADED'):
-            await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
+            res = await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
                             prepare_for_markdown('\nОбновлены расписания. Пожалуйста, проверьте ваше расписание!'),
                             parse_mode='MarkdownV2', all_=True)
             await update.message.reply_text(
-                'Загрузка расписаний завершена. Проведена рассылка всем ученикам об обновлении расписаний. Начать сначала: /load',
+                f'Загрузка расписаний завершена. Проведена рассылка всем ученикам об обновлении расписаний.\n{res}\nНачать сначала: /load',
                 reply_markup=await timetable_kbrd())
             fl1 += 1
         if fl1 == 0:
@@ -225,14 +227,35 @@ class LoadEditsTT:
     async def load_pdf(self, update, context):
         file_info = await bot.get_file(update.message.document.file_id)
         await file_info.download_to_drive(path_to_changes + f"{context.user_data['changes_date']}.pdf")
-        await save_edits_in_timetable_csv(context.user_data['changes_date'])
+        msg_ = await update.message.reply_text(
+            '⏳ *Идет формирование изменений в боте\, время ожидания \- 5\-10 секунд\.\.\.*', parse_mode='MarkdownV2')
+        try:
+            await save_edits_in_timetable_csv(context.user_data['changes_date'])
+        except Exception as e:
+            await bot.delete_message(update.message.chat.id, msg_.id)
+            await update.message.reply_text(
+                f'При попытке сохранить файл с изменениями произошла ошибка: {e}. Проверьте формат таблицы. Начать сначала: /changes',
+                reply_markup=await timetable_kbrd())
+            context.user_data['in_conversation'] = False
+            return ConversationHandler.END
         next_day = not datetime.now().day == int(context.user_data["changes_date"].split('.')[0])
-        await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
+        try:
+            edits_text = await self.get_edits(next_day)
+        except Exception as e:
+            await bot.delete_message(update.message.chat.id, msg_.id)
+            await update.message.reply_text(
+                f'При попытке сформировать изменения произошла ошибка: {e}. Проверьте формат таблицы. Начать сначала: /changes',
+                reply_markup=await timetable_kbrd())
+            context.user_data['in_conversation'] = False
+            return ConversationHandler.END
+
+        bot.delete_message(update.message.chat.id, msg_.id)
+        res = await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
                         prepare_for_markdown(
                             f'\nВ боте появились изменения на {context.user_data["changes_date"]}. '
-                            f'Пожалуйста, проверьте ваше расписание на эту дату.\n\n') + await self.get_edits(next_day),
+                            f'Пожалуйста, проверьте ваше расписание на эту дату.\n\n') + edits_text,
                         parse_mode='MarkdownV2', all_=True)
-        await update.message.reply_text('Файл загружен. Проведена рассылка всем ученикам об обновлении расписаний. Начать сначала: /changes',
+        await update.message.reply_text(f'Файл загружен. Проведена рассылка всем ученикам об обновлении расписаний.\n{res}\nНачать сначала: /changes',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END

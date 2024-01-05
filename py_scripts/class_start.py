@@ -9,7 +9,7 @@ class SetTimetable:
     step_name = 3
     step_pswrd = 4
     step_third_name = 5
-    classes = ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД']
+    classes = ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД'] + ['АДМИН']
 
     async def classes_buttons(self):
         classes = [['6А', '6Б', '6В']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(7, 12)] + [['АДМИН']]
@@ -42,6 +42,9 @@ class SetTimetable:
             return self.step_class
 
     async def get_class(self, update, context):
+        if update.message.text not in self.classes:
+            await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
+            return self.step_class
         user__id = update.message.from_user.id
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
         if user:
@@ -55,9 +58,6 @@ class SetTimetable:
             await update.message.reply_text('Введите пароль админа:',
                                                 reply_markup=ReplyKeyboardRemove())
             return self.step_pswrd
-        if update.message.text != 'АДМИН' and update.message.text not in self.classes:
-            await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
-            return self.step_class
         context.user_data['INFO']['Class'] = update.message.text
         await update.message.reply_text(f'А теперь укажите свою фамилию (пример: Некрасов)',
                                                 reply_markup=ReplyKeyboardRemove())

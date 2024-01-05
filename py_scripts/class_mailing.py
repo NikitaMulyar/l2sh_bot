@@ -185,6 +185,8 @@ class MailTo:
         context.user_data['FILES_SIZE'] = 0
         p, c = context.user_data['PARAL'], context.user_data['CLASS']
         t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])
+        if t:
+            t = '❗️Сообщение не было отправлено некоторым пользователям по следующим причинам:\n' + t
         try:
             await update.message.reply_text(prepare_for_markdown(f'Сообщение:\n') + mail_text +
                                             prepare_for_markdown(f'\n\nбыло отправлено в параллель "{p}", класс: "{c}"'), parse_mode='MarkdownV2')

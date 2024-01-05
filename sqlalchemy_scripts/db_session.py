@@ -21,7 +21,7 @@ def global_init(db_file):
     print(f"Подключение к базе данных по адресу {conn_str}")
 
     engine = sa.create_engine(conn_str, echo=False, pool_timeout=60)
-    __factory = orm.sessionmaker(bind=engine)
+    __factory = orm.sessionmaker(bind=engine)()
 
     from . import __all_models
 
@@ -29,4 +29,4 @@ def global_init(db_file):
 
 def create_session() -> Session:
     global __factory
-    return __factory()
+    return __factory
