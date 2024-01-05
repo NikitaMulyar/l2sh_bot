@@ -18,7 +18,7 @@ class MailTo:
         for i in self.parallels:
             btns.append(KeyboardButton(i))
 
-        kbd = ReplyKeyboardMarkup([btns, [KeyboardButton('АДМИН')], [KeyboardButton('Всем')]], resize_keyboard=True)
+        kbd = ReplyKeyboardMarkup([btns, [KeyboardButton('Админ'), KeyboardButton('Учителя')], [KeyboardButton('Всем')]], resize_keyboard=True)
         return kbd
 
     async def mailing_classes_kbrd(self, parallel):
@@ -40,16 +40,16 @@ class MailTo:
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
         if not user:
             await update.message.reply_text(
-                f'Вы даже не заполнили свои данные. Напишите /start и заполните свои данные')
+                f'Вы не заполнили свои данные. Напишите /start и заполните свои данные')
             return ConversationHandler.END
         await update.message.reply_text('Прервать настройку рассылки: /end_mail')
-        if user.grade == 'АДМИН':
+        if user.role == 'admin':
             await update.message.reply_text(
                 'Выберите параллель, к которой будет обращена рассылка:',
                 reply_markup=await self.mailing_parallels_kbrd())
             context.user_data['in_conversation'] = True
             return self.step_parallel
-        await update.message.reply_text('Введите пароль админа:')
+        await update.message.reply_text('Введите пароль:')
         context.user_data['in_conversation'] = True
         return self.step_pswrd
 
@@ -60,12 +60,12 @@ class MailTo:
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
         await update.message.reply_text('Выберите параллель, к которой будет обращена рассылка\n'
-                                        '⚠️Для рассылки учителям выберите "АДМИН":',
+                                        '⚠️Для рассылки учителям выберите "Админ":',
                                         reply_markup=await self.mailing_parallels_kbrd())
         return self.step_parallel
 
     async def get_parallel(self, update, context):
-        if update.message.text == 'Всем' or update.message.text == 'АДМИН':
+        if update.message.text == 'Всем' or update.message.text == 'Админ' or update.message.text == 'Учителя':
             context.user_data['PARAL'] = update.message.text
             context.user_data['CLASS'] = update.message.text
             await update.message.reply_text('Напишите сообщение для рассылки:',
@@ -147,8 +147,10 @@ class MailTo:
 
     async def send_message(self, update, context):
         author = db_sess.query(User).filter(User.chat_id == update.message.chat.id).first()
-        if context.user_data['PARAL'] == 'АДМИН':
-            all_users = db_sess.query(User).filter(User.grade == 'АДМИН').all()
+        if context.user_data['PARAL'] == 'Админ':
+            all_users = db_sess.query(User).filter(User.role == 'admin').all()
+        elif context.user_data['PARAL'] == 'Учителя':
+            all_users = db_sess.query(User).filter(User.role == 'teacher').all()
         else:
             all_users = db_sess.query(User).all()
             if context.user_data['PARAL'] != 'Всем':
@@ -159,9 +161,15 @@ class MailTo:
                     all_users = db_sess.query(User).filter(
                         context.user_data['CLASS'] == User.grade).all()
         mailbox_ = prepare_for_markdown('📬')
+        if author.grade is None and author.role == 'teacher':
+            user_grade = 'Учитель'
+        elif author.grade is None and author.role == 'admin':
+            user_grade = 'Админ'
+        else:
+            user_grade = author.grade
         mail_text = (mailbox_ + '*Новое сообщение\!*' + mailbox_ + prepare_for_markdown('\n\n') +
                      context.user_data['MESSAGE'] +
-                     prepare_for_markdown(f'\n\nОт {author.surname} {author.name}, {author.grade}'))
+                     prepare_for_markdown(f'\n\nОт {author.surname} {author.name}, {user_grade}'))
         arr = []
         didnt_send = {}
         for file in context.user_data['ATTACHMENTS']:

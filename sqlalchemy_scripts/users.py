@@ -10,6 +10,8 @@ class User(SqlAlchemyBase):
     telegram_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, primary_key=True)
     surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    allow_changing = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True, default=False)
+    role = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="student")
     grade = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     number = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     choose_extra = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=0)

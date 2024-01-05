@@ -20,7 +20,7 @@ class LoadTimetables:
             return ConversationHandler.END
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
         await update.message.reply_text('Прервать загрузку расписаний: /end_load')
-        if user and user.grade == 'АДМИН':
+        if user and user.role == "admin":
             await update.message.reply_text(f'Выберите нужный класс\n⚠️Для 6-9 классов нужно выбрать "6-9", для '
                                         f'загрузки учительского расписания - "Учителя"',
                                             reply_markup=await self.classes_buttons())
@@ -193,7 +193,7 @@ class LoadEditsTT:
             return ConversationHandler.END
         user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
         await update.message.reply_text('Прервать загрузку расписаний: /end_changes')
-        if user and user.grade == 'АДМИН':
+        if user and user.role == 'admin':
             await update.message.reply_text(f'Выберите дату изменений в расписании или напишите свою (формат: ДД.ММ.ГГГГ):',
                                             reply_markup=await self.dates_buttons())
             context.user_data['in_conversation'] = True

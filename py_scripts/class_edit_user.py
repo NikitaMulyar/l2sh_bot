@@ -8,9 +8,8 @@ class Edit_User(SetTimetable):
         context.user_data['in_conversation'] = True
         user__id = update.message.from_user.id
         if db_sess.query(User).filter(User.telegram_id == user__id).first():
-            await update.message.reply_text('Если Вы из пед. состава, выберите "АДМИН"')
             await update.message.reply_text('Давайте начнём изменять информацию о Вас.\n'
-                                            'Выберите свой класс.\n'
+                                            'Выберите свою роль/класс.\n'
                                             'Если захотите остановить изменения, напишите: /end_edit',
                                             reply_markup=await self.classes_buttons())
             context.user_data['INFO'] = dict()
@@ -27,12 +26,12 @@ class Edit_User(SetTimetable):
             context.user_data['in_conversation'] = False
             context.user_data['INFO'] = dict()
             return ConversationHandler.END
-        await update.message.reply_text(f'А теперь укажите свою фамилию (пример: Некрасов)')
+        await update.message.reply_text(f'Укажите свою фамилию (пример: Некрасов)')
         return self.step_familia
 
     async def get_name(self, update, context):
         context.user_data['INFO']['Name'] = update.message.text
-        if context.user_data['INFO']['Class'] == 'АДМИН':
+        if context.user_data['INFO']['Class'] == 'admin' or context.user_data['INFO']['Class'] == 'teacher':
             await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
             return self.step_third_name
         user__id = update.message.from_user.id
@@ -43,8 +42,8 @@ class Edit_User(SetTimetable):
                 db_sess.delete(extra_lesson)
             db_sess.commit()
             await update.message.reply_text('Вы поменяли класс, поэтому все настройки кружков сброшены')
-        update_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
-                  context.user_data['INFO']['Class'])
+        update_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'], 'student',
+                  grade=context.user_data['INFO']['Class'])
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False

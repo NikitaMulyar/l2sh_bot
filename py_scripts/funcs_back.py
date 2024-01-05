@@ -16,8 +16,7 @@ import os
 from py_scripts.consts import *
 import pdfplumber
 
-
-db_session.global_init("database/telegram_bot2.db")
+db_session.global_init("database/telegram_bot3.db")
 bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
 
@@ -34,6 +33,7 @@ def throttle(func):
             asyncio.gather(func(*args, **kwargs))
         else:
             asyncio.gather(trottle_ans(*args, **kwargs))
+
     return wrapper
 
 
@@ -47,6 +47,7 @@ def throttle2(func):
         elif last_time + timedelta(seconds=0.5) <= now_:
             args[2].user_data['last_time2'] = now_
             asyncio.gather(func(*args, **kwargs))
+
     return wrapper
 
 
@@ -55,11 +56,10 @@ async def trottle_ans(*args, **kwargs):
 
 
 async def timetable_kbrd():
-    btn = KeyboardButton('📚Расписание📚')
-    btn2 = KeyboardButton('Расписание на день недели:')
+    btn = KeyboardButton('📚Ближайшее расписание📚')
     btn3 = KeyboardButton('🎨Мои кружки🎨')
     arr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
-    kbd = ReplyKeyboardMarkup([[btn], [btn2], arr, [btn3]], resize_keyboard=True)
+    kbd = ReplyKeyboardMarkup([[btn], arr, [btn3]], resize_keyboard=True)
     return kbd
 
 
@@ -72,7 +72,7 @@ async def extra_school_timetable_kbrd():
 
 
 async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
-    all_users = db_sess.query(User).filter(User.grade != "АДМИН").all()
+    all_users = db_sess.query(User).filter(User.role != "admin").all()
     if all_:
         all_users = db_sess.query(User).all()
     for user in all_users:
@@ -86,7 +86,7 @@ async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
 
 
 async def write_admins(bot: telegram.Bot, text, parse_mode=None):
-    all_users = db_sess.query(User).filter(User.grade == "АДМИН").all()
+    all_users = db_sess.query(User).filter(User.role == "admin").all()
     for user in all_users:
         try:
             if parse_mode:
@@ -192,34 +192,36 @@ def prepare_for_markdown(text):
     return res
 
 
-def put_to_db(update, name, surname, grade):
+def put_to_db(update, name, surname, role, grade=None):
     user__id = update.message.from_user.id
     num = grade
-    if num != 'АДМИН':
+    if role != 'admin' and role != 'teacher':
         num = num[:-1]
     if db_sess.query(User).filter(User.telegram_id == user__id).first():
         if not db_sess.query(User).filter(User.telegram_id == user__id,
                                           User.chat_id == update.message.chat.id).first():
-            user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name,
+            user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name, role=role,
                         grade=grade, number=num)
             db_sess.add(user)
     else:
-        user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name,
+        user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name, role=role,
                     grade=grade, number=num)
         db_sess.add(user)
         db_sess.commit()
     db_sess.commit()
 
 
-def update_db(update, name, surname, grade):
+def update_db(update, name, surname, role, grade=None):
     user__id = update.message.from_user.id
     user = db_sess.query(User).filter(User.telegram_id == user__id).first()
     user.surname = surname
     user.name = name
+    user.role = role
     user.grade = grade
-    user.number = grade[:-1]
-    if grade == 'АДМИН':
-        user.number = 'АДМИН'
+    if role != 'admin' and role != 'teacher':
+        user.number = grade[:-1]
+    else:
+        user.number = grade
     db_sess.commit()
 
 
