@@ -7,7 +7,7 @@ from sqlalchemy_scripts.extra_lessons import Extra
 from sqlalchemy_scripts import db_session
 from sqlalchemy_scripts.users import User
 from datetime import datetime, timedelta
-from timetables_csv import *
+from py_scripts.timetables_csv import *
 import string
 from py_scripts.config import *
 import numpy as np
@@ -77,9 +77,9 @@ async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
     for user in all_users:
         try:
             if parse_mode:
-                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
+                await asyncio.gather(bot.send_message(user.telegram_id, text, parse_mode='MarkdownV2'))
             else:
-                await asyncio.gather(bot.send_message(user.chat_id, text))
+                await asyncio.gather(bot.send_message(user.telegram_id, text))
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
@@ -98,9 +98,9 @@ async def write_admins(bot: telegram.Bot, text, parse_mode=None):
     for user in all_users:
         try:
             if parse_mode:
-                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
+                await asyncio.gather(bot.send_message(user.telegram_id, text, parse_mode='MarkdownV2'))
             else:
-                await asyncio.gather(bot.send_message(user.chat_id, text))
+                await asyncio.gather(bot.send_message(user.telegram_id, text))
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
@@ -214,14 +214,13 @@ def put_to_db(update, name, surname, role, username, grade=None):
     if role != 'admin' and role != 'teacher':
         num = num[:-1]
     if db_sess.query(User).filter(User.telegram_id == user__id).first():
-        if not db_sess.query(User).filter(User.telegram_id == user__id,
-                                          User.chat_id == update.message.chat.id).first():
-            user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name, role=role,
-                        grade=grade, number=num, username=username)
+        if not db_sess.query(User).filter(User.telegram_id == user__id).first():
+            user = User(telegram_id=user__id, surname=surname, name=name, role=role,
+                        grade=grade, number=num, telegram_tag=username)
             db_sess.add(user)
     else:
-        user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name, role=role,
-                    grade=grade, number=num, username=username)
+        user = User(telegram_id=user__id, surname=surname, name=name, role=role,
+                    grade=grade, number=num, telegram_tag=username)
         db_sess.add(user)
         db_sess.commit()
     db_sess.commit()

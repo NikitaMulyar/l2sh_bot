@@ -22,8 +22,6 @@ class SetTimetable:
         context.user_data['in_conversation'] = True
         user__id = update.message.from_user.id
         if db_sess.query(User).filter(User.telegram_id == user__id).first():
-            user = db_sess.query(User).filter(User.telegram_id == user__id).first()
-            user.chat_id = update.message.chat.id
             db_sess.commit()
             await update.message.reply_text(
                 'Здравствуйте! Я вижу, что Вы уже есть в системе.\n'

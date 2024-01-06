@@ -37,7 +37,7 @@ class MailTo:
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
-        user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
+        user = db_sess.query(User).filter(User.telegram_id == update.message.from_user.id).first()
         if not user:
             await update.message.reply_text(
                 f'Вы не заполнили свои данные. Напишите /start и заполните свои данные')
@@ -146,7 +146,7 @@ class MailTo:
         return self.step_attachments
 
     async def send_message(self, update, context):
-        author = db_sess.query(User).filter(User.chat_id == update.message.chat.id).first()
+        author = db_sess.query(User).filter(User.telegram_id == update.message.from_user.id).first()
         if context.user_data['PARAL'] == 'Админ':
             all_users = db_sess.query(User).filter(User.role == 'admin').all()
         elif context.user_data['PARAL'] == 'Учителя':
@@ -177,12 +177,12 @@ class MailTo:
         for user in all_users:
             try:
                 if len(arr) >= 2:
-                    await bot.send_media_group(user.chat_id, arr, caption=mail_text, parse_mode='MarkdownV2')
+                    await bot.send_media_group(user.telegram_id, arr, caption=mail_text, parse_mode='MarkdownV2')
                 elif len(arr) == 1:
-                    await bot.send_document(user.chat_id, context.user_data['ATTACHMENTS'][0],
+                    await bot.send_document(user.telegram_id, context.user_data['ATTACHMENTS'][0],
                                             caption=mail_text, parse_mode='MarkdownV2')
                 else:
-                    await bot.send_message(user.chat_id, mail_text, parse_mode='MarkdownV2')
+                    await bot.send_message(user.telegram_id, mail_text, parse_mode='MarkdownV2')
             except Exception as e:
                 if e.__str__() not in didnt_send:
                     didnt_send[e.__str__()] = 1

@@ -15,7 +15,13 @@ class Profile:
             await update.message.reply_text(
                 f'Вы даже не заполнили свои данные. Напиши /start и заполните свои данные')
             return
-        t = f'📠*Ваш профиль*📠\n\n' + (f'Класс: {user.grade}\nИмя: {user.name}\n'
+        grade = user.grade
+        if not grade:
+            if user.role == "teacher":
+                grade = "Учитель"
+            else:
+                grade = "Админ"
+        t = f'📠*Ваш профиль*📠\n\n' + (f'Класс: {grade}\nИмя: {user.name}\n'
                                       f'Фамилия: {user.surname}')
         await update.message.reply_text(t, parse_mode='MarkdownV2',
                                         reply_markup=await timetable_kbrd())

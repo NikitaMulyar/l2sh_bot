@@ -180,10 +180,10 @@ class GetTimetable:
             await update.message.reply_text(f'⚠️Для начала заполните свои данные: /start')
             return
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
-        if user.role == 'admin' or (user.role == 'teacher' and not os.path.exists(path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv')):
+        if (user.role == 'admin' or user.role == 'teacher') and not os.path.exists(path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv'):
             await update.message.reply_text(f'⚠️У вас нет личного расписания')
             return
-        elif user.role == 'teacher':
+        elif user.role == 'teacher' or user.role == 'admin':
             if update.message.text == '📚Ближайшее расписание📚':
                 context.user_data['NEXT_DAY_TT'] = False
                 lessons, day = await get_timetable_for_teacher(context, f'{user.surname} {user.name[0]}')
