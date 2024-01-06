@@ -34,7 +34,6 @@ https://t.me/l2sh_lessons_bot
 3. Our bot will guide you through a quick setup process to connect your account and grant necessary permissions.
 4. Once set up, you can start interacting with the bot using simple commands
 
-![instruction](data/instruction.jpg)
 
 Team of Developers 👨‍💻
 ---------------
