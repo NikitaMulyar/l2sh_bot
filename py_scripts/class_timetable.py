@@ -47,7 +47,7 @@ class GetTimetable:
                         if 'Замены' in df.columns.values:
                             if df.iloc[j]['Урок №'] == '' and j == 0:
                                 continue
-                            if user.number in df.iloc[j]['Класс'] and (user.grade[-1] in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j]['Класс']):
+                            if user.number in df.iloc[j]['Класс'] and (user.grade[-1] in df.iloc[j]['Класс'] or 'классы' in df.iloc[j]['Класс']):
                                 subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
                                 subject = " ".join(subject.split('\n'))
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
@@ -180,11 +180,11 @@ class GetTimetable:
             await update.message.reply_text(f'⚠️Для начала заполните свои данные: /start')
             return
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
-        if user.grade == 'АДМИН' and not os.path.exists(path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv'):
+        if user.role == 'admin' or (user.role == 'teacher' and not os.path.exists(path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv')):
             await update.message.reply_text(f'⚠️У вас нет личного расписания')
             return
-        elif user.grade == 'АДМИН':
-            if update.message.text == '📚Расписание📚':
+        elif user.role == 'teacher':
+            if update.message.text == '📚Ближайшее расписание📚':
                 context.user_data['NEXT_DAY_TT'] = False
                 lessons, day = await get_timetable_for_teacher(context, f'{user.surname} {user.name[0]}')
                 if lessons.empty:
@@ -230,6 +230,9 @@ class GetTimetable:
                 else:
                     t = title + '\n' + t + edits_text
                 await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+                ######Вывод кружков вместе с расписанием
+                await extra_send_near(update, context, flag=True)
+                ####################
             elif (not context.user_data.get('EXTRA_CLICKED') and
                   update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
                 user = db_sess.query(User).filter(User.telegram_id == user__id).first()
@@ -279,6 +282,9 @@ class GetTimetable:
                 else:
                     t = title + '\n' + t + edits_text
                 await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+                ######Вывод кружков вместе с расписанием
+                await extra_send_day(update, flag=True)
+                ####################
             elif update.message.text == '🎨Мои кружки🎨':
                 await update.message.reply_text('Выберите интересующий Вас день',
                                                 reply_markup=await extra_school_timetable_kbrd())
@@ -336,7 +342,7 @@ class GetTimetable:
                         await update.message.reply_text(el,
                                                         reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
         else:
-            if update.message.text == '📚Расписание📚':
+            if update.message.text == '📚Ближайшее расписание📚':
                 context.user_data['NEXT_DAY_TT'] = False
                 if int(user.number) >= 10:
                     lessons, day = await get_timetable_for_user(context, f'{user.surname} {user.name}', user.grade)
@@ -370,9 +376,12 @@ class GetTimetable:
                         last_cab = ''
                         for lesson_info in pre_lesson_info:
                             lesson_info = lesson_info.split('\n')
+                            lesson_info[-2] = lesson_info[-2].strip()
                             if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
-                            'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
-                            'математика (1)', '(1)', 'физика (1)', 'эффекты (1)', 'математика (2)', 'математике']:
+                                                       'программирование (1)', 'практикум (2)', 'структуры данных (2)',
+                                                       'программирование (2)',
+                                                       'математика (1)', '(1)', 'физика (1)', 'эффекты (1)',
+                                                       'математика (2)', 'математике']:
                                 if 'Эрлих И.Г.' in lesson_info[-1]:
                                     lesson_info = ['Эрлих И.Г.'] + [lesson_info[-2]] + [lesson_info[-1].split(' ')[-1]]
                                 lesson_name = lesson_info[-2]
@@ -411,10 +420,14 @@ class GetTimetable:
                 t += '\n'
                 edits_text = await self.get_edits(context, user)
                 if edits_text:
-                    t = title + '_' + prepare_for_markdown('⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
+                    t = title + '_' + prepare_for_markdown(
+                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
                 else:
                     t = title + '\n' + t + edits_text
                 await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+                ####Вывод кружков вместе с расписанием
+                await extra_send_near(update, context)
+                ##########
             elif (not context.user_data.get('EXTRA_CLICKED') and
                   update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
                 user = db_sess.query(User).filter(User.telegram_id == user__id).first()
@@ -455,9 +468,12 @@ class GetTimetable:
                         last_cab = ""
                         for lesson_info in pre_lesson_info:
                             lesson_info = lesson_info.split('\n')
+                            lesson_info[-2] = lesson_info[-2].strip()
                             if lesson_info[-2] not in ['вероятностей', 'практикум (1)', 'Час', 'структуры данных (1)',
-                            'программирование (1)', 'практикум (2)', 'структуры данных (2)', 'программирование (2)',
-                            'математика (1)', '(1)', 'физика (1)', 'эффекты (1)', 'математика (2)', 'математике']:
+                                                       'программирование (1)', 'практикум (2)', 'структуры данных (2)',
+                                                       'программирование (2)',
+                                                       'математика (1)', '(1)', 'физика (1)', 'эффекты (1)',
+                                                       'математика (2)', 'математике']:
                                 if 'Эрлих И.Г.' in lesson_info[-1]:
                                     lesson_info = ['Эрлих И.Г.'] + [lesson_info[-2]] + [lesson_info[-1].split(' ')[-1]]
                                 lesson_name = lesson_info[-2]
@@ -497,6 +513,9 @@ class GetTimetable:
                 else:
                     t = title + '\n' + t + edits_text
                 await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+                ######Вывод кружков вместе с расписанием
+                await extra_send_day(update)
+                ####################
             elif update.message.text == '🎨Мои кружки🎨':
                 await update.message.reply_text('Выберите интересующий Вас день',
                                                 reply_markup=await extra_school_timetable_kbrd())

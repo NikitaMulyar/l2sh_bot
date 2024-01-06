@@ -50,12 +50,12 @@ class Extra_Lessons:
             return ConversationHandler.END
         user__id = update.message.from_user.id
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
-        if user.grade == 'АДМИН':
+        if user.role == 'admin' or user.role == 'teacher':
             await update.message.reply_text(f'Вы не можете записываться на кружки.')
             return
         await update.message.reply_text('🌟 Здесь Вы можете добавить кружки, которые хотели бы увидеть в '
                                         'своем расписании.\n'
-                                        'Если захотите закончить, просто напишите: "/end_extra".\n'
+                                        'Если захотите закончить, напишите: "/end_extra".\n'
                                         'Давайте начнем выбирать: ✨')
         context.user_data['in_conversation'] = True
         context.user_data['choose_count'] = 0

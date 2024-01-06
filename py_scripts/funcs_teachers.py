@@ -2,7 +2,6 @@
 from py_scripts.funcs_back import *
 import PyPDF2
 
-
 days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}
 
 
@@ -108,3 +107,43 @@ def extra_lessons_teachers_return(id, button_text):
         text += f'🏫 Место проведения: {place} 🏫\n'
         full_text.append(text)
     return "".join(full_text)
+
+day_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
+
+
+async def extra_send_near(update, context, flag=False):
+    today = datetime.now().weekday()
+    if context.user_data['NEXT_DAY_TT']:
+        today = (today + 1) % 7
+    if today == 6:
+        today = 0
+    days = {value: key for key, value in day_num.items()}
+    if flag:
+        extra_text = extra_lessons_teachers_return(update.message.from_user.id, days[today])
+    else:
+        extra_text = extra_lessons_return(update.message.from_user.id, days[today])
+    text = prepare_for_markdown(extra_text)
+    if text == '':
+        await update.message.reply_text(
+            f'*Кружков на {days[today].lower()} нет*',
+            reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+        return
+    await update.message.reply_text(
+        f'*Кружки на {days[today].lower()}*\n\n{text}',
+        reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+
+
+async def extra_send_day(update, flag=False):
+    if flag:
+        extra_text = extra_lessons_teachers_return(update.message.from_user.id, update.message.text)
+    else:
+        extra_text = extra_lessons_return(update.message.from_user.id, update.message.text)
+    text = prepare_for_markdown(extra_text)
+    if text == '':
+        await update.message.reply_text(
+            f'*Кружков на {days[day_num[update.message.text]].lower()} нет*',
+            reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+        return
+    await update.message.reply_text(
+        f'*Кружки на {days[day_num[update.message.text]].lower()}*\n\n{text}',
+        reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
