@@ -38,6 +38,6 @@ https://t.me/l2sh_lessons_bot
 
 Team of Developers 👨‍💻
 ---------------
-[Nikita](https://t.me/delikatny_pon) - Full Stack developer, team leader
+[Nikita](https://t.me/delikatny_pon) - Full Stack developer, Team Leader
 
-[Matthew](https://t.me/lokisf8) - Full Stack developer
+[Matthew](https://t.me/lokisf8) - Full Stack developer, Infosec Developer

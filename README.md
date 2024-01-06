@@ -38,6 +38,6 @@ https://t.me/l2sh_lessons_bot
 
 Команда Разработчиков 👨‍💻
 ---------------
-[Никита](https://t.me/delikatny_pon) - Full Stack разработчик, Тимлид
+[Никита](https://t.me/delikatny_pon) - Full Stack разработчик, Team Leader
 
-[Матвей](https://t.me/lokisf8) - Full Stack разработчик
+[Матвей](https://t.me/lokisf8) - Full Stack разработчик, Infosec Developer
