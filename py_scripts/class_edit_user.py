@@ -43,7 +43,7 @@ class Edit_User(SetTimetable):
             db_sess.commit()
             await update.message.reply_text('Вы поменяли класс, поэтому все настройки кружков сброшены')
         update_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'], 'student',
-                  grade=context.user_data['INFO']['Class'])
+                  update.message.from_user.username, grade=context.user_data['INFO']['Class'])
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
@@ -62,7 +62,7 @@ class Edit_User(SetTimetable):
             await update.message.reply_text('Вы поменяли класс, поэтому все настройки кружков сброшены')
         update_db(update, context.user_data['INFO']['Name'] + ' ' +
                   context.user_data['INFO']['Otchestvo'], context.user_data['INFO']['Familia'],
-                  context.user_data['INFO']['Class'])
+                  context.user_data['INFO']['Class'], update.message.from_user.username)
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False

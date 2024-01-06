@@ -9,7 +9,7 @@ class SetTimetable:
     step_name = 3
     step_pswrd = 4
     step_third_name = 5
-    classes = ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД']
+    classes = ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД'] + ['Админ', 'Учитель']
 
     async def classes_buttons(self):
         classes = [['6А', '6Б', '6В']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(7, 12)] + [['Админ', 'Учитель']]
@@ -32,13 +32,12 @@ class SetTimetable:
                 reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
-        else:
-            await update.message.reply_text(
-                'Здравствуйте! В этом боте Вы можете узнавать расписание на день!\n'
-                'Сначала выберите свою роль/класс.\n'
-                'Для остановки регистрации напишите: /end', reply_markup=await self.classes_buttons())
-            context.user_data['INFO'] = dict()
-            return self.step_class
+        await update.message.reply_text(
+            'Здравствуйте! В этом боте Вы можете узнавать расписание на день!\n'
+            'Сначала выберите свою роль/класс.\n'
+            'Для остановки регистрации напишите: /end', reply_markup=await self.classes_buttons())
+        context.user_data['INFO'] = dict()
+        return self.step_class
 
     async def get_class(self, update, context):
         if update.message.text not in self.classes:
@@ -49,7 +48,6 @@ class SetTimetable:
         if user:
             if (update.message.text == 'Админ' and user.role != "admin") or (
                     update.message.text == 'Учитель' and user.role != "teacher"):
-
                 if update.message.text == 'Админ':
                     context.user_data['INFO']['Class'] = "admin"
                 else:
@@ -63,11 +61,7 @@ class SetTimetable:
                 context.user_data['INFO']['Class'] = "teacher"
             await update.message.reply_text('Введите пароль:', reply_markup=ReplyKeyboardRemove())
             return self.step_pswrd
-        if update.message.text != 'Админ' and update.message.text != 'Учитель' and update.message.text not in self.classes:
-            await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
-            return self.step_class
-        if update.message.text != 'Админ' and update.message.text != 'Учитель':
-            context.user_data['INFO']['Class'] = update.message.text
+        context.user_data['INFO']['Class'] = update.message.text
         await update.message.reply_text(f'Укажите свою фамилию (пример: Некрасов)',
                                         reply_markup=ReplyKeyboardRemove())
         return self.step_familia
@@ -93,9 +87,8 @@ class SetTimetable:
         if context.user_data['INFO']['Class'] == 'admin' or context.user_data['INFO']['Class'] == 'teacher':
             await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
             return self.step_third_name
-        else:
-            put_to_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
-                      'student', grade=context.user_data['INFO']['Class'])
+        put_to_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
+                  'student', update.message.from_user.username, grade=context.user_data['INFO']['Class'],)
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
@@ -105,7 +98,7 @@ class SetTimetable:
         context.user_data['INFO']['Otchestvo'] = update.message.text
         put_to_db(update, context.user_data['INFO']['Name'] + ' ' +
                   context.user_data['INFO']['Otchestvo'], context.user_data['INFO']['Familia'],
-                  context.user_data['INFO']['Class'])
+                  context.user_data['INFO']['Class'], update.message.from_user.username)
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False

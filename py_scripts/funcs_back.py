@@ -208,7 +208,7 @@ def prepare_for_markdown(text):
     return res
 
 
-def put_to_db(update, name, surname, role, grade=None):
+def put_to_db(update, name, surname, role, username, grade=None):
     user__id = update.message.from_user.id
     num = grade
     if role != 'admin' and role != 'teacher':
@@ -217,23 +217,24 @@ def put_to_db(update, name, surname, role, grade=None):
         if not db_sess.query(User).filter(User.telegram_id == user__id,
                                           User.chat_id == update.message.chat.id).first():
             user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name, role=role,
-                        grade=grade, number=num)
+                        grade=grade, number=num, username=username)
             db_sess.add(user)
     else:
         user = User(chat_id=update.message.chat.id, telegram_id=user__id, surname=surname, name=name, role=role,
-                    grade=grade, number=num)
+                    grade=grade, number=num, username=username)
         db_sess.add(user)
         db_sess.commit()
     db_sess.commit()
 
 
-def update_db(update, name, surname, role, grade=None):
+def update_db(update, name, surname, role, username, grade=None):
     user__id = update.message.from_user.id
     user = db_sess.query(User).filter(User.telegram_id == user__id).first()
     user.surname = surname
     user.name = name
     user.role = role
     user.grade = grade
+    user.username = username
     if role != 'admin' and role != 'teacher':
         user.number = grade[:-1]
     else:
