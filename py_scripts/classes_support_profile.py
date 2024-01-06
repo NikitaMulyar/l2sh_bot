@@ -6,14 +6,10 @@ class Profile:
     async def get_profile(self, update, context):
         if context.user_data.get('in_conversation'):
             return
-        user__id = update.message.from_user.id
-        if not db_sess.query(User).filter(User.telegram_id == user__id).first():
-            await update.message.reply_text(f'Для начала заполните свои данные: /start')
-            return
-        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+        chat_id = update.message.chat.id
+        user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         if not user:
-            await update.message.reply_text(
-                f'Вы даже не заполнили свои данные. Напиши /start и заполните свои данные')
+            await update.message.reply_text(f'Для начала заполните свои данные: /start')
             return
         grade = user.grade
         if not grade:

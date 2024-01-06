@@ -20,8 +20,8 @@ class SetTimetable:
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
         context.user_data['in_conversation'] = True
-        user__id = update.message.from_user.id
-        if db_sess.query(User).filter(User.telegram_id == user__id).first():
+        chat_id = update.message.chat.id
+        if db_sess.query(User).filter(User.chat_id == chat_id).first():
             db_sess.commit()
             await update.message.reply_text(
                 'Здравствуйте! Я вижу, что Вы уже есть в системе.\n'
@@ -41,8 +41,8 @@ class SetTimetable:
         if update.message.text not in self.classes:
             await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
             return self.step_class
-        user__id = update.message.from_user.id
-        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+        chat_id = update.message.chat.id
+        user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         if user:
             if (update.message.text == 'Админ' and user.role != "admin") or (
                     update.message.text == 'Учитель' and user.role != "teacher"):
@@ -86,7 +86,7 @@ class SetTimetable:
             await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
             return self.step_third_name
         put_to_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
-                  'student', update.message.from_user.username, grade=context.user_data['INFO']['Class'],)
+                  'student', update.message.from_user.username, grade=context.user_data['INFO']['Class'])
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False

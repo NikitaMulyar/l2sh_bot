@@ -30,8 +30,8 @@ class GetTimetableForStudent:
                         if 'Замены' in df.columns.values:
                             if df.iloc[j]['Урок №'] == '' and j == 0:
                                 continue
-                            if student_class[:-1] in df.iloc[j]['Класс'] and (
-                                    student_class[-1] in df.iloc[j]['Класс'] or 'классы' in df.iloc[j]['Класс']):
+                            if student_class[:-1] in df.iloc[j]['Класс'].upper() and (
+                                    student_class[-1] in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j]['Класс'].lower()):
                                 subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
                                 subject = " ".join(subject.split('\n'))
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
@@ -55,8 +55,8 @@ class GetTimetableForStudent:
                                     res.append([f"{class__}, ", number_of_lesson,
                                                 subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
                         else:
-                            if student_class[:-1] in df.iloc[j]['Класс'] and (
-                                    student_class[-1] in df.iloc[j]['Класс'] or 'классы' in df.iloc[j]['Класс']):
+                            if student_class[:-1] in df.iloc[j]['Класс'].upper() and (
+                                    student_class[-1] in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j]['Класс'].lower()):
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
                                 res.append([f"{class__}, ", number_of_lesson,
                                             df.iloc[j]['Замены кабинетов'],
@@ -254,7 +254,6 @@ class GetTimetableForTeacher:
         return t
 
     async def diff_teacher_timetable(self, update, context, day, name, familia):
-
         lessons, day = await get_standard_timetable_for_teacher(f'{familia} {name[0]}',
                                                                 day_num[day])
         if lessons.empty:
@@ -330,7 +329,7 @@ class CheckStudentTT:
             return ConversationHandler.END
         context.user_data['in_conversation'] = True
         await update.message.reply_text('С помощью этой команды можно быстро посмотреть расписание '
-                                        'какого-то класса или ученика. Выберите из списка интересуемый класс.\n'
+                                        'какого-то класса, ученика или учителя. Выберите из списка интересуемый класс.\n'
                                         'Прерваться: /end_check',
                                         reply_markup=await self.classes_buttons())
         context.user_data['INFO'] = dict()
@@ -387,6 +386,6 @@ class CheckStudentTT:
     async def end_checking(self, update, context):
         context.user_data['in_conversation'] = False
         context.user_data['INFO'] = dict()
-        await update.message.reply_text(f'Поиск ученика прерван. Начать сначала: /check',
+        await update.message.reply_text(f'Поиск ученика/учителя прерван. Начать сначала: /check',
                                         reply_markup=await timetable_kbrd())
         return ConversationHandler.END

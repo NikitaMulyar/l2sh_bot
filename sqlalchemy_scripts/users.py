@@ -6,7 +6,8 @@ from .db_session import SqlAlchemyBase
 class User(SqlAlchemyBase):
     __tablename__ = 'users'
 
-    telegram_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, primary_key=True)
+    chat_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, primary_key=True)
+    telegram_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     telegram_tag = sqlalchemy.Column(sqlalchemy.String, nullable=True)

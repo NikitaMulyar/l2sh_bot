@@ -6,8 +6,8 @@ class Edit_User(SetTimetable):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
         context.user_data['in_conversation'] = True
-        user__id = update.message.from_user.id
-        if db_sess.query(User).filter(User.telegram_id == user__id).first():
+        chat_id = update.message.chat.id
+        if db_sess.query(User).filter(User.chat_id == chat_id).first():
             await update.message.reply_text('Давайте начнём изменять информацию о Вас.\n'
                                             'Выберите свою роль/класс.\n'
                                             'Если захотите остановить изменения, напишите: /end_edit',
@@ -34,8 +34,9 @@ class Edit_User(SetTimetable):
         if context.user_data['INFO']['Class'] == 'admin' or context.user_data['INFO']['Class'] == 'teacher':
             await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
             return self.step_third_name
+        chat_id = update.message.chat.id
         user__id = update.message.from_user.id
-        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+        user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         if user.grade != context.user_data['INFO']['Class']:
             extra_lessons = db_sess.query(Extra_to_User).filter(Extra_to_User.user_id == user__id).all()
             for extra_lesson in extra_lessons:
@@ -52,7 +53,8 @@ class Edit_User(SetTimetable):
     async def get_third_name(self, update, context):
         context.user_data['INFO']['Otchestvo'] = update.message.text
         user__id = update.message.from_user.id
-        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+        chat_id = update.message.chat.id
+        user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         if user.grade != context.user_data['INFO']['Class']:
             extra_lessons = db_sess.query(Extra_to_User).filter(
                 Extra_to_User.user_id == user__id).all()

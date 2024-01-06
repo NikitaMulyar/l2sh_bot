@@ -37,7 +37,8 @@ class MailTo:
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
-        user = db_sess.query(User).filter(User.telegram_id == update.message.from_user.id).first()
+        chat_id = update.message.chat.id
+        user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         if not user:
             await update.message.reply_text(
                 f'Вы не заполнили свои данные. Напишите /start и заполните свои данные')
@@ -59,13 +60,12 @@ class MailTo:
                                             'Начать сначала: /mailing')
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
-        await update.message.reply_text('Выберите параллель, к которой будет обращена рассылка\n'
-                                        '⚠️Для рассылки учителям выберите "Админ":',
+        await update.message.reply_text('Выберите параллель, к которой будет обращена рассылка:',
                                         reply_markup=await self.mailing_parallels_kbrd())
         return self.step_parallel
 
     async def get_parallel(self, update, context):
-        if update.message.text == 'Всем' or update.message.text == 'Админ' or update.message.text == 'Учителя':
+        if update.message.text in ['Всем', 'Админ', 'Учителя']:
             context.user_data['PARAL'] = update.message.text
             context.user_data['CLASS'] = update.message.text
             await update.message.reply_text('Напишите сообщение для рассылки:',
@@ -106,7 +106,7 @@ class MailTo:
                                  '2. Можно прикрепить не более 10 файлов (если будет отправлено более '
                                  '10 файлов, бот отправит только первые 10).\n'
                                  '3. При прикреплении тяжелых файлов (которые достигают лимит), '
-                                 'рассылка может замедлиться, и бот не будет отвечать до 3 минут.\n'
+                                 'рассылка может замедлиться, и бот не будет отвечать до 3-5 минут.\n'
                                  '4. ⚠️Если вы захотите завершить прикрепление файлов, нажмите на кнопку "Готово"')
         await update.message.reply_text(text_, reply_markup=await self.attachments_kbrd(),
                                         parse_mode='MarkdownV2')
@@ -125,15 +125,14 @@ class MailTo:
             return self.step_attachments
         context.user_data['FILES_SIZE'] += file_info.file_size
         if context.user_data['FILES_SIZE'] / 1024 / 1024 > 10:
-            len_ = len(context.user_data['ATTACHMENTS']) - 1
-            await update.message.reply_text(f'Достигнут лимит по общему размеру файлов. '
-                                            f'Будут отправлены только первые {len_}.')
             context.user_data['ATTACHMENTS'] = context.user_data['ATTACHMENTS'][:-1]
-            return await self.send_message(update, context)
+            await update.message.reply_text(f'Файл не может быть отправлен из-за лимита. Загрузка файлов продолжается. '
+                                            'Если вы хотите завершить прикрепление файлов, '
+                                            'нажмите на кнопку "Готово"')
+            return self.step_attachments
         if len(context.user_data['ATTACHMENTS']) == 10:
             await update.message.reply_text('Достигнут лимит по количеству файлов. '
                                             'Будут отправлены только первые 10.')
-            context.user_data['ATTACHMENTS'] = context.user_data['ATTACHMENTS'][:10]
             return await self.send_message(update, context)
         await update.message.reply_text('Загрузка файлов продолжается. '
                                         'Если вы хотите завершить прикрепление файлов, '
@@ -146,7 +145,8 @@ class MailTo:
         return self.step_attachments
 
     async def send_message(self, update, context):
-        author = db_sess.query(User).filter(User.telegram_id == update.message.from_user.id).first()
+        chat_id = update.message.chat.id
+        author = db_sess.query(User).filter(User.chat_id == chat_id).first()
         if context.user_data['PARAL'] == 'Админ':
             all_users = db_sess.query(User).filter(User.role == 'admin').all()
         elif context.user_data['PARAL'] == 'Учителя':
@@ -154,7 +154,6 @@ class MailTo:
         else:
             all_users = db_sess.query(User).all()
             if context.user_data['PARAL'] != 'Всем':
-                # context.user_data['PARAL'] in User.grade
                 all_users = (db_sess.query(User).
                              filter(User.number == context.user_data['PARAL']).all())
                 if context.user_data['CLASS'] != 'Всем':
@@ -177,19 +176,19 @@ class MailTo:
         for user in all_users:
             try:
                 if len(arr) >= 2:
-                    await bot.send_media_group(user.telegram_id, arr, caption=mail_text, parse_mode='MarkdownV2')
+                    await bot.send_media_group(user.chat_id, arr, caption=mail_text, parse_mode='MarkdownV2')
                 elif len(arr) == 1:
-                    await bot.send_document(user.telegram_id, context.user_data['ATTACHMENTS'][0],
+                    await bot.send_document(user.chat_id, context.user_data['ATTACHMENTS'][0],
                                             caption=mail_text, parse_mode='MarkdownV2')
                 else:
-                    await bot.send_message(user.telegram_id, mail_text, parse_mode='MarkdownV2')
+                    await bot.send_message(user.chat_id, mail_text, parse_mode='MarkdownV2')
             except Exception as e:
                 if e.__str__() not in didnt_send:
                     didnt_send[e.__str__()] = 1
                 else:
                     didnt_send[e.__str__()] += 1
                 continue
-        context.user_data['ATTACHMENTS'] = []
+        context.user_data['ATTACHMENTS'].clear()
         context.user_data['FILES_SIZE'] = 0
         p, c = context.user_data['PARAL'], context.user_data['CLASS']
         t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])

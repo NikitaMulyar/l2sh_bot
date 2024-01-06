@@ -47,7 +47,8 @@ class GetTimetable:
                         if 'Замены' in df.columns.values:
                             if df.iloc[j]['Урок №'] == '' and j == 0:
                                 continue
-                            if user.number in df.iloc[j]['Класс'] and (user.grade[-1] in df.iloc[j]['Класс'] or 'классы' in df.iloc[j]['Класс']):
+                            if (user.number in df.iloc[j]['Класс'] and
+                                    (user.grade[-1].upper() in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j]['Класс'].lower())):
                                 subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
                                 subject = " ".join(subject.split('\n'))
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
@@ -175,11 +176,11 @@ class GetTimetable:
     async def get_timetable(self, update, context):
         if context.user_data.get('in_conversation'):
             return
-        user__id = update.message.from_user.id
-        if not db_sess.query(User).filter(User.telegram_id == user__id).first():
+        chat_id = update.message.chat.id
+        user = db_sess.query(User).filter(User.chat_id == chat_id).first()
+        if not user:
             await update.message.reply_text(f'⚠️Для начала заполните свои данные: /start')
             return
-        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
         if (user.role == 'admin' or user.role == 'teacher') and not os.path.exists(path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv'):
             await update.message.reply_text(f'⚠️У вас нет личного расписания')
             return
@@ -235,7 +236,6 @@ class GetTimetable:
                 ####################
             elif (not context.user_data.get('EXTRA_CLICKED') and
                   update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
-                user = db_sess.query(User).filter(User.telegram_id == user__id).first()
                 lessons, day = await get_standard_timetable_for_teacher(f'{user.surname} {user.name[0]}',
                                                                         self.day_num[update.message.text])
                 if lessons.empty:
@@ -430,7 +430,6 @@ class GetTimetable:
                 ##########
             elif (not context.user_data.get('EXTRA_CLICKED') and
                   update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
-                user = db_sess.query(User).filter(User.telegram_id == user__id).first()
                 if int(user.number) >= 10:
                     lessons, day = await get_standard_timetable_for_user(f'{user.surname} {user.name}', user.grade,
                                                                          self.day_num[update.message.text])

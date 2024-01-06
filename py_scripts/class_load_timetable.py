@@ -16,7 +16,8 @@ class LoadTimetables:
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
-        user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
+        chat_id = update.message.chat.id
+        user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         await update.message.reply_text('Прервать загрузку расписаний: /end_load')
         if user and user.role == "admin":
             await update.message.reply_text(f'Выберите нужный класс', reply_markup=await self.classes_buttons())
@@ -83,7 +84,7 @@ class LoadTimetables:
             res = await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
                                   prepare_for_markdown(
                                       '\nОбновлены расписания. Пожалуйста, проверьте ваше расписание!'),
-                                  parse_mode='MarkdownV2', all_=True)
+                                  parse_mode='MarkdownV2')
             await update.message.reply_text(
                 f'Загрузка расписаний завершена. Проведена рассылка всем ученикам об обновлении расписаний.\n{res}\nНачать сначала: /load',
                 reply_markup=await timetable_kbrd())
@@ -189,7 +190,8 @@ class LoadEditsTT:
     async def start(self, update, context):
         if context.user_data.get('in_conversation'):
             return ConversationHandler.END
-        user = db_sess.query(User).filter(User.telegram_id == update.message.chat.id).first()
+        chat_id = update.message.chat.id
+        user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         await update.message.reply_text('Прервать загрузку расписаний: /end_changes')
         if user and user.role == 'admin':
             await update.message.reply_text(f'Выберите дату изменений в расписании или напишите свою (формат: ДД.ММ.ГГГГ):',
@@ -213,8 +215,12 @@ class LoadEditsTT:
         return self.step_date
 
     async def get_date(self, update, context):
-        if len(update.message.text.split('.')) != 3 or not all([i.isdigit() for i in update.message.text.split('.')]):
-            await update.message.reply_text(f'Указана неверная дата "{update.message.text}"')
+        try:
+            tmp = update.message.text.split('.')
+            date__ = datetime(year=int(tmp[2]), month=int(tmp[1]), day=int(tmp[0]))
+            # Проверка корректности даты
+        except Exception as e:
+            await update.message.reply_text(f'Указана неверная дата "{update.message.text}". Ошибка: {e}')
             return self.step_date
         context.user_data['changes_date'] = update.message.text
         await update.message.reply_text(f'Загрузите файл .pdf')

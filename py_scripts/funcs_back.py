@@ -16,7 +16,7 @@ import os
 from py_scripts.consts import *
 import pdfplumber
 
-db_session.global_init("database/telegram_bot3.db")
+db_session.global_init("database/telegram_bot.db")
 bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
 
@@ -70,16 +70,16 @@ async def extra_school_timetable_kbrd():
 
 
 async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
-    all_users = db_sess.query(User).filter(User.role != "admin").all()
+    all_users = db_sess.query(User).filter(User.role != "admin" & User.role != "teacher").all()
     didnt_send = {}
     if all_:
         all_users = db_sess.query(User).all()
     for user in all_users:
         try:
             if parse_mode:
-                await asyncio.gather(bot.send_message(user.telegram_id, text, parse_mode='MarkdownV2'))
+                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
             else:
-                await asyncio.gather(bot.send_message(user.telegram_id, text))
+                await asyncio.gather(bot.send_message(user.chat_id, text))
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
@@ -98,9 +98,9 @@ async def write_admins(bot: telegram.Bot, text, parse_mode=None):
     for user in all_users:
         try:
             if parse_mode:
-                await asyncio.gather(bot.send_message(user.telegram_id, text, parse_mode='MarkdownV2'))
+                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
             else:
-                await asyncio.gather(bot.send_message(user.telegram_id, text))
+                await asyncio.gather(bot.send_message(user.chat_id, text))
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
@@ -210,30 +210,25 @@ def prepare_for_markdown(text):
 
 def put_to_db(update, name, surname, role, username, grade=None):
     user__id = update.message.from_user.id
+    chat_id = update.message.chat.id
     num = grade
     if role != 'admin' and role != 'teacher':
         num = num[:-1]
-    if db_sess.query(User).filter(User.telegram_id == user__id).first():
-        if not db_sess.query(User).filter(User.telegram_id == user__id).first():
-            user = User(telegram_id=user__id, surname=surname, name=name, role=role,
-                        grade=grade, number=num, telegram_tag=username)
-            db_sess.add(user)
-    else:
-        user = User(telegram_id=user__id, surname=surname, name=name, role=role,
+    if not db_sess.query(User).filter(User.chat_id == chat_id).first():
+        user = User(telegram_id=user__id, chat_id=chat_id, usurname=surname, name=name, role=role,
                     grade=grade, number=num, telegram_tag=username)
         db_sess.add(user)
         db_sess.commit()
-    db_sess.commit()
 
 
 def update_db(update, name, surname, role, username, grade=None):
-    user__id = update.message.from_user.id
-    user = db_sess.query(User).filter(User.telegram_id == user__id).first()
+    chat_id = update.message.chat.id
+    user = db_sess.query(User).filter(User.chat_id == chat_id).first()
     user.surname = surname
     user.name = name
     user.role = role
     user.grade = grade
-    user.username = username
+    user.telegram_tag = username
     if role != 'admin' and role != 'teacher':
         user.number = grade[:-1]
     else:
