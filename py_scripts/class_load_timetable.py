@@ -258,7 +258,7 @@ class LoadEditsTT:
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
 
-        bot.delete_message(update.message.chat.id, msg_.id)
+        await bot.delete_message(update.message.chat.id, msg_.id)
         res = await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
                               prepare_for_markdown(
                                   f'\nВ боте появились изменения на {context.user_data["changes_date"]}. '

@@ -70,7 +70,6 @@ async def extract_timetable_for_students_6_9():
             except Exception:
                 df = pd.DataFrame(table[2:], columns=table[1])
                 df[''].ffill(axis=0, inplace=True)
-                days_from_short_text_to_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
                 df[''] = df[''].apply(lambda x: days_from_short_text_to_num[x])
                 for col in df.columns.values:
                     if col != '':

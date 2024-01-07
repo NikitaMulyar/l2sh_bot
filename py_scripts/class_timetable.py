@@ -1,36 +1,18 @@
 import os
 from telegram.ext import ConversationHandler
-from py_scripts.consts import path_to_timetables_csv
+
+from py_scripts.class_extra_lesson import extra_lessons_for_each_day, extra_lessons_for_all_days, extra_send_day
+from py_scripts.consts import path_to_timetables_csv, days_from_num_to_full_text_formatted
 from py_scripts.funcs_back import get_edits_in_timetable, throttle, extra_school_timetable_kbrd, get_timetable_for_user, \
     get_timetable_for_user_6_9, get_standard_timetable_for_user, get_standard_timetable_for_user_6_9, \
-    prepare_for_markdown, db_sess, timetable_kbrd, extra_lessons_return
-from py_scripts.funcs_teachers import get_timetable_for_teacher, extra_send_near, get_standard_timetable_for_teacher, \
-    extra_send_day, extra_lessons_teachers_return
+    prepare_for_markdown, db_sess, timetable_kbrd
+from py_scripts.funcs_teachers import extra_send_near, timetable_teacher_for_each_day
 from datetime import datetime
 from sqlalchemy_scripts.users import User
-from py_scripts.consts import days_from_num_to_full_text, days_from_short_text_to_num, lessons_keys
+from py_scripts.consts import days_from_num_to_full_text, days_from_short_text_to_num, lessons_keys, for_datetime
 
 
 class GetTimetable:
-    for_datetime = {'0\n08:30 - 08:55': ((8, 20),
-                                         (8, 55)),
-                    '1\n09:00 - 09:45': ((8, 55),
-                                         (9, 45)),
-                    '2\n09:55 - 10:40': ((9, 45),
-                                         (10, 40)),
-                    '3\n10:50 - 11:35': ((10, 40),
-                                         (11, 35)),
-                    '4\n11:45 - 12:30': ((11, 35),
-                                         (12, 30)),
-                    '5\n12:50 - 13:35': ((12, 30),
-                                         (13, 35)),
-                    '6\n13:55 - 14:40': ((13, 35),
-                                         (14, 40)),
-                    '7\n14:50 - 15:35': ((14, 40),
-                                         (15, 35)),
-                    '8\n15:45 - 16:30': ((15, 35),
-                                         (16, 30))}
-
     async def get_edits(self, context, user):
         t = ""
         edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
@@ -184,66 +166,17 @@ class GetTimetable:
                 path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv'):
             await update.message.reply_text(f'⚠️У вас нет личного расписания')
             return
+        elif update.message.text == '🎨Мои кружки🎨':
+            await update.message.reply_text('Выберите интересующий Вас день',
+                                            reply_markup=await extra_school_timetable_kbrd())
+            context.user_data['EXTRA_CLICKED'] = True
         elif user.role == 'teacher' or user.role == 'admin':
             if update.message.text == '📚Ближайшее расписание📚':
                 context.user_data['NEXT_DAY_TT'] = False
-                lessons, day = await get_timetable_for_teacher(context, f'{user.surname} {user.name[0]}')
-                if lessons.empty:
-                    await update.message.reply_text(f'На {days_from_num_to_full_text[day]} у Вас нет уроков')
-                    return
-                title = f'*Расписание на _{days_from_num_to_full_text[day]}_*\n\n'
-                t = ""
-                time_now = datetime.now()  # - timedelta(hours=3)
-                # !!!!!!!!!!!!!!!!!
-                for txt_info, key in lessons_keys.items():
-                    try:
-                        pre_lesson_info = lessons.loc[key][1::]
-                        start, end = self.for_datetime[key]
-                        if start <= (time_now.hour, time_now.minute) < end and not context.user_data['NEXT_DAY_TT']:
-                            t += f'_*' + prepare_for_markdown(f'➡️ {txt_info}')
-                        else:
-                            t += prepare_for_markdown(f'{txt_info}')
-                        for lesson_info in pre_lesson_info:
-                            lesson_info = lesson_info.split('\n')
-                            cabinet = lesson_info[-1]
-                            classes = ""
-                            lesson_name = []
-                            for el in lesson_info[:-1:]:
-                                for grades in ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД']:
-                                    if grades in el:
-                                        classes += el
-                                        break
-                                else:
-                                    lesson_name.append(el)
-                            lesson_name = " ".join(lesson_name)
-                            t += prepare_for_markdown(
-                                f'{lesson_name} - каб. {cabinet}\n(классы: {classes})\n')
-                        if start <= (time_now.hour, time_now.minute) < end and not context.user_data['NEXT_DAY_TT']:
-                            t += '*_'
-                        t += '\n'
-                    except Exception as e:
-                        continue
-                t += '\n'
                 edits_text = await self.get_edits_for_teacher(context, user)
-                if edits_text:
-                    t = title + '_' + prepare_for_markdown(
-                        '⚠️Обратите внимание, что у Вас есть изменения в расписании!\n\n') + '_' + t + edits_text
-                else:
-                    t = title + '\n' + t + edits_text
-                await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
-                ######Вывод кружков вместе с расписанием
-                await extra_send_near(update, context, flag=True)
-                ####################
+                await timetable_teacher_for_each_day(context, user, update, edits_text, near=True)
             elif (not context.user_data.get('EXTRA_CLICKED') and
                   update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
-                lessons, day = await get_standard_timetable_for_teacher(f'{user.surname} {user.name[0]}',
-                                                                        days_from_short_text_to_num[
-                                                                            update.message.text])
-                if lessons.empty:
-                    await update.message.reply_text(f'В этот день у Вас нет уроков')
-                    return
-                title = f'*Расписание на _{days_from_num_to_full_text[day]}_*\n\n'
-                t = ""
                 edits_text = ""
                 context.user_data['NEXT_DAY_TT'] = False
                 if days_from_short_text_to_num[update.message.text] == 0 and datetime.now().weekday() == 5:
@@ -255,53 +188,11 @@ class GetTimetable:
                 elif days_from_short_text_to_num[update.message.text] == (datetime.now().weekday() + 1) % 7:
                     context.user_data['NEXT_DAY_TT'] = True
                     edits_text = await self.get_edits_for_teacher(context, user)
-                for txt_info, key in lessons_keys.items():
-                    try:
-                        pre_lesson_info = lessons.loc[key][1::]
-                        t += prepare_for_markdown(f'{txt_info}')
-                        for lesson_info in pre_lesson_info:
-                            lesson_info = lesson_info.split('\n')
-                            cabinet = lesson_info[-1]
-                            classes = ""
-                            lesson_name = []
-                            for el in lesson_info[:-1:]:
-                                for grades in ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД']:
-                                    if grades in el:
-                                        classes += el
-                                        break
-                                else:
-                                    lesson_name.append(el)
-                            lesson_name = " ".join(lesson_name)
-                            t += prepare_for_markdown(
-                                f'{lesson_name} - каб. {cabinet}\n(классы: {classes})\n')
-                        t += '\n'
-                    except Exception as e:
-                        continue
-                if edits_text:
-                    t = title + '_' + prepare_for_markdown(
-                        '⚠️Обратите внимание, что у Вас есть изменения в расписании!\n\n') + '_' + t + edits_text
-                else:
-                    t = title + '\n' + t + edits_text
-                await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
-                ######Вывод кружков вместе с расписанием
-                await extra_send_day(update, flag=True)
-                ####################
-            elif update.message.text == '🎨Мои кружки🎨':
-                await update.message.reply_text('Выберите интересующий Вас день',
-                                                reply_markup=await extra_school_timetable_kbrd())
-                context.user_data['EXTRA_CLICKED'] = True
+                await timetable_teacher_for_each_day(context, user, update, edits_text)
             elif context.user_data.get('EXTRA_CLICKED') and update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
                 context.user_data['EXTRA_CLICKED'] = False
-                extra_text = extra_lessons_teachers_return(update.message.from_user.id, update.message.text)
-                text = prepare_for_markdown(extra_text)
-                if text == '':
-                    await update.message.reply_text(
-                        f'*Кружков на {days_from_num_to_full_text[days_from_short_text_to_num[update.message.text]].lower()} нет*',
-                        reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-                    return
-                await update.message.reply_text(
-                    f'*Кружки на {days_from_num_to_full_text[days_from_short_text_to_num[update.message.text]].lower()}*\n\n{text}',
-                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+                await extra_lessons_for_each_day(update, update.message.from_user.id, update.message.text,
+                                                 teacher=True)
             elif update.message.text == '♟️Сегодня♟️':
                 today = datetime.now().weekday()
                 context.user_data['EXTRA_CLICKED'] = False
@@ -310,38 +201,10 @@ class GetTimetable:
                                                     reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
                     return
                 days = {value: key for key, value in days_from_short_text_to_num.items()}
-                extra_text = extra_lessons_teachers_return(update.message.from_user.id, days[today])
-                text = prepare_for_markdown(extra_text)
-                if text == '':
-                    await update.message.reply_text(
-                        f'*Кружков на {days_from_num_to_full_text[today].lower()} нет*',
-                        reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-                    return
-                await update.message.reply_text(
-                    f'*Кружки на {days_from_num_to_full_text[today].lower()}*\n\n{text}',
-                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+                await extra_lessons_for_each_day(update, update.message.from_user.id, days[today], teacher=True)
             elif update.message.text == '🎭Все кружки🎭':
                 context.user_data['EXTRA_CLICKED'] = False
-                list_text_res = []
-                text_res = ""
-                for day, day_number in days_from_short_text_to_num.items():
-                    extra_text = extra_lessons_teachers_return(update.message.from_user.id, day)
-                    text = prepare_for_markdown(extra_text)
-                    if text != "":
-                        text_res += f'_*{days_from_num_to_full_text[day_number]}*_\n{text}\n'
-                    if len(text_res) > 3000:
-                        list_text_res.append(text_res)
-                        text_res = ""
-                list_text_res.append(text_res)
-                if not list_text_res:
-                    await update.message.reply_text(
-                        f'*Вы не проводите кружки\.*',
-                        reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-                    return
-                for el in list_text_res:
-                    if el:
-                        await update.message.reply_text(el,
-                                                        reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+                await extra_lessons_for_all_days(update, update.message.from_user.id, teacher=True)
         else:
             if update.message.text == '📚Ближайшее расписание📚':
                 context.user_data['NEXT_DAY_TT'] = False
@@ -356,7 +219,7 @@ class GetTimetable:
                     await update.message.reply_text(f'Ученика "{txt}" не найдено или отсутствует '
                                                     f'расписание для {class_txt} класса.')
                     return
-                title = f'*Расписание на _{days_from_num_to_full_text[day]}_*\n\n'
+                title = f'*Расписание на _{days_from_num_to_full_text_formatted[day]}_*\n\n'
                 t = ""
                 time_now = datetime.now()  # - timedelta(hours=3)
                 # !!!!!!!!!!!!!!!!!
@@ -366,10 +229,8 @@ class GetTimetable:
                             pre_lesson_info = lessons.loc[key].split('###')
                         else:
                             pre_lesson_info = lessons.loc[key][day].split('###')
-                        start, end = self.for_datetime[key]
+                        start, end = for_datetime[key]
                         # Получили информацию об уроке: учитель, предмет, каб.
-                        # if type(pre_lesson_info) == str:
-                        #     pre_lesson_info = [pre_lesson_info]
                         if start <= (time_now.hour, time_now.minute) < end and not context.user_data['NEXT_DAY_TT']:
                             t += f'_*' + prepare_for_markdown(f'➡️ {txt_info}')
                         else:
@@ -446,7 +307,7 @@ class GetTimetable:
                     await update.message.reply_text(f'Ученика "{txt}" не найдено или отсутствует '
                                                     f'расписание для {class_txt} класса.')
                     return ConversationHandler.END
-                title = f'*Расписание на _{days_from_num_to_full_text[day]}_*\n\n'
+                title = f'*Расписание на _{days_from_num_to_full_text_formatted[day]}_*\n\n'
                 t = ""
                 edits_text = ""
                 context.user_data['NEXT_DAY_TT'] = False
@@ -518,22 +379,9 @@ class GetTimetable:
                 ######Вывод кружков вместе с расписанием
                 await extra_send_day(update)
                 ####################
-            elif update.message.text == '🎨Мои кружки🎨':
-                await update.message.reply_text('Выберите интересующий Вас день',
-                                                reply_markup=await extra_school_timetable_kbrd())
-                context.user_data['EXTRA_CLICKED'] = True
             elif context.user_data.get('EXTRA_CLICKED') and update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
                 context.user_data['EXTRA_CLICKED'] = False
-                extra_text = extra_lessons_return(update.message.from_user.id, update.message.text)
-                text = prepare_for_markdown(extra_text)
-                if text == '':
-                    await update.message.reply_text(
-                        f'*Кружков на {days_from_num_to_full_text[days_from_short_text_to_num[update.message.text]].lower()} нет*',
-                        reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-                    return
-                await update.message.reply_text(
-                    f'*Кружки на {days_from_num_to_full_text[days_from_short_text_to_num[update.message.text]].lower()}*\n\n{text}',
-                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+                await extra_lessons_for_each_day(update, update.message.from_user.id, update.message.text)
             elif update.message.text == '♟️Сегодня♟️':
                 today = datetime.now().weekday()
                 context.user_data['EXTRA_CLICKED'] = False
@@ -542,35 +390,7 @@ class GetTimetable:
                                                     reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
                     return
                 days = {value: key for key, value in days_from_short_text_to_num.items()}
-                extra_text = extra_lessons_return(update.message.from_user.id, days[today])
-                text = prepare_for_markdown(extra_text)
-                if text == '':
-                    await update.message.reply_text(
-                        f'*Кружков на {days_from_num_to_full_text[today].lower()} нет*',
-                        reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-                    return
-                await update.message.reply_text(
-                    f'*Кружки на {days_from_num_to_full_text[today].lower()}*\n\n{text}',
-                    reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+                await extra_lessons_for_each_day(update, update.message.from_user.id, days[today])
             elif update.message.text == '🎭Все кружки🎭':
                 context.user_data['EXTRA_CLICKED'] = False
-                list_text_res = []
-                text_res = ""
-                for day, day_number in days_from_short_text_to_num.items():
-                    extra_text = extra_lessons_return(update.message.from_user.id, day)
-                    text = prepare_for_markdown(extra_text)
-                    if text != "":
-                        text_res += f'_*{days_from_num_to_full_text[day_number]}*_\n{text}\n'
-                    if len(text_res) > 3000:
-                        list_text_res.append(text_res)
-                        text_res = ""
-                list_text_res.append(text_res)
-                if not list_text_res:
-                    await update.message.reply_text(
-                        f'*Вы еще не записывались на кружки\.*',
-                        reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
-                    return
-                for el in list_text_res:
-                    if el:
-                        await update.message.reply_text(el,
-                                                        reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+                await extra_lessons_for_all_days(update, update.message.from_user.id)

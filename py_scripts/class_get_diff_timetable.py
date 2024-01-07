@@ -1,8 +1,9 @@
 from telegram import ReplyKeyboardMarkup
 
+from py_scripts.class_extra_lesson import extra_send_day
 from py_scripts.funcs_back import prepare_for_markdown, get_standard_timetable_for_user, \
     get_standard_timetable_for_user_6_9, get_edits_in_timetable, timetable_kbrd, throttle2
-from py_scripts.funcs_teachers import get_standard_timetable_for_teacher, extra_send_day
+from py_scripts.funcs_teachers import get_standard_timetable_for_teacher
 from telegram.ext import ConversationHandler
 from datetime import datetime
 from py_scripts.consts import days_from_num_to_full_text, days_from_short_text_to_num, lessons_keys

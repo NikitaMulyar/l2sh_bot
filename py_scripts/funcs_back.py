@@ -236,29 +236,6 @@ def update_db(update, name, surname, role, username, grade=None):
     db_sess.commit()
 
 
-def extra_lessons_return(id, button_text):
-    days = {"Пн": "Понедельник", "Вт": "Вторник", "Ср": "Среда", "Чт": "Четверг", "Пт": "Пятница", "Сб": "Суббота"}
-    day = days[button_text]
-    extra_lessons = db_sess.query(Extra_to_User).filter(Extra_to_User.user_id == id).all()
-    full_text = []
-    for extra_lesson in extra_lessons:
-        extra = db_sess.query(Extra).filter(Extra.id == extra_lesson.extra_id, Extra.day == day).first()
-        if extra:
-            text = "⤵️\n"
-            text += f"📚 {extra.title} 📚\n"
-            text += f"🕝 {extra.time} 🕝\n"
-            if extra.teacher.count(".") > 1:
-                text += f'Учитель: {extra.teacher}\n'
-            place = ""
-            if "зал" in extra.place or "online" in extra.place:
-                place = extra.place
-            else:
-                place = f"{extra.place} кабинет"
-            text += f'🏫 Место проведения: {place} 🏫\n'
-            full_text.append(text)
-    return "".join(full_text)
-
-
 async def save_edits_in_timetable_csv(date):
     # filename format: DD.MM.YYYY
     path_ = path_to_changes + date + '.pdf'
@@ -341,8 +318,10 @@ async def save_edits_in_timetable_csv(date):
                                     'Замена кабинета': 'Замены кабинетов',
                                     "№\nурока": "Урок №",
                                     "№ урока": "Урок №",
+                                    "№урока": "Урок №",
                                     "№": "Урок №",
                                     'Замена\nкабинета': 'Замены кабинетов',
+                                    'Заменакабинета': 'Замены кабинетов',
                                     'Урок по\nрасписанию': 'Урок по расписанию',
                                     'Урок и кабинет по\nрасписанию': 'Урок по расписанию',
                                     'Урок и кабинет\nпо расписанию': 'Урок по расписанию',
