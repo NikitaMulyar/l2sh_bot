@@ -70,28 +70,28 @@ class LoadTimetables:
         return self.step_class
 
     async def end_setting(self, update, context):
-        fl1 = 0
+        res1 = ''
+        res2 = ''
         if context.user_data.get('FILE_UPLOADED2'):
-            res = await write_admins(bot, prepare_for_markdown('❗️') + '_*Уважаемые учителя\!*_' +
+            res1 = await write_admins(bot, prepare_for_markdown('❗️') + '_*Уважаемые учителя\!*_' +
                                      prepare_for_markdown(
                                          '\nОбновлены расписания пед. состава. Они уже доступны к просмотру.'),
                                      parse_mode='MarkdownV2')
-            await update.message.reply_text(
-                f'Загрузка расписаний завершена. Проведена рассылка всем учителям об обновлении расписаний.\n{res}\nНачать сначала: /load',
-                reply_markup=await timetable_kbrd())
-            fl1 += 1
         if context.user_data.get('FILE_UPLOADED'):
-            res = await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
+            res2 = await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
                                   prepare_for_markdown(
                                       '\nОбновлены расписания. Пожалуйста, проверьте ваше расписание!'),
                                   parse_mode='MarkdownV2')
+        if context.user_data.get('FILE_UPLOADED2'):
             await update.message.reply_text(
-                f'Загрузка расписаний завершена. Проведена рассылка всем ученикам об обновлении расписаний.\n{res}\nНачать сначала: /load',
+                f'Учителя получили уведомление о новых расписаниях.\n{res1}',
                 reply_markup=await timetable_kbrd())
-            fl1 += 1
-        if fl1 == 0:
-            await update.message.reply_text('Загрузка расписаний завершена. Начать сначала: /load',
-                                            reply_markup=await timetable_kbrd())
+        if context.user_data.get('FILE_UPLOADED'):
+            await update.message.reply_text(
+                f'Ученики получили уведомление о новых расписаниях.\n{res2}',
+                reply_markup=await timetable_kbrd())
+        await update.message.reply_text('Загрузка расписаний завершена. Начать сначала: /load',
+                                        reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['FILE_UPLOADED'] = False
         context.user_data['FILE_UPLOADED2'] = False

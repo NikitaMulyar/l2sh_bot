@@ -16,6 +16,7 @@ import os
 from py_scripts.consts import *
 import pdfplumber
 
+
 db_session.global_init("database/telegram_bot.db")
 bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
@@ -70,7 +71,7 @@ async def extra_school_timetable_kbrd():
 
 
 async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
-    all_users = db_sess.query(User).filter(User.role != "admin" & User.role != "teacher").all()
+    all_users = db_sess.query(User).filter(User.role != "admin").filter(User.role != "teacher").all()
     didnt_send = {}
     if all_:
         all_users = db_sess.query(User).all()
@@ -93,7 +94,7 @@ async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
 
 
 async def write_admins(bot: telegram.Bot, text, parse_mode=None):
-    all_users = db_sess.query(User).filter(User.role == "admin").all()
+    all_users = db_sess.query(User).filter((User.role == "admin") | (User.role == "teacher")).all()
     didnt_send = {}
     for user in all_users:
         try:
@@ -297,6 +298,8 @@ async def save_edits_in_timetable_csv(date):
                     tmp = t[j]
                     while len(tmp) != 5:
                         tmp.append(None)
+                        if len(tmp) > 5:
+                            raise Exception("Неверный формат таблицы")
                     if tmp[3] and 'Замен' in tmp[3] and tmp[4] is not None:
                         tmp[3] += tmp[4]
                         tmp[4] = None
