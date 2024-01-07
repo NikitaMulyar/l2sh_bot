@@ -12,6 +12,7 @@ class SetTimetable:
     step_pswrd = 4
     step_third_name = 5
     classes = ['6А', '6Б', '6В'] + [f'{i}{j}' for i in range(7, 12) for j in 'АБВГД'] + ['Админ', 'Учитель']
+    command = '/start'
 
     async def classes_buttons(self):
         classes = [['6А', '6Б', '6В']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(7, 12)] + [['Админ', 'Учитель']]
@@ -66,7 +67,7 @@ class SetTimetable:
     async def get_psw(self, update, context):
         if my_hash(update.message.text) != password_hash:
             await update.message.reply_text('Неверный пароль. Настройка данных прервана. '
-                                            'Начать сначала: /start',
+                                            f'Начать сначала: {self.command}',
                                             reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             context.user_data['INFO'] = dict()
@@ -104,6 +105,6 @@ class SetTimetable:
     async def end_setting(self, update, context):
         context.user_data['in_conversation'] = False
         context.user_data['INFO'] = dict()
-        await update.message.reply_text(f'Регистрация в системе прервана. Начать сначала: /start',
+        await update.message.reply_text(f'Регистрация в системе прервана. Начать сначала: {self.command}',
                                         reply_markup=await timetable_kbrd())
         return ConversationHandler.END

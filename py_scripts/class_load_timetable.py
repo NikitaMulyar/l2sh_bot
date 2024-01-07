@@ -259,7 +259,7 @@ class LoadEditsTT:
             return ConversationHandler.END
 
         await bot.delete_message(update.message.chat.id, msg_.id)
-        res = await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
+        res = await write_all(bot, prepare_for_markdown('❗️') + '_*Уважаемые учителя и лицеисты\!*_' +
                               prepare_for_markdown(
                                   f'\nВ боте появились изменения на {context.user_data["changes_date"]}. '
                                   f'Пожалуйста, проверьте ваше расписание на эту дату.\n\n') + edits_text,

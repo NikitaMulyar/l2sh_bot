@@ -88,7 +88,6 @@ async def extract_teacher_timetable_for_day(day, full_name):
     return df, day
 
 
-
 async def timetable_teacher_for_each_day(context, user, update, edits_text, near=False):
     if near:
         lessons, day = await get_timetable_for_teacher(context, f'{user.surname} {user.name[0]}')
