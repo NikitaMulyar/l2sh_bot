@@ -194,18 +194,19 @@ async def extra_lessons_for_all_days(update, id, teacher=False):
                                             reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
 
 
-def extra_lessons_teachers_return(id, button_text):
+def extra_lessons_teachers_return(id, button_text, surname=None):
     days = {"Пн": "Понедельник", "Вт": "Вторник", "Ср": "Среда", "Чт": "Четверг", "Пт": "Пятница", "Сб": "Суббота"}
     day = days[button_text]
-    user = db_sess.query(User).filter(User.telegram_id == id).first()
-    extra_lessons = db_sess.query(Extra).filter(Extra.teacher.like(f'{user.surname}%'), day == Extra.day).all()
+    if not surname:
+        surname = db_sess.query(User).filter(User.telegram_id == id).first().surname
+    extra_lessons = db_sess.query(Extra).filter(Extra.teacher.like(f'{surname}%'), day == Extra.day).all()
     full_text = []
     extra_was = []
     for extra_lesson in extra_lessons:
         if extra_lesson.title in extra_was:
             continue
         text = "⤵️\n"
-        ex = db_sess.query(Extra).filter(Extra.teacher.like(f'{user.surname}%'), Extra.title == extra_lesson.title,
+        ex = db_sess.query(Extra).filter(Extra.teacher.like(f'{surname}%'), Extra.title == extra_lesson.title,
                                          Extra.time == extra_lesson.time).all()
         classes = []
         for el in ex:
@@ -246,9 +247,12 @@ async def extra_send_near(update, context, flag=False):
         reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
 
 
-async def extra_send_day(update, flag=False):
+async def extra_send_day(update, diff=None, flag=False):
     if flag:
-        extra_text = extra_lessons_teachers_return(update.message.from_user.id, update.message.text)
+        if diff:
+            extra_text = extra_lessons_teachers_return(update.message.from_user.id, update.message.text, surname=diff)
+        else:
+            extra_text = extra_lessons_teachers_return(update.message.from_user.id, update.message.text)
     else:
         extra_text = extra_lessons_return(update.message.from_user.id, update.message.text)
     text = prepare_for_markdown(extra_text)

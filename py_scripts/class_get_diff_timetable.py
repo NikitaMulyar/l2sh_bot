@@ -24,7 +24,8 @@ class GetTimetableForStudent:
                             if df.iloc[j]['Урок №'] == '' and j == 0:
                                 continue
                             if student_class[:-1] in df.iloc[j]['Класс'].upper() and (
-                                    student_class[-1] in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j]['Класс'].lower()):
+                                    student_class[-1] in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j][
+                                'Класс'].lower()):
                                 subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
                                 subject = " ".join(subject.split('\n'))
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
@@ -49,7 +50,8 @@ class GetTimetableForStudent:
                                                 subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
                         else:
                             if student_class[:-1] in df.iloc[j]['Класс'].upper() and (
-                                    student_class[-1] in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j]['Класс'].lower()):
+                                    student_class[-1] in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j][
+                                'Класс'].lower()):
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
                                 res.append([f"{class__}, ", number_of_lesson,
                                             df.iloc[j]['Замены кабинетов'],
@@ -84,7 +86,8 @@ class GetTimetableForStudent:
             lessons, day = await get_standard_timetable_for_user(f'{student_familia} {student_name}',
                                                                  student_class, days_from_short_text_to_num[day_name])
         else:
-            lessons, day = await get_standard_timetable_for_user_6_9(student_class, days_from_short_text_to_num[day_name])
+            lessons, day = await get_standard_timetable_for_user_6_9(student_class,
+                                                                     days_from_short_text_to_num[day_name])
         txt = (student_familia + ' ' + student_name + ' ' + student_class)
         if lessons.empty:
             class_txt = student_class
@@ -282,7 +285,7 @@ class GetTimetableForTeacher:
             t = title + '\n' + t + edits_text
         await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         ######Вывод кружков вместе с расписанием
-        await extra_send_day(update, flag=True)
+        await extra_send_day(update, diff=familia, flag=True)
         ####################
 
 
@@ -328,12 +331,12 @@ class CheckStudentTT:
             context.user_data['INFO']['Name'] = ''
             context.user_data['INFO']['Familia'] = ''
             return self.step_date
-        await update.message.reply_text(f'Укажите фамилию учащегося (пример: Некрасов)')
+        await update.message.reply_text(f'Укажите фамилию пользователя (пример: Некрасов)')
         return self.step_familia
 
     async def get_familia(self, update, context):
         context.user_data['INFO']['Familia'] = update.message.text
-        await update.message.reply_text(f'Укажите ПОЛНОЕ имя учащегося (пример: Николай)')
+        await update.message.reply_text(f'Укажите ПОЛНОЕ имя пользователя (пример: Николай)')
         return self.step_name
 
     async def get_name(self, update, context):
@@ -352,9 +355,9 @@ class CheckStudentTT:
             return self.step_date
         context.user_data['INFO']['Day'] = update.message.text
         if context.user_data['INFO']['Class'] == 'Учитель':
-            await  self.get_teach.diff_teacher_timetable(update, context, context.user_data['INFO']['Day'],
-                                                         context.user_data['INFO']['Name'],
-                                                         context.user_data['INFO']['Familia'])
+            await self.get_teach.diff_teacher_timetable(update, context, context.user_data['INFO']['Day'],
+                                                        context.user_data['INFO']['Name'],
+                                                        context.user_data['INFO']['Familia'])
         else:
             await self.get_tt.get_timetable(update, context,
                                             context.user_data['INFO']['Day'],
