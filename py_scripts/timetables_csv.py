@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import PyPDF2
-from py_scripts.consts import *
+from py_scripts.consts import path_to_timetables, path_to_timetables_csv
 import pandas as pd
 import pdfplumber
 import os

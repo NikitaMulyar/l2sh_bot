@@ -1,4 +1,10 @@
-from py_scripts.class_start import *
+from telegram.ext import ConversationHandler
+
+from py_scripts.consts import password_hash, my_hash
+from sqlalchemy_scripts.users import User
+from py_scripts.class_start import SetTimetable
+from py_scripts.funcs_back import update_db, db_sess, timetable_kbrd
+from sqlalchemy_scripts.user_to_extra import Extra_to_User
 
 
 class Edit_User(SetTimetable):

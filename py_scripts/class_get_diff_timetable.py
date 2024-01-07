@@ -1,6 +1,10 @@
-from py_scripts.funcs_back import *
-from py_scripts.funcs_teachers import *
+from telegram import ReplyKeyboardMarkup
+
+from py_scripts.funcs_back import prepare_for_markdown, get_standard_timetable_for_user, \
+    get_standard_timetable_for_user_6_9, get_edits_in_timetable, timetable_kbrd, throttle2
+from py_scripts.funcs_teachers import get_standard_timetable_for_teacher, days, day_num, extra_send_day
 from telegram.ext import ConversationHandler
+from datetime import datetime
 
 
 class GetTimetableForStudent:

@@ -1,4 +1,5 @@
-from py_scripts.funcs_back import *
+from py_scripts.funcs_back import throttle, db_sess, timetable_kbrd
+from sqlalchemy_scripts.users import User
 
 
 class Profile:

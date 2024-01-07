@@ -1,5 +1,13 @@
+import os
 from telegram.ext import ConversationHandler
-from py_scripts.funcs_teachers import *
+from py_scripts.consts import path_to_timetables_csv
+from py_scripts.funcs_back import get_edits_in_timetable, throttle, extra_school_timetable_kbrd, get_timetable_for_user, \
+    get_timetable_for_user_6_9, get_standard_timetable_for_user, get_standard_timetable_for_user_6_9, \
+    prepare_for_markdown, db_sess, timetable_kbrd, extra_lessons_return
+from py_scripts.funcs_teachers import get_timetable_for_teacher, extra_send_near, get_standard_timetable_for_teacher, \
+    extra_send_day, extra_lessons_teachers_return
+from datetime import datetime
+from sqlalchemy_scripts.users import User
 
 
 class GetTimetable:
@@ -48,7 +56,8 @@ class GetTimetable:
                             if df.iloc[j]['Урок №'] == '' and j == 0:
                                 continue
                             if (user.number in df.iloc[j]['Класс'] and
-                                    (user.grade[-1].upper() in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j]['Класс'].lower())):
+                                    (user.grade[-1].upper() in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j][
+                                        'Класс'].lower())):
                                 subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
                                 subject = " ".join(subject.split('\n'))
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
@@ -72,7 +81,8 @@ class GetTimetable:
                                     res.append([f"{class__}, ", number_of_lesson,
                                                 subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
                         else:
-                            if user.number in df.iloc[j]['Класс'] and (user.grade[-1] in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j]['Класс']):
+                            if user.number in df.iloc[j]['Класс'] and (
+                                    user.grade[-1] in df.iloc[j]['Класс'].upper() or 'классы' in df.iloc[j]['Класс']):
                                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
                                 res.append([f"{class__}, ", number_of_lesson,
                                             df.iloc[j]['Замены кабинетов'],
@@ -181,7 +191,8 @@ class GetTimetable:
         if not user:
             await update.message.reply_text(f'⚠️Для начала заполните свои данные: /start')
             return
-        if (user.role == 'admin' or user.role == 'teacher') and not os.path.exists(path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv'):
+        if (user.role == 'admin' or user.role == 'teacher') and not os.path.exists(
+                path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv'):
             await update.message.reply_text(f'⚠️У вас нет личного расписания')
             return
         elif user.role == 'teacher' or user.role == 'admin':

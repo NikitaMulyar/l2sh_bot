@@ -1,7 +1,9 @@
-from py_scripts.funcs_back import *
+import telegram
+from py_scripts.consts import my_hash, password_hash
+from py_scripts.funcs_back import db_sess, prepare_for_markdown, bot, timetable_kbrd
 from telegram.ext import ConversationHandler
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
-
+from sqlalchemy_scripts.users import User
 
 class MailTo:
     parallels = ['6', '7', '8', '9', '10', '11']

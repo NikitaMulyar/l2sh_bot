@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
-from py_scripts.funcs_back import *
+import pdfplumber
+
+from py_scripts.consts import path_to_timetables, path_to_timetables_csv
+import pandas as pd
+from py_scripts.funcs_back import extra_lessons_return, prepare_for_markdown, timetable_kbrd, db_sess
 import PyPDF2
+import os
+from datetime import datetime
+from sqlalchemy_scripts.extra_lessons import Extra
+from sqlalchemy_scripts.users import User
 
 days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}
 

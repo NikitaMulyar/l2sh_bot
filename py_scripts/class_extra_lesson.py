@@ -1,7 +1,10 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
-from py_scripts.funcs_back import *
-from sqlalchemy_scripts.user_to_extra import *
+from py_scripts.funcs_back import db_sess, timetable_kbrd
+from sqlalchemy_scripts.extra_lessons import Extra
+from sqlalchemy_scripts.user_to_extra import Extra_to_User
+from sqlalchemy_scripts.users import User
+import pandas as pd
 
 
 class Extra_Lessons:

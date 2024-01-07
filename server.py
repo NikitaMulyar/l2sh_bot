@@ -1,15 +1,17 @@
 import logging
-from telegram.ext import Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler
-from py_scripts.class_timetable import *
-from py_scripts.class_edit_user import *
-from py_scripts.class_mailing import *
-from py_scripts.class_start import *
-from py_scripts.class_load_timetable import *
-from py_scripts.classes_support_profile import *
-from py_scripts.class_extra_lesson import *
-from py_scripts.class_get_diff_timetable import *
-from py_scripts.stickers_class import *
-
+import os
+from telegram.ext import Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler, ConversationHandler
+from py_scripts.class_timetable import GetTimetable
+from py_scripts.class_edit_user import Edit_User
+from py_scripts.class_mailing import MailTo
+from py_scripts.class_start import SetTimetable
+from py_scripts.class_load_timetable import LoadTimetables, LoadEditsTT
+from py_scripts.classes_support_profile import Support, Profile
+from py_scripts.class_extra_lesson import Extra_Lessons
+from py_scripts.class_get_diff_timetable import CheckStudentTT
+from py_scripts.config import BOT_TOKEN
+from py_scripts.funcs_back import db_sess
+from py_scripts.stickers_class import GetSticker
 
 try:
     if not os.path.exists('out/'):
@@ -22,7 +24,6 @@ try:
         os.mkdir("timetables_csv/")
 except Exception:
     pass
-
 
 logging.basicConfig(
     filename='out/logs.log', filemode='a',

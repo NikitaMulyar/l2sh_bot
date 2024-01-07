@@ -7,13 +7,12 @@ from sqlalchemy_scripts.extra_lessons import Extra
 from sqlalchemy_scripts import db_session
 from sqlalchemy_scripts.users import User
 from datetime import datetime, timedelta
-from py_scripts.timetables_csv import *
 import string
-from py_scripts.config import *
+from py_scripts.config import BOT_TOKEN
 import numpy as np
 import asyncio
 import os
-from py_scripts.consts import *
+from py_scripts.consts import path_to_timetables_csv, path_to_changes
 import pdfplumber
 
 

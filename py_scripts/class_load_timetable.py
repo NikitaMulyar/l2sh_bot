@@ -1,5 +1,10 @@
+from datetime import timedelta
+from telegram import ReplyKeyboardMarkup
 from telegram.ext import ConversationHandler
+from py_scripts.consts import password_hash, my_hash, path_to_changes
+from py_scripts.funcs_back import bot, write_admins, write_all, get_edits_in_timetable, save_edits_in_timetable_csv
 from py_scripts.funcs_teachers import *
+from py_scripts.timetables_csv import extract_timetable_for_students_6_9, extract_timetable_for_students_10_11
 
 
 class LoadTimetables:

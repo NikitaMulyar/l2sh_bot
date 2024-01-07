@@ -1,7 +1,8 @@
-from py_scripts.funcs_back import *
+from py_scripts.funcs_back import db_sess, bot
 from telegram.ext import ConversationHandler
 from sqlalchemy_scripts.stickers_table import Sticker
 from random import choice
+from sqlalchemy_scripts.users import User
 
 
 class GetSticker:
