@@ -9,8 +9,7 @@ import os
 from datetime import datetime
 from sqlalchemy_scripts.extra_lessons import Extra
 from sqlalchemy_scripts.users import User
-
-days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}
+from py_scripts.consts import days_from_num_to_full_text, days_from_short_text_to_num
 
 
 async def extract_timetable_for_teachers():
@@ -80,7 +79,7 @@ async def get_standard_timetable_for_teacher(full_name, day):
 async def extract_teacher_timetable_for_day(day, full_name):
     df = pd.read_csv(path_to_timetables_csv + f'{full_name}.csv')
     df.drop('Unnamed: 0', axis=1, inplace=True)
-    day2 = days[day]
+    day2 = days_from_num_to_full_text[day]
     df = df[['Unnamed: 1', day2]]
     df = df[df[day2] != '--']
     df = df.set_index(df['Unnamed: 1'].values)
@@ -116,8 +115,6 @@ def extra_lessons_teachers_return(id, button_text):
         full_text.append(text)
     return "".join(full_text)
 
-day_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
-
 
 async def extra_send_near(update, context, flag=False):
     today = datetime.now().weekday()
@@ -125,7 +122,7 @@ async def extra_send_near(update, context, flag=False):
         today = (today + 1) % 7
     if today == 6:
         today = 0
-    days = {value: key for key, value in day_num.items()}
+    days = {value: key for key, value in days_from_short_text_to_num.items()}
     if flag:
         extra_text = extra_lessons_teachers_return(update.message.from_user.id, days[today])
     else:
@@ -149,9 +146,9 @@ async def extra_send_day(update, flag=False):
     text = prepare_for_markdown(extra_text)
     if text == '':
         await update.message.reply_text(
-            f'*Кружков на {days[day_num[update.message.text]].lower()} нет*',
+            f'*Кружков на {days_from_num_to_full_text[days_from_short_text_to_num[update.message.text]].lower()} нет*',
             reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
         return
     await update.message.reply_text(
-        f'*Кружки на {days[day_num[update.message.text]].lower()}*\n\n{text}',
+        f'*Кружки на {days_from_num_to_full_text[days_from_short_text_to_num[update.message.text]].lower()}*\n\n{text}',
         reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')

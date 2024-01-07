@@ -2,25 +2,13 @@ from telegram import ReplyKeyboardMarkup
 
 from py_scripts.funcs_back import prepare_for_markdown, get_standard_timetable_for_user, \
     get_standard_timetable_for_user_6_9, get_edits_in_timetable, timetable_kbrd, throttle2
-from py_scripts.funcs_teachers import get_standard_timetable_for_teacher, days, day_num, extra_send_day
+from py_scripts.funcs_teachers import get_standard_timetable_for_teacher, extra_send_day
 from telegram.ext import ConversationHandler
 from datetime import datetime
+from py_scripts.consts import days_from_num_to_full_text, days_from_short_text_to_num, lessons_keys
 
 
 class GetTimetableForStudent:
-    days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среду', 3: 'Четверг', 4: 'Пятницу', 5: 'Субботу'}
-    days2 = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда', 3: 'Четверг', 4: 'Пятница', 5: 'Суббота'}
-    day_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
-    lessons_keys = {'0️⃣-й урок, 8:30 - 8:55:\n': '0\n08:30 - 08:55',
-                    '1️⃣-й урок, 9:00 - 9:45:\n': '1\n09:00 - 09:45',
-                    '2️⃣-й урок, 9:55 - 10:40:\n': '2\n09:55 - 10:40',
-                    '3️⃣-й урок, 10:50 - 11:35:\n': '3\n10:50 - 11:35',
-                    '4️⃣-й урок, 11:45 - 12:30:\n': '4\n11:45 - 12:30',
-                    '5️⃣-й урок, 12:50 - 13:35:\n': '5\n12:50 - 13:35',
-                    '6️⃣-й урок, 13:55 - 14:40:\n': '6\n13:55 - 14:40',
-                    '7️⃣-й урок, 14:50 - 15:35:\n': '7\n14:50 - 15:35',
-                    '8️⃣-й урок, 15:45 - 16:30:\n': '8\n15:45 - 16:30'}
-
     async def get_edits(self, context, student_class):
         t = ""
         edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
@@ -93,29 +81,29 @@ class GetTimetableForStudent:
     async def get_timetable(self, update, context, day_name, student_class, student_name, student_familia):
         if int(student_class[:-1]) >= 10:
             lessons, day = await get_standard_timetable_for_user(f'{student_familia} {student_name}',
-                                                                 student_class, self.day_num[day_name])
+                                                                 student_class, days_from_short_text_to_num[day_name])
         else:
-            lessons, day = await get_standard_timetable_for_user_6_9(student_class, self.day_num[day_name])
+            lessons, day = await get_standard_timetable_for_user_6_9(student_class, days_from_short_text_to_num[day_name])
         txt = (student_familia + ' ' + student_name + ' ' + student_class)
         if lessons.empty:
             class_txt = student_class
             await update.message.reply_text(f'Ученика "{txt}" не найдено или отсутствует '
                                             f'расписание для {class_txt} класса.')
             return
-        title = f'*Расписание на _{self.days[day]}_* для ученика {txt.strip(" ")}\n\n'
+        title = f'*Расписание на _{days_from_num_to_full_text[day]}_* для ученика {txt.strip(" ")}\n\n'
         t = ""
         edits_text = ""
         context.user_data['NEXT_DAY_TT'] = False
-        if self.day_num[day_name] == 0 and datetime.now().weekday() == 5:
+        if days_from_short_text_to_num[day_name] == 0 and datetime.now().weekday() == 5:
             context.user_data['NEXT_DAY_TT'] = True
             edits_text = await self.get_edits(context, student_class)
-        elif self.day_num[day_name] == datetime.now().weekday():
+        elif days_from_short_text_to_num[day_name] == datetime.now().weekday():
             context.user_data['NEXT_DAY_TT'] = False
             edits_text = await self.get_edits(context, student_class)
-        elif self.day_num[day_name] == (datetime.now().weekday() + 1) % 7:
+        elif days_from_short_text_to_num[day_name] == (datetime.now().weekday() + 1) % 7:
             context.user_data['NEXT_DAY_TT'] = True
             edits_text = await self.get_edits(context, student_class)
-        for txt_info, key in self.lessons_keys.items():
+        for txt_info, key in lessons_keys.items():
             try:
                 if int(student_class[:-1]) >= 10:
                     pre_lesson_info = lessons.loc[key].split('###')
@@ -175,18 +163,6 @@ class GetTimetableForStudent:
 
 
 class GetTimetableForTeacher:
-    day_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
-    days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среду', 3: 'Четверг', 4: 'Пятницу', 5: 'Субботу'}
-    lessons_keys = {'0️⃣-й урок, 8:30 - 8:55:\n': '0\n08:30 - 08:55',
-                    '1️⃣-й урок, 9:00 - 9:45:\n': '1\n09:00 - 09:45',
-                    '2️⃣-й урок, 9:55 - 10:40:\n': '2\n09:55 - 10:40',
-                    '3️⃣-й урок, 10:50 - 11:35:\n': '3\n10:50 - 11:35',
-                    '4️⃣-й урок, 11:45 - 12:30:\n': '4\n11:45 - 12:30',
-                    '5️⃣-й урок, 12:50 - 13:35:\n': '5\n12:50 - 13:35',
-                    '6️⃣-й урок, 13:55 - 14:40:\n': '6\n13:55 - 14:40',
-                    '7️⃣-й урок, 14:50 - 15:35:\n': '7\n14:50 - 15:35',
-                    '8️⃣-й урок, 15:45 - 16:30:\n': '8\n15:45 - 16:30'}
-
     async def get_edits_for_teacher(self, context, surname, name):
         t = ""
         edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
@@ -259,11 +235,11 @@ class GetTimetableForTeacher:
 
     async def diff_teacher_timetable(self, update, context, day, name, familia):
         lessons, day = await get_standard_timetable_for_teacher(f'{familia} {name[0]}',
-                                                                day_num[day])
+                                                                days_from_short_text_to_num[day])
         if lessons.empty:
             await update.message.reply_text(f'В этот день нет уроков')
             return
-        title = f'*Расписание на _{days[day]}_*\n\n'
+        title = f'*Расписание на _{days_from_num_to_full_text[day]}_*\n\n'
         t = ""
         edits_text = ""
         context.user_data['NEXT_DAY_TT'] = False
@@ -276,7 +252,7 @@ class GetTimetableForTeacher:
         elif day == (datetime.now().weekday() + 1) % 7:
             context.user_data['NEXT_DAY_TT'] = True
             edits_text = await self.get_edits_for_teacher(context, familia, name)
-        for txt_info, key in self.lessons_keys.items():
+        for txt_info, key in lessons_keys.items():
             try:
                 pre_lesson_info = lessons.loc[key][1::]
                 t += prepare_for_markdown(f'{txt_info}')

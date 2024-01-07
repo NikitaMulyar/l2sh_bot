@@ -5,6 +5,7 @@ import pandas as pd
 import pdfplumber
 import os
 import numpy as np
+from py_scripts.consts import days_from_short_text_to_num
 
 
 async def extract_timetable_for_students_10_11():
@@ -59,8 +60,7 @@ async def extract_timetable_for_students_6_9():
             try:
                 df = pd.DataFrame(table[1:], columns=table[0])
                 df[''].ffill(axis=0, inplace=True)
-                day_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
-                df[''] = df[''].apply(lambda x: day_num[x])
+                df[''] = df[''].apply(lambda x: days_from_short_text_to_num[x])
                 for col in df.columns.values:
                     if col != '':
                         df[col] = df[col] + '###'
@@ -70,8 +70,8 @@ async def extract_timetable_for_students_6_9():
             except Exception:
                 df = pd.DataFrame(table[2:], columns=table[1])
                 df[''].ffill(axis=0, inplace=True)
-                day_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
-                df[''] = df[''].apply(lambda x: day_num[x])
+                days_from_short_text_to_num = {'Пн': 0, 'Вт': 1, 'Ср': 2, 'Чт': 3, 'Пт': 4, 'Сб': 5}
+                df[''] = df[''].apply(lambda x: days_from_short_text_to_num[x])
                 for col in df.columns.values:
                     if col != '':
                         df[col] = df[col] + '###'

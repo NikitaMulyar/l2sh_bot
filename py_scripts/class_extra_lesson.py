@@ -1,15 +1,15 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ConversationHandler
 from py_scripts.funcs_back import db_sess, timetable_kbrd
 from sqlalchemy_scripts.extra_lessons import Extra
 from sqlalchemy_scripts.user_to_extra import Extra_to_User
 from sqlalchemy_scripts.users import User
 import pandas as pd
+from py_scripts.consts import days_from_num_to_full_text
 
 
 class Extra_Lessons:
     def __init__(self):
-        days = {0: "Понедельник", 1: "Вторник", 2: "Среда", 3: "Четверг", 4: "Пятница", 5: "Суббота"}
         self.count = {}
         for i in range(6):
             counter = 0
@@ -32,7 +32,7 @@ class Extra_Lessons:
                                         "".join(extra_lessons[k + l][j].replace(".", "").replace(",", "").split())):
                                     teacher = extra_lessons[k + l][j]
                                     break
-                        day = days[j]
+                        day = days_from_num_to_full_text[j]
                         teacher = teacher.replace('ё', 'е')
                         extra = Extra(title=title, time=time, day=day, teacher=teacher, place=place, grade=i + 6)
                         if not bool(db_sess.query(Extra).filter(Extra.title == title, Extra.grade == i + 6,
@@ -84,7 +84,6 @@ class Extra_Lessons:
             lesson = list(db_sess.query(Extra).filter(Extra.grade == grade).all())[context.user_data['choose_count']]
             context.user_data['choose_count'] += 1
         context.user_data['lesson'] = lesson
-        place = ""
         if "зал" in lesson.place or "онлайн" in lesson.place:
             place = lesson.place
         else:
