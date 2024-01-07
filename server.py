@@ -8,6 +8,7 @@ from py_scripts.class_load_timetable import *
 from py_scripts.classes_support_profile import *
 from py_scripts.class_extra_lesson import *
 from py_scripts.class_get_diff_timetable import *
+from py_scripts.stickers_class import *
 
 
 try:
@@ -70,7 +71,8 @@ def main():
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_class)],
             4: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_text)],
             5: [MessageHandler(filters.Document.ALL, mail_dialog.get_attachments),
-                MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_ready)]
+                MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_ready),
+                MessageHandler(filters.AUDIO, mail_dialog.get_attachments)]
         },
         fallbacks=[CommandHandler('end_mail', mail_dialog.end_mailing)]
     )
@@ -110,11 +112,20 @@ def main():
         },
         fallbacks=[CommandHandler('end_check', check_.end_checking)]
     )
+    sticker_upload = GetSticker()
+    stircker_conv = ConversationHandler(
+        entry_points=[CommandHandler('new_sticker', sticker_upload.start)],
+        states={
+            1: [MessageHandler(filters.Sticker.ALL, sticker_upload.get_sticker)]
+        },
+        fallbacks=[CommandHandler('stick_end', sticker_upload.end_uploading)]
+    )
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
-                                       4: [mailto_handler], 5: [load_tt_handler],
-                                       6: [prof_handler], 7: [sup_hadler],
-                                       8: [load_changes_in_tt_handler],
-                                       9: [config_extra], 10: [checking_handler]})
+                                       4: [mailto_handler], 5: [load_tt_handler], 6: [prof_handler],
+                                       7: [sup_hadler], 8: [load_changes_in_tt_handler], 9: [config_extra],
+                                       10: [checking_handler], 11: [stircker_conv],
+                                       12: [MessageHandler(filters.Sticker.ALL, sticker_upload.send_random_sticker)],
+                                       13: [CommandHandler('erase_all', sticker_upload.erase_all)]})
     application.run_polling()
 
 

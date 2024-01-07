@@ -12,6 +12,7 @@ class MailTo:
     step_class = 3
     step_text = 4
     step_attachments = 5
+    size_limit = 50
 
     async def mailing_parallels_kbrd(self):
         btns = []
@@ -46,8 +47,9 @@ class MailTo:
         await update.message.reply_text('Прервать настройку рассылки: /end_mail')
         if user.role == 'admin':
             await update.message.reply_text(
-                'Выберите параллель, к которой будет обращена рассылка:',
-                reply_markup=await self.mailing_parallels_kbrd())
+                f'*Рассылка осуществляется под аккаунтом\: {user.surname} {user.name}\, Админ*\n' +
+                prepare_for_markdown('Выберите параллель, к которой будет обращена рассылка:'),
+                reply_markup=await self.mailing_parallels_kbrd(), parse_mode='MarkdownV2')
             context.user_data['in_conversation'] = True
             return self.step_parallel
         await update.message.reply_text('Введите пароль:')
@@ -57,11 +59,18 @@ class MailTo:
     async def get_psw(self, update, context):
         if my_hash(update.message.text) != password_hash:
             await update.message.reply_text('Неверный пароль. Настройка рассылки прервана. '
-                                            'Начать сначала: /mailing')
+                                            'Начать сначала: /mail')
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
-        await update.message.reply_text('Выберите параллель, к которой будет обращена рассылка:',
-                                        reply_markup=await self.mailing_parallels_kbrd())
+        chat_id = update.message.chat.id
+        user = db_sess.query(User).filter(User.chat_id == chat_id).first()
+        grade = user.grade
+        if grade is None:
+            grade = 'Учитель'
+        await update.message.reply_text(
+            f'*Рассылка осуществляется под аккаунтом\: {user.surname} {user.name}\, {grade}*\n' +
+            prepare_for_markdown('Выберите параллель, к которой будет обращена рассылка:'),
+            reply_markup=await self.mailing_parallels_kbrd(), parse_mode='MarkdownV2')
         return self.step_parallel
 
     async def get_parallel(self, update, context):
@@ -102,7 +111,7 @@ class MailTo:
     async def get_text(self, update, context):
         context.user_data['MESSAGE'] = update.message.text_markdown_v2
         text_ = 'Прикрепите вложения по желанию\.\n*⚠️Инструкция по прикреплению файлов*\n' + \
-            prepare_for_markdown('1. Суммарный размер файлов не может превышать 10МБ.\n'
+            prepare_for_markdown(f'1. Суммарный размер файлов не может превышать {self.size_limit}МБ.\n'
                                  '2. Можно прикрепить не более 10 файлов (если будет отправлено более '
                                  '10 файлов, бот отправит только первые 10).\n'
                                  '3. При прикреплении тяжелых файлов (которые достигают лимит), '
@@ -116,17 +125,28 @@ class MailTo:
         return self.step_attachments
 
     async def get_attachments(self, update, context):
-        context.user_data['ATTACHMENTS'].append(update.message.document.file_id)
-        file_info = await bot.get_file(update.message.document.file_id)
-        if file_info.file_size / 1024 / 1024 > 10:
+        try:
+            if update.message.audio is None:
+                file_info = await bot.get_file(update.message.document.file_id)
+                file_id = update.message.document.file_id
+            else:
+                file_info = await bot.get_file(update.message.audio.file_id)
+                file_id = update.message.audio.file_id
+            if file_info.file_size / 1024 / 1024 > self.size_limit:
+                raise Exception
+        except Exception as e:
+            print(e)
             await update.message.reply_text('Файл слишком большой. Загрузка файлов продолжается. '
                                             'Если вы хотите завершить прикрепление файлов, '
                                             'нажмите на кнопку "Готово"')
             return self.step_attachments
         context.user_data['FILES_SIZE'] += file_info.file_size
-        if context.user_data['FILES_SIZE'] / 1024 / 1024 > 10:
+        context.user_data['ATTACHMENTS'].append(file_id)
+        if context.user_data['FILES_SIZE'] / 1024 / 1024 > self.size_limit:
             context.user_data['ATTACHMENTS'] = context.user_data['ATTACHMENTS'][:-1]
-            await update.message.reply_text(f'Файл не может быть отправлен из-за лимита. Загрузка файлов продолжается. '
+            context.user_data['FILES_SIZE'] -= file_info.file_size
+            await update.message.reply_text(f'Файл не может быть отправлен из-за лимита суммарного '
+                                            f'размера файлов. Загрузка файлов продолжается. '
                                             'Если вы хотите завершить прикрепление файлов, '
                                             'нажмите на кнопку "Готово"')
             return self.step_attachments

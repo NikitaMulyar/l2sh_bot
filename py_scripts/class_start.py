@@ -32,7 +32,7 @@ class SetTimetable:
             return ConversationHandler.END
         await update.message.reply_text(
             'Здравствуйте! В этом боте Вы можете узнавать расписание на день!\n'
-            'Сначала выберите свою роль/класс.\n'
+            'Сначала выберите свою должность/класс.\n'
             'Для остановки регистрации напишите: /end', reply_markup=await self.classes_buttons())
         context.user_data['INFO'] = dict()
         return self.step_class
@@ -43,23 +43,20 @@ class SetTimetable:
             return self.step_class
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        if user:
-            if (update.message.text == 'Админ' and user.role != "admin") or (
-                    update.message.text == 'Учитель' and user.role != "teacher"):
-                if update.message.text == 'Админ':
-                    context.user_data['INFO']['Class'] = "admin"
-                else:
-                    context.user_data['INFO']['Class'] = "teacher"
-                await update.message.reply_text('Введите пароль:', reply_markup=ReplyKeyboardRemove())
-                return self.step_pswrd
-        elif update.message.text == 'Админ' or update.message.text == 'Учитель':
-            if update.message.text == 'Админ':
-                context.user_data['INFO']['Class'] = "admin"
-            else:
-                context.user_data['INFO']['Class'] = "teacher"
+        if user and update.message.text == 'Админ' and user.role != "admin":
+            context.user_data['INFO']['Class'] = "admin"
             await update.message.reply_text('Введите пароль:', reply_markup=ReplyKeyboardRemove())
             return self.step_pswrd
-        context.user_data['INFO']['Class'] = update.message.text
+        elif update.message.text == 'Админ':
+            context.user_data['INFO']['Class'] = "admin"
+            await update.message.reply_text('Введите пароль:', reply_markup=ReplyKeyboardRemove())
+            return self.step_pswrd
+        if update.message.text == 'Учитель':
+            context.user_data['INFO']['Class'] = "teacher"
+        elif update.message.text == 'Админ':
+            context.user_data['INFO']['Class'] = "admin"
+        else:
+            context.user_data['INFO']['Class'] = update.message.text
         await update.message.reply_text(f'Укажите свою фамилию (пример: Некрасов)',
                                         reply_markup=ReplyKeyboardRemove())
         return self.step_familia

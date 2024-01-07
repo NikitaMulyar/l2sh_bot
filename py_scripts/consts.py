@@ -8,6 +8,9 @@ import hashlib
 
 
 def my_hash(text):
-    hash_obj = hashlib.sha256(text.encode('ascii'))
-    hex_hash = hash_obj.hexdigest()
-    return hex_hash
+    try:
+        hash_obj = hashlib.sha256(text.encode('ascii'))
+        hex_hash = hash_obj.hexdigest()
+        return hex_hash
+    except Exception:
+        return '402'

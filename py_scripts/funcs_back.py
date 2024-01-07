@@ -215,7 +215,7 @@ def put_to_db(update, name, surname, role, username, grade=None):
     if role != 'admin' and role != 'teacher':
         num = num[:-1]
     if not db_sess.query(User).filter(User.chat_id == chat_id).first():
-        user = User(telegram_id=user__id, chat_id=chat_id, usurname=surname, name=name, role=role,
+        user = User(telegram_id=user__id, chat_id=chat_id, surname=surname, name=name, role=role,
                     grade=grade, number=num, telegram_tag=username)
         db_sess.add(user)
         db_sess.commit()
