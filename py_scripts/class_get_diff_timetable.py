@@ -70,7 +70,7 @@ class CheckStudentTT:
             return self.step_date
         context.user_data['INFO']['Day'] = update.message.text
         if context.user_data['INFO']['Class'] == 'Учитель':
-            send_text = await get_standard_timetable_with_edits_for_teacher(update, context,
+            send_text = await get_standard_timetable_with_edits_for_teacher(context,
                                                                             context.user_data['INFO']['Day'],
                                                                             context.user_data['INFO']['Name'],
                                                                             context.user_data['INFO']['Familia'])
@@ -78,7 +78,7 @@ class CheckStudentTT:
             await extra_send_day(update, surname=context.user_data['INFO']['Familia'], flag=True,
                                  no_kbrd=True)
         else:
-            send_text = await get_standard_timetable_with_edits_for_student(update, context,
+            send_text = await get_standard_timetable_with_edits_for_student(context,
                                             context.user_data['INFO']['Day'],
                                             context.user_data['INFO']['Class'],
                                             context.user_data['INFO']['Name'],

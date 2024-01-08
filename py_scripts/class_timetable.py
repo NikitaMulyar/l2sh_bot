@@ -23,21 +23,25 @@ class GetTimetable:
         if not user:
             await update.message.reply_text(f'⚠️Для начала заполните свои данные: /start')
             return
-        if (user.role == 'admin' or user.role == 'teacher') and not os.path.exists(
-                path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv'):
-            await update.message.reply_text(f'⚠️У вас нет личного расписания')
-            return
-        elif update.message.text == '🎨Мои кружки🎨':
+        if update.message.text == '🎨Мои кружки🎨':
             await update.message.reply_text('Выберите интересующий Вас день',
                                             reply_markup=await extra_school_timetable_kbrd())
             context.user_data['EXTRA_CLICKED'] = True
         elif user.role == 'teacher' or user.role == 'admin':
             if update.message.text == '📚Ближайшее расписание📚':
+                if (user.role == 'admin' or user.role == 'teacher') and not os.path.exists(
+                        path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv'):
+                    await update.message.reply_text(f'⚠️У вас нет личного расписания')
+                    return
                 context.user_data['NEXT_DAY_TT'] = False
                 await timetable_teacher_for_each_day(update, context, user)
-                await extra_send_near(update, context, flag=True)
+                await extra_send_near(update, context, flag=True, surname=user.surname)
             elif (not context.user_data.get('EXTRA_CLICKED') and
                   update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
+                if (user.role == 'admin' or user.role == 'teacher') and not os.path.exists(
+                        path_to_timetables_csv + f'{user.surname} {user.name[0]}.csv'):
+                    await update.message.reply_text(f'⚠️У вас нет личного расписания')
+                    return
                 t = await get_standard_timetable_with_edits_for_teacher(context,
                                                                         update.message.text,
                                                                         user.name, user.surname,
@@ -56,11 +60,11 @@ class GetTimetable:
                                                     reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
                     return
                 days = {value: key for key, value in days_from_short_text_to_num.items()}
-                update.message.text = days[today]
-                await extra_send_day(update, flag=True, surname=user.surname)
+                await extra_send_day(update, text__=days[today], flag=True, surname=user.surname)
             elif update.message.text == '🎭Все кружки🎭':
                 context.user_data['EXTRA_CLICKED'] = False
-                await extra_lessons_for_all_days(update, update.message.from_user.id, teacher=True)
+                await extra_lessons_for_all_days(update, update.message.from_user.id, teacher=True,
+                                                 surname=user.surname)
         else:
             if update.message.text == '📚Ближайшее расписание📚':
                 context.user_data['NEXT_DAY_TT'] = False

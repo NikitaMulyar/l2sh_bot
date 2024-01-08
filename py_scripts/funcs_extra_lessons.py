@@ -54,12 +54,12 @@ def extra_lessons_teachers_return(button_text, surname):  # Кружки на д
     return "".join(full_text)
 
 
-async def extra_lessons_for_all_days(update, id, teacher=False):
+async def extra_lessons_for_all_days(update, id, teacher=False, surname=''):
     list_text_res = []
     text_res = ""
     for day, day_number in days_from_short_text_to_num.items():
         if teacher:
-            extra_text = extra_lessons_teachers_return(day, id)
+            extra_text = extra_lessons_teachers_return(day, surname)
         else:
             extra_text = extra_lessons_return(id, day)
         text = prepare_for_markdown(extra_text)
@@ -85,15 +85,15 @@ async def extra_lessons_for_all_days(update, id, teacher=False):
                                             reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
 
 
-async def extra_send_near(update, context, flag=False):
-    today = datetime.now().weekday()
+async def extra_send_near(update, context, flag=False, surname=''):
+    today = datetime.datetime.now().weekday()
     if context.user_data['NEXT_DAY_TT']:
         today = (today + 1) % 7
     if today == 6:
         today = 0
     days = {value: key for key, value in days_from_short_text_to_num.items()}
     if flag:
-        extra_text = extra_lessons_teachers_return(update.message.from_user.id, days[today])
+        extra_text = extra_lessons_teachers_return(days[today], surname)
     else:
         extra_text = extra_lessons_return(update.message.from_user.id, days[today])
     text = prepare_for_markdown(extra_text)
@@ -107,27 +107,29 @@ async def extra_send_near(update, context, flag=False):
         reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
 
 
-async def extra_send_day(update, surname=None, flag=False, no_kbrd=False):
+async def extra_send_day(update, text__=None, surname=None, flag=False, no_kbrd=False):
+    if not text__:
+        text__ = update.message.text
     if flag:
-        extra_text = extra_lessons_teachers_return(update.message.text, surname)
+        extra_text = extra_lessons_teachers_return(text__, surname)
     else:
-        extra_text = extra_lessons_return(update.message.from_user.id, update.message.text)
+        extra_text = extra_lessons_return(update.message.from_user.id, text__)
     text = prepare_for_markdown(extra_text)
     if not no_kbrd:
         if text == '':
             await update.message.reply_text(
-                f'*Кружков на {days_from_num_to_full_text_formatted[days_from_short_text_to_num[update.message.text]]} нет*',
+                f'*Кружков на {days_from_num_to_full_text_formatted[days_from_short_text_to_num[text__]]} нет*',
                 reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
             return
         await update.message.reply_text(
-            f'*Кружки на {days_from_num_to_full_text_formatted[days_from_short_text_to_num[update.message.text]]}*\n\n{text}',
+            f'*Кружки на {days_from_num_to_full_text_formatted[days_from_short_text_to_num[text__]]}*\n\n{text}',
             reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
     else:
         if text == '':
             await update.message.reply_text(
-                f'*Кружков на {days_from_num_to_full_text_formatted[days_from_short_text_to_num[update.message.text]]} нет*',
+                f'*Кружков на {days_from_num_to_full_text_formatted[days_from_short_text_to_num[text__]]} нет*',
                 parse_mode='MarkdownV2')
             return
         await update.message.reply_text(
-            f'*Кружки на {days_from_num_to_full_text_formatted[days_from_short_text_to_num[update.message.text]]}*\n\n{text}',
+            f'*Кружки на {days_from_num_to_full_text_formatted[days_from_short_text_to_num[text__]]}*\n\n{text}',
             parse_mode='MarkdownV2')

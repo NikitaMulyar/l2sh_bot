@@ -55,7 +55,6 @@ class Reset_Class:
             if user.role != 'admin':
                 await update.message.reply_text(f'Нет доступа!')
                 return
-        await bot.send_document(chat_id, 'out/logs.log')
         all_users = db_sess.query(User).all()
         with open('db_copy.txt', mode='w', encoding='utf-8') as f:
             i = 1
@@ -64,7 +63,10 @@ class Reset_Class:
                      f'(chat_id: {user_.chat_id}, telegram_id: {user_.telegram_id})\n\n')
                 f.write(s)
                 i += 1
+            f.close()
+        await bot.send_document(chat_id, 'out/logs.log')
         await bot.send_document(chat_id, 'db_copy.txt')
+        await bot.send_document(chat_id, 'database/telegram_bot.db')
 
 
 def check_hash(password):

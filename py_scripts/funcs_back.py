@@ -29,7 +29,7 @@ def throttle():
             if not last_time:
                 args[2].user_data['last_time'] = now_
                 return await func(*args, **kwargs)
-            elif last_time + timedelta(seconds=0.7) <= now_:
+            elif last_time + timedelta(seconds=0.5) <= now_:
                 args[2].user_data['last_time'] = now_
                 return await func(*args, **kwargs)
             else:
@@ -47,7 +47,7 @@ def throttle2():
             if not last_time:
                 args[2].user_data['last_time2'] = now_
                 return await func(*args, **kwargs)
-            elif last_time + timedelta(seconds=0.7) <= now_:
+            elif last_time + timedelta(seconds=0.5) <= now_:
                 args[2].user_data['last_time2'] = now_
                 return await func(*args, **kwargs)
         return wrapped
