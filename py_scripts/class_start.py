@@ -1,7 +1,8 @@
 from telegram.ext import ConversationHandler
 from telegram import ReplyKeyboardRemove, ReplyKeyboardMarkup
+
+from py_scripts.security import my_hash, check_hash
 from sqlalchemy_scripts.users import User
-from py_scripts.consts import my_hash, password_hash
 from py_scripts.funcs_back import db_sess, timetable_kbrd, put_to_db
 
 
@@ -65,7 +66,7 @@ class SetTimetable:
         return self.step_familia
 
     async def get_psw(self, update, context):
-        if my_hash(update.message.text) != password_hash:
+        if not check_hash(update.message.text):
             await update.message.reply_text('Неверный пароль. Настройка данных прервана. '
                                             f'Начать сначала: {self.command}',
                                             reply_markup=await timetable_kbrd())

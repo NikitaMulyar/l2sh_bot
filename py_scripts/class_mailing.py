@@ -1,9 +1,11 @@
 import telegram
-from py_scripts.consts import my_hash, password_hash
 from py_scripts.funcs_back import db_sess, prepare_for_markdown, bot, timetable_kbrd
 from telegram.ext import ConversationHandler
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
+
+from py_scripts.security import my_hash, check_hash
 from sqlalchemy_scripts.users import User
+
 
 class MailTo:
     parallels = ['6', '7', '8', '9', '10', '11']
@@ -21,7 +23,9 @@ class MailTo:
         for i in self.parallels:
             btns.append(KeyboardButton(i))
 
-        kbd = ReplyKeyboardMarkup([btns, [KeyboardButton('Админ'), KeyboardButton('Учителя')], [KeyboardButton('Всем')]], resize_keyboard=True)
+        kbd = ReplyKeyboardMarkup(
+            [btns, [KeyboardButton('Админ'), KeyboardButton('Учителя')], [KeyboardButton('Всем')]],
+            resize_keyboard=True)
         return kbd
 
     async def mailing_classes_kbrd(self, parallel):
@@ -59,7 +63,7 @@ class MailTo:
         return self.step_pswrd
 
     async def get_psw(self, update, context):
-        if my_hash(update.message.text) != password_hash:
+        if not check_hash(update.message.text):
             await update.message.reply_text('Неверный пароль. Настройка рассылки прервана. '
                                             'Начать сначала: /mail')
             context.user_data['in_conversation'] = False
@@ -219,13 +223,16 @@ class MailTo:
             t = '❗️Сообщение не было отправлено некоторым пользователям по следующим причинам:\n' + t
         try:
             await update.message.reply_text(prepare_for_markdown(f'Сообщение:\n') + mail_text +
-                                            prepare_for_markdown(f'\n\nбыло отправлено в параллель "{p}", класс: "{c}"'), parse_mode='MarkdownV2')
+                                            prepare_for_markdown(
+                                                f'\n\nбыло отправлено в параллель "{p}", класс: "{c}"'),
+                                            parse_mode='MarkdownV2')
             await update.message.reply_text(f'Настройка рассылки окончена.\n{t}\nНачать сначала: /mail',
                                             reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
         except Exception as e:
-            await update.message.reply_text(f'Ошибка: {e}. Попробуйте исправить текст и отправьте его заново. ❗️НЕЛЬЗЯ использовать нижнее подчеркивание и зачеркивание!')
+            await update.message.reply_text(
+                f'Ошибка: {e}. Попробуйте исправить текст и отправьте его заново. ❗️НЕЛЬЗЯ использовать нижнее подчеркивание и зачеркивание!')
             return self.step_text
 
     async def end_mailing(self, update, context):

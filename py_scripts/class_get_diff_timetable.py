@@ -46,12 +46,12 @@ class CheckStudentTT:
             context.user_data['INFO']['Name'] = ''
             context.user_data['INFO']['Familia'] = ''
             return self.step_date
-        await update.message.reply_text(f'Укажите фамилию учащегося (пример: Некрасов)')
+        await update.message.reply_text(f'Укажите фамилию пользователя (пример: Некрасов)')
         return self.step_familia
 
     async def get_familia(self, update, context):
         context.user_data['INFO']['Familia'] = update.message.text
-        await update.message.reply_text(f'Укажите ПОЛНОЕ имя учащегося (пример: Николай)')
+        await update.message.reply_text(f'Укажите ПОЛНОЕ имя пользователя (пример: Николай)')
         return self.step_name
 
     async def get_name(self, update, context):
