@@ -1,6 +1,6 @@
 from telegram.ext import ConversationHandler
 
-from py_scripts.consts import password_hash, my_hash
+from py_scripts.security import my_hash, check_hash
 from sqlalchemy_scripts.users import User
 from py_scripts.class_start import SetTimetable
 from py_scripts.funcs_back import update_db, db_sess, timetable_kbrd
@@ -26,7 +26,7 @@ class Edit_User(SetTimetable):
             return ConversationHandler.END
 
     async def get_psw(self, update, context):
-        if my_hash(update.message.text) != password_hash:
+        if not check_hash(update.message.text):
             await update.message.reply_text('Неверный пароль. Настройка данных прервана. '
                                             'Начать сначала: /edit', reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False

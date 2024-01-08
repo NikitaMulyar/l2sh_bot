@@ -9,7 +9,7 @@ from py_scripts.funcs_back import get_edits_in_timetable, throttle, extra_school
 from py_scripts.funcs_teachers import extra_send_near, timetable_teacher_for_each_day
 from datetime import datetime
 from sqlalchemy_scripts.users import User
-from py_scripts.consts import days_from_num_to_full_text, days_from_short_text_to_num, lessons_keys, for_datetime
+from py_scripts.consts import days_from_short_text_to_num, lessons_keys, for_datetime
 
 
 class GetTimetable:

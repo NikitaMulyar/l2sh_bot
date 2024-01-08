@@ -12,6 +12,7 @@ from py_scripts.class_get_diff_timetable import CheckStudentTT
 from py_scripts.config import BOT_TOKEN
 from py_scripts.funcs_back import db_sess
 from py_scripts.stickers_class import GetSticker
+from py_scripts.security import Reset_Class
 
 try:
     if not os.path.exists('out/'):
@@ -101,6 +102,10 @@ def main():
     prof = Profile()
     sup_hadler = CommandHandler('support', sup.get_supp)
     prof_handler = CommandHandler('profile', prof.get_profile)
+
+    reset_cl = Reset_Class()
+    reset_handler = CommandHandler('reset', reset_cl.reset_admin_password)
+
     timetable_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, timetable__.get_timetable)
     check_ = CheckStudentTT()
     checking_handler = ConversationHandler(
@@ -126,7 +131,8 @@ def main():
                                        7: [sup_hadler], 8: [load_changes_in_tt_handler], 9: [config_extra],
                                        10: [checking_handler], 11: [stircker_conv],
                                        12: [MessageHandler(filters.Sticker.ALL, sticker_upload.send_random_sticker)],
-                                       13: [CommandHandler('erase_all', sticker_upload.erase_all)]})
+                                       13: [CommandHandler('erase_all', sticker_upload.erase_all)],
+                                       14: [reset_handler]})
     application.run_polling()
 
 
