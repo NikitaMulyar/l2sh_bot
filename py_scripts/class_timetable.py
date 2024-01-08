@@ -166,8 +166,7 @@ class GetTimetable:
                                                     reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
                     return
                 days = {value: key for key, value in days_from_short_text_to_num.items()}
-                update.message.text = days[today]
-                await extra_send_day(update)
+                await extra_send_day(update, text__=days[today])
             elif update.message.text == '🎭Все кружки🎭':
                 context.user_data['EXTRA_CLICKED'] = False
                 await extra_lessons_for_all_days(update, update.message.from_user.id)
