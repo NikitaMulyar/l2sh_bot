@@ -1,7 +1,6 @@
 from telegram.ext import ConversationHandler
 from telegram import ReplyKeyboardRemove, ReplyKeyboardMarkup
-
-from py_scripts.security import my_hash, check_hash
+from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
 from py_scripts.funcs_back import db_sess, timetable_kbrd, put_to_db
 

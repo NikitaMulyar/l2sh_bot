@@ -1,9 +1,9 @@
 from telegram import ReplyKeyboardMarkup
 from py_scripts.funcs_back import timetable_kbrd, throttle2
 from telegram.ext import ConversationHandler
-from py_scripts.timetable_back_funcs import (get_standard_timetable_with_edits_for_teacher,
-                                             get_standard_timetable_with_edits_for_student)
-from py_scripts.funcs_teachers import extra_send_day
+from py_scripts.funcs_students import get_standard_timetable_with_edits_for_student
+from py_scripts.funcs_teachers import get_standard_timetable_with_edits_for_teacher
+from py_scripts.funcs_extra_lessons import extra_send_day
 
 
 class CheckStudentTT:
@@ -61,7 +61,7 @@ class CheckStudentTT:
                                         reply_markup=kbrd)
         return self.step_date
 
-    @throttle2
+    @throttle2()
     async def get_day(self, update, context):
         if update.message.text not in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
             kbrd = await self.days_buttons()
@@ -74,15 +74,16 @@ class CheckStudentTT:
                                                                             context.user_data['INFO']['Day'],
                                                                             context.user_data['INFO']['Name'],
                                                                             context.user_data['INFO']['Familia'])
-            await update.message.reply_text(send_text, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
-            await extra_send_day(update, flag=True)
+            await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+            await extra_send_day(update, surname=context.user_data['INFO']['Familia'], flag=True,
+                                 no_kbrd=True)
         else:
             send_text = await get_standard_timetable_with_edits_for_student(update, context,
                                             context.user_data['INFO']['Day'],
                                             context.user_data['INFO']['Class'],
                                             context.user_data['INFO']['Name'],
                                             context.user_data['INFO']['Familia'])
-            await update.message.reply_text(send_text, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+            await update.message.reply_text(send_text, parse_mode='MarkdownV2')
         await update.message.reply_text('Выберите день или закончите выбор командой: /end_check')
         return self.step_date
 

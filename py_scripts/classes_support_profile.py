@@ -1,9 +1,9 @@
-from py_scripts.funcs_back import throttle, db_sess, timetable_kbrd
+from py_scripts.funcs_back import throttle, db_sess, timetable_kbrd, prepare_for_markdown
 from sqlalchemy_scripts.users import User
 
 
 class Profile:
-    @throttle
+    @throttle()
     async def get_profile(self, update, context):
         if context.user_data.get('in_conversation'):
             return
@@ -18,14 +18,15 @@ class Profile:
                 grade = "Учитель"
             else:
                 grade = "Админ"
-        t = f'📠*Ваш профиль*📠\n\n' + (f'Класс: {grade}\nИмя: {user.name}\n'
-                                      f'Фамилия: {user.surname}')
+        t = (f'📠*Ваш профиль*📠\n\n' +
+             prepare_for_markdown(f'Класс: {grade}\nИмя: {user.name}\nФамилия: {user.surname}\n'
+                                  f'Роль: {user.role}'))
         await update.message.reply_text(t, parse_mode='MarkdownV2',
                                         reply_markup=await timetable_kbrd())
 
 
 class Support:
-    @throttle
+    @throttle()
     async def get_supp(self, update, context):
         await update.message.reply_text('Чат тех-поддержки: @help_group_l2sh',
                                         reply_markup=await timetable_kbrd())

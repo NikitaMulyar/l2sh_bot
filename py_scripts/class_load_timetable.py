@@ -5,7 +5,7 @@ from py_scripts.consts import path_to_changes, path_to_timetables
 from py_scripts.funcs_back import bot, write_admins, write_all, get_edits_in_timetable, save_edits_in_timetable_csv, \
     db_sess, prepare_for_markdown, timetable_kbrd
 from py_scripts.funcs_teachers import extract_timetable_for_teachers
-from py_scripts.security import my_hash, check_hash
+from py_scripts.security import check_hash
 from py_scripts.timetables_csv import extract_timetable_for_students_6_9, extract_timetable_for_students_10_11
 from sqlalchemy_scripts.users import User
 from datetime import datetime

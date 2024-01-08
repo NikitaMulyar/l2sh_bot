@@ -13,6 +13,9 @@ from py_scripts.config import BOT_TOKEN
 from py_scripts.funcs_back import db_sess
 from py_scripts.stickers_class import GetSticker
 from py_scripts.security import Reset_Class
+from py_scripts.give_allow_class import GivePermissionToChangePsw
+from py_scripts.take_allow_class import TakePermissionToChangePsw
+
 
 try:
     if not os.path.exists('out/'):
@@ -28,7 +31,8 @@ except Exception:
 
 logging.basicConfig(
     filename='out/logs.log', filemode='a',
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.ERROR
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.WARNING,
+    encoding='utf-8'
 )
 logger = logging.getLogger(__name__)
 
@@ -104,7 +108,26 @@ def main():
     prof_handler = CommandHandler('profile', prof.get_profile)
 
     reset_cl = Reset_Class()
+    giving_cl = GivePermissionToChangePsw()
     reset_handler = CommandHandler('reset', reset_cl.reset_admin_password)
+    giving_conver = ConversationHandler(
+        entry_points=[CommandHandler('give', giving_cl.start)],
+        states={
+            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, giving_cl.get_username)],
+            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, giving_cl.get_confirmed)]
+        },
+        fallbacks=[CommandHandler('end_give', giving_cl.end_give)]
+    )
+
+    taking_cl = TakePermissionToChangePsw()
+    taking_conver = ConversationHandler(
+        entry_points=[CommandHandler('take', taking_cl.start)],
+        states={
+            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, taking_cl.get_username)],
+            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, taking_cl.get_confirmed)]
+        },
+        fallbacks=[CommandHandler('end_take', taking_cl.end_give)]
+    )
 
     timetable_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, timetable__.get_timetable)
     check_ = CheckStudentTT()
@@ -126,13 +149,17 @@ def main():
         },
         fallbacks=[CommandHandler('stick_end', sticker_upload.end_uploading)]
     )
+
+    get_info_handler = CommandHandler('info', reset_cl.get_info_about_bot)
+
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
                                        4: [mailto_handler], 5: [load_tt_handler], 6: [prof_handler],
                                        7: [sup_hadler], 8: [load_changes_in_tt_handler], 9: [config_extra],
                                        10: [checking_handler], 11: [stircker_conv],
                                        12: [MessageHandler(filters.Sticker.ALL, sticker_upload.send_random_sticker)],
                                        13: [CommandHandler('erase_all', sticker_upload.erase_all)],
-                                       14: [reset_handler]})
+                                       14: [reset_handler], 15: [giving_conver], 16: [get_info_handler],
+                                       17: [taking_conver]})
     application.run_polling()
 
 

@@ -1,4 +1,4 @@
-from py_scripts.funcs_back import db_sess, bot
+from py_scripts.funcs_back import db_sess, bot, throttle
 from telegram.ext import ConversationHandler
 from sqlalchemy_scripts.stickers_table import Sticker
 from random import choice
@@ -25,6 +25,7 @@ class GetSticker:
         await update.message.reply_text(f'Жду стикер! Закончить: /stick_end')
         return self.step_upload
 
+    @throttle()
     async def get_sticker(self, update, context):
         sticker_id = update.message.sticker.file_id
         sticker_unique_id = update.message.sticker.file_unique_id

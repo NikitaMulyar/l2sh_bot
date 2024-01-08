@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
+import functools
+
 import pandas as pd
 import telegram
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Bot
-from sqlalchemy_scripts.user_to_extra import Extra_to_User
-from sqlalchemy_scripts.extra_lessons import Extra
 from sqlalchemy_scripts import db_session
 from sqlalchemy_scripts.users import User
 from datetime import datetime, timedelta
 import string
 from py_scripts.config import BOT_TOKEN
-import numpy as np
 import asyncio
 import os
-from py_scripts.consts import path_to_timetables_csv, path_to_changes
+from py_scripts.consts import path_to_changes
 import pdfplumber
 
 
@@ -21,31 +20,37 @@ bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
 
 
-def throttle(func):
-    def wrapper(*args, **kwargs):
-        now_ = datetime.now()
-        last_time = args[2].user_data.get('last_time')
-        if not last_time:
-            args[2].user_data['last_time'] = now_
-            asyncio.gather(func(*args, **kwargs))
-        elif last_time + timedelta(seconds=0.5) <= now_:
-            args[2].user_data['last_time'] = now_
-            asyncio.gather(func(*args, **kwargs))
-        else:
-            asyncio.gather(trottle_ans(*args, **kwargs))
+def throttle():
+    def wrapper(func):
+        @functools.wraps(func)
+        async def wrapped(*args, **kwargs):
+            now_ = datetime.now()
+            last_time = args[2].user_data.get('last_time')
+            if not last_time:
+                args[2].user_data['last_time'] = now_
+                return await func(*args, **kwargs)
+            elif last_time + timedelta(seconds=0.7) <= now_:
+                args[2].user_data['last_time'] = now_
+                return await func(*args, **kwargs)
+            else:
+                return await trottle_ans(*args, **kwargs)
+        return wrapped
     return wrapper
 
 
-def throttle2(func):
-    def wrapper(*args, **kwargs):
-        now_ = datetime.now()
-        last_time = args[2].user_data.get('last_time2')
-        if not last_time:
-            args[2].user_data['last_time2'] = now_
-            asyncio.gather(func(*args, **kwargs))
-        elif last_time + timedelta(seconds=0.5) <= now_:
-            args[2].user_data['last_time2'] = now_
-            asyncio.gather(func(*args, **kwargs))
+def throttle2():
+    def wrapper(func):
+        @functools.wraps(func)
+        async def wrapped(*args, **kwargs):
+            now_ = datetime.now()
+            last_time = args[2].user_data.get('last_time2')
+            if not last_time:
+                args[2].user_data['last_time2'] = now_
+                return await func(*args, **kwargs)
+            elif last_time + timedelta(seconds=0.7) <= now_:
+                args[2].user_data['last_time2'] = now_
+                return await func(*args, **kwargs)
+        return wrapped
     return wrapper
 
 
@@ -111,91 +116,6 @@ async def write_admins(bot: telegram.Bot, text, parse_mode=None):
     if t:
         t = '❗️Сообщение не было отправлено некоторым пользователям по следующим причинам:\n' + t
     return t
-
-
-async def extract_timetable_for_day_6_9(day, class_):
-    df = pd.read_csv(path_to_timetables_csv + f'{class_}.csv')
-    df = df.iloc[day].to_frame()
-    df[day] = df[day].str.strip('###')
-    df[day] = df[day].apply(lambda x: np.NaN if x == '' else x)
-    df.dropna(axis=0, inplace=True)
-    return df, day
-
-
-async def get_standard_timetable_for_user_6_9(class_, day):
-    if not os.path.exists(path_to_timetables_csv + f'{class_}.csv'):
-        return pd.DataFrame(), -1
-    timetable_, day = await extract_timetable_for_day_6_9(day, class_)
-    return timetable_, day
-
-
-async def get_timetable_for_user_6_9(context, class_):
-    if not os.path.exists(path_to_timetables_csv + f'{class_}.csv'):
-        return pd.DataFrame(), -1
-    # day = (datetime.now() - timedelta(hours=3)).weekday()
-    # !!!!!!!!!!!!!!!!!!!
-    now_ = datetime.now()  # - timedelta(hours=3)
-    day = now_.weekday()
-    if day == 6:
-        timetable_, day = await extract_timetable_for_day_6_9(0, class_)
-        context.user_data['NEXT_DAY_TT'] = True
-        return timetable_, 0
-    timetable_, day = await extract_timetable_for_day_6_9(day, class_)
-    last_les_end_h, last_les_end_m = map(int,
-                                         timetable_.index.values[-1].split(' - ')[-1]
-                                         .split(':'))
-    # !!!!!!!!!!!!!!!!!!!!!
-    h, m = now_.hour, now_.minute
-    if (h, m) > (last_les_end_h, last_les_end_m):
-        context.user_data['NEXT_DAY_TT'] = True
-        if day == 5:
-            timetable_, day = await extract_timetable_for_day_6_9(0, class_)
-            return timetable_, 0
-        timetable_, day = await extract_timetable_for_day_6_9(day + 1, class_)
-        # Флажок, чтобы расписание на следующий день не выделялось, если завтра больше уроков
-    else:
-        context.user_data['NEXT_DAY_TT'] = False
-    return timetable_, day
-
-
-async def extract_timetable_for_day(day, full_name, class_):
-    df = pd.read_csv(path_to_timetables_csv + f'{full_name} {class_}.csv')
-    df = df.iloc[day].to_frame()
-    df = df[df[day] != '--'][day]
-    return df, day
-
-
-async def get_standard_timetable_for_user(full_name, class_, day):
-    if not os.path.exists(path_to_timetables_csv + f'{full_name} {class_}.csv'):
-        return pd.DataFrame(), -1
-    timetable_, day = await extract_timetable_for_day(day, full_name, class_)
-    return timetable_, day
-
-
-async def get_timetable_for_user(context, full_name, class_):
-    if not os.path.exists(path_to_timetables_csv + f'{full_name} {class_}.csv'):
-        return pd.DataFrame(), -1
-    now_ = datetime.now()  # - timedelta(hours=3)
-    day = now_.weekday()
-    if day == 6:
-        timetable_, day = await extract_timetable_for_day(0, full_name, class_)
-        context.user_data['NEXT_DAY_TT'] = True
-        return timetable_, 0
-    timetable_, day = await extract_timetable_for_day(day, full_name, class_)
-    last_les_end_h, last_les_end_m = map(int,
-                                         timetable_.index.values[-1].split(' - ')[-1]
-                                         .split(':'))
-    h, m = now_.hour, now_.minute
-    if (h, m) > (last_les_end_h, last_les_end_m):
-        context.user_data['NEXT_DAY_TT'] = True
-        if day == 5:
-            timetable_, day = await extract_timetable_for_day(0, full_name, class_)
-            return timetable_, 0
-        timetable_, day = await extract_timetable_for_day(day + 1, full_name, class_)
-        # Флажок, чтобы расписание на следующий день не выделялось, если завтра больше уроков
-    else:
-        context.user_data['NEXT_DAY_TT'] = False
-    return timetable_, day
 
 
 def prepare_for_markdown(text):

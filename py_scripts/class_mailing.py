@@ -3,7 +3,7 @@ from py_scripts.funcs_back import db_sess, prepare_for_markdown, bot, timetable_
 from telegram.ext import ConversationHandler
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 
-from py_scripts.security import my_hash, check_hash
+from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
 
 

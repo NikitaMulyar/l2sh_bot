@@ -1,6 +1,4 @@
 from telegram.ext import ConversationHandler
-
-from py_scripts.security import my_hash, check_hash
 from sqlalchemy_scripts.users import User
 from py_scripts.class_start import SetTimetable
 from py_scripts.funcs_back import update_db, db_sess, timetable_kbrd
@@ -38,16 +36,6 @@ class Edit_User(SetTimetable):
             context.user_data['in_conversation'] = False
             await update.message.reply_text(f'Вы даже не заполнили свои данные. Напишите /start и заполните свои данные')
             return ConversationHandler.END
-
-    async def get_psw(self, update, context):
-        if not check_hash(update.message.text):
-            await update.message.reply_text('Неверный пароль. Настройка данных прервана. '
-                                            'Начать сначала: /edit', reply_markup=await timetable_kbrd())
-            context.user_data['in_conversation'] = False
-            context.user_data['INFO'] = dict()
-            return ConversationHandler.END
-        await update.message.reply_text(f'Укажите свою фамилию (пример: Некрасов)')
-        return self.step_familia
 
     async def get_name(self, update, context):
         context.user_data['INFO']['Name'] = update.message.text
