@@ -75,8 +75,7 @@ class CheckStudentTT:
                                                                             context.user_data['INFO']['Name'],
                                                                             context.user_data['INFO']['Familia'])
             await update.message.reply_text(send_text, parse_mode='MarkdownV2')
-            await extra_send_day(update, surname=context.user_data['INFO']['Familia'], flag=True,
-                                 no_kbrd=True)
+            await extra_send_day(update, surname=context.user_data['INFO']['Familia'], flag=True, no_kbrd=True)
         else:
             send_text = await get_standard_timetable_with_edits_for_student(context,
                                             context.user_data['INFO']['Day'],

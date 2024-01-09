@@ -13,14 +13,18 @@ class Profile:
             await update.message.reply_text(f'Для начала заполните свои данные: /start')
             return
         grade = user.grade
+        role = "ученик"
         if not grade:
             if user.role == "teacher":
                 grade = "Учитель"
+                role = "Учитель"
             else:
                 grade = "Админ"
+                role = "Учитель"
+
         t = (f'📠*Ваш профиль*📠\n\n' +
              prepare_for_markdown(f'Класс: {grade}\nИмя: {user.name}\nФамилия: {user.surname}\n'
-                                  f'Роль: {user.role}'))
+                                  f'Роль: {role}'))
         await update.message.reply_text(t, parse_mode='MarkdownV2',
                                         reply_markup=await timetable_kbrd())
 
