@@ -36,6 +36,10 @@ async def extract_timetable_for_students_10_11():
                     df.loc[df[col] == '', col] = '--'
             df.ffill(axis=1, inplace=True)
             df.to_csv(path_to_timetables_csv + f'{full_name} {class_}.csv')
+            with open('list_new_timetable.txt', mode='a', encoding='utf-8') as f:
+                f.write(f'{full_name} {class_}\n')
+            f.close()
+        pdf.close()
 
     for student in list(get_all_students()):
         if student is None:
@@ -79,6 +83,10 @@ async def extract_timetable_for_students_6_9():
                     df[col] = df[col].apply(lambda x: np.NaN if x == 0 else x)
             df = df.ffill(axis=1)
             df.to_csv(path_to_timetables_csv + f'{class_}.csv')
+            with open('list_new_timetable.txt', mode='a', encoding='utf-8') as f:
+                f.write(f'{class_}\n')
+            f.close()
+        pdf.close()
 
     for class_ in list(get_all_classes()):
         if class_ is None:

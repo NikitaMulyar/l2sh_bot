@@ -161,6 +161,10 @@ async def extract_timetable_for_teachers():
                     df.loc[df[col] == '', col] = '--'
             df.ffill(axis=0, inplace=True)
             df.to_csv(path_to_timetables_csv + f'{full_name}.csv')
+            with open('list_new_timetable.txt', mode='a', encoding='utf-8') as f:
+                f.write(f'{full_name}\n')
+            f.close()
+        pdf.close()
 
     for teacher, page_n in list(get_all_teachers()):
         await save_timetable_csv(teacher, page_n)

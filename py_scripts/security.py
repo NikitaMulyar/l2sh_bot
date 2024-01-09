@@ -63,7 +63,7 @@ class Reset_Class:
                      f'(chat_id: {user_.chat_id}, telegram_id: {user_.telegram_id})\n\n')
                 f.write(s)
                 i += 1
-            f.close()
+        f.close()
         await bot.send_document(chat_id, 'out/logs.log')
         await bot.send_document(chat_id, 'db_copy.txt')
         await bot.send_document(chat_id, 'database/telegram_bot.db')
@@ -72,6 +72,7 @@ class Reset_Class:
 def check_hash(password):
     with open('password', 'rt', encoding='utf-8') as f:
         password_hash = f.read()
+    f.close()
     return my_hash(password) == password_hash
 
 

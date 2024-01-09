@@ -74,17 +74,27 @@ async def extra_school_timetable_kbrd():
     return kbd
 
 
-async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
-    all_users = db_sess.query(User).filter(User.role != "admin").filter(User.role != "teacher").all()
+async def write_about_new_timetable():
+    all_users = db_sess.query(User).all()
     didnt_send = {}
-    if all_:
-        all_users = db_sess.query(User).all()
+    with open('list_new_timetable.txt', mode='r', encoding='utf-8') as f:
+        arr_to_write = set(f.read().split('\n'))
+    f.close()
+    text12 = (prepare_for_markdown('❗️') + '_*Уважаемые лицеисты\!*_' +
+              prepare_for_markdown('\nВ бота загружены новые расписания. '
+                                   'Пожалуйста, ознакомьтесь с ними.'))
+    text3 = (prepare_for_markdown('❗️') + '_*Уважаемые учителя\!*_' +
+             prepare_for_markdown('\nОбновлены расписания пед. состава. Они будут доступны к '
+                                  'просмотру через несколько минут.'))
     for user in all_users:
         try:
-            if parse_mode:
-                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
-            else:
-                await asyncio.gather(bot.send_message(user.chat_id, text))
+            var1 = f'{user.grade}'
+            var2 = f'{user.surname} {user.name} {user.grade}'
+            var3 = f'{user.surname} {user.name[0]}'
+            if var1 in arr_to_write or var2 in arr_to_write:
+                await bot.send_message(user.chat_id, text12, parse_mode='MarkdownV2')
+            elif var3 in arr_to_write:
+                await bot.send_message(user.chat_id, text3, parse_mode='MarkdownV2')
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
@@ -97,15 +107,12 @@ async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
     return t
 
 
-async def write_admins(bot: telegram.Bot, text, parse_mode=None):
-    all_users = db_sess.query(User).filter((User.role == "admin") | (User.role == "teacher")).all()
+async def write_all(text):
+    all_users = db_sess.query(User).all()
     didnt_send = {}
     for user in all_users:
         try:
-            if parse_mode:
-                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
-            else:
-                await asyncio.gather(bot.send_message(user.chat_id, text))
+            await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
@@ -307,6 +314,7 @@ async def save_edits_in_timetable_csv(date):
                             df.loc[curr_ind] = [classes[i], urok_num[i], urok_po_rasp[i], zameny[i]]
                             curr_ind += 1
             dfs.append(df)
+    pdf.close()
     try:
         os.remove(path_to_changes + f'{date}_lessons.csv')
     except Exception:
