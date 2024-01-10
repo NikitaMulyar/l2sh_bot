@@ -177,11 +177,12 @@ async def get_standard_timetable_with_edits_for_student(context, day_name, stude
                                                              student_class, days_from_short_text_to_num[day_name])
     else:
         lessons, day = await get_standard_timetable_for_user_6_9(student_class, days_from_short_text_to_num[day_name])
-    txt = (student_familia + ' ' + student_name + ' ' + student_class)
+    txt = prepare_for_markdown((student_familia + ' ' + student_name + ' ' + student_class)
+                               .strip(" "))
     if lessons.empty:
         class_txt = student_class
-        return f'Ученика "{txt}" не найдено или отсутствует расписание для {class_txt} класса\.'
-    app = f' для ученика {prepare_for_markdown(txt.strip(" "))}'
+        return f'Ученика \"{txt}\" не найдено или отсутствует расписание для {class_txt} класса\.'
+    app = f' для ученика {txt}'
     if not flag:
         app = ''
     title = f'*Расписание на _{days_from_num_to_full_text[day]}_*{app}\n\n'

@@ -55,8 +55,7 @@ async def write_about_edits(context, text):
             else:
                 edits_text = await get_edits_for_teacher(context, user.surname, user.name)
             if edits_text:
-                await bot.send_message(user.chat_id, text + prepare_for_markdown(edits_text),
-                                       parse_mode='MarkdownV2')
+                await bot.send_message(user.chat_id, text + edits_text, parse_mode='MarkdownV2')
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
@@ -366,12 +365,13 @@ class LoadEditsTT:
         today_date = (now_.year, now_.month, now_.day)
         context.user_data['NEXT_DAY_TT'] = not today_date == edits_date
 
-        res = await write_about_edits(prepare_for_markdown('❗️') + '_*Уважаемые учителя и лицеисты\!*_' +
-                              prepare_for_markdown(
-                                  f'\nВ боте появились изменения на {context.user_data["changes_date"]}. '
-                                  f'Пожалуйста, проверьте ваше расписание на эту дату.\n\n'), context)
+        res = await write_about_edits(context,
+                                      prepare_for_markdown('❗️') + '_*Уважаемые учителя и лицеисты\!*_' +
+                                      prepare_for_markdown(
+                                      f'\nВ боте появились изменения на {context.user_data["changes_date"]}. '
+                                      f'Пожалуйста, проверьте ваше расписание на эту дату.\n\n'))
         await update.message.reply_text(
-            f'Файл загружен. Проведена рассылка всем ученикам об обновлении расписаний.\n{res}\nНачать сначала: /changes',
+            f'Файл загружен. Проведена рассылка ученикам и учителям, у которых есть изменения.\n{res}\nНачать сначала: /changes',
             reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
