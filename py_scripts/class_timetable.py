@@ -16,7 +16,7 @@ from py_scripts.funcs_teachers import get_standard_timetable_with_edits_for_teac
 class GetTimetable:
     @throttle()
     async def get_timetable(self, update, context):
-        is_busy = await check_busy(update, context)
+        is_busy = await check_busy(update, context, flag=True)
         if is_busy:
             return
         chat_id = update.message.chat.id

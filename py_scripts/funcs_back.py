@@ -19,10 +19,10 @@ bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
 
 
-async def check_busy(update, context):
+async def check_busy(update, context, flag=False):
     if context.user_data.get('in_conversation'):
         cmd = context.user_data.get("DIALOG_CMD")
-        if cmd:
+        if cmd and not flag:
             await update.message.reply_text(f'Сначала нужно завершить предыдущую цепочку команд: {cmd}')
         return True
     return False
