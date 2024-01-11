@@ -23,8 +23,7 @@ async def check_busy(update, context):
     if context.user_data.get('in_conversation'):
         cmd = context.user_data.get("DIALOG_CMD")
         if cmd:
-            update.message.text(f'Сначала нужно завершить предыдущую цепочку команд: '
-                                f'{context.user_data["DIALOG_CMD"]}')
+            await update.message.reply_text(f'Сначала нужно завершить предыдущую цепочку команд: {cmd}')
         return True
     return False
 
