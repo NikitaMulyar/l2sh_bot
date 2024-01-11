@@ -36,3 +36,14 @@ for_datetime = {'0\r\n08:30 - 08:55': ((8, 20),
 path_to_timetables = 'timetables/'
 path_to_changes = 'changes_tt/'
 path_to_timetables_csv = 'timetables_csv/'
+
+COMMANDS = {'start': 'end',
+            'edit': 'end_edit',
+            'mail': 'end_mail',
+            'load': 'end_load',
+            'changes': 'end_changes',
+            'extra': 'end_extra',
+            'give': 'end_give',
+            'take': 'end_take',
+            'check': 'end_check',
+            'sticker': 'end_sticker'}

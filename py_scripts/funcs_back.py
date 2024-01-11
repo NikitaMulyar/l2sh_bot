@@ -9,7 +9,6 @@ from sqlalchemy_scripts.users import User
 from datetime import datetime, timedelta
 import string
 from py_scripts.config import BOT_TOKEN
-import asyncio
 import os
 from py_scripts.consts import path_to_changes
 import pdfplumber
@@ -18,6 +17,16 @@ import pdfplumber
 db_session.global_init("database/telegram_bot.db")
 bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
+
+
+async def check_busy(update, context):
+    if context.user_data.get('in_conversation'):
+        cmd = context.user_data.get("DIALOG_CMD")
+        if cmd:
+            update.message.text(f'Сначала нужно завершить предыдущую цепочку команд: '
+                                f'{context.user_data["DIALOG_CMD"]}')
+        return True
+    return False
 
 
 def throttle():

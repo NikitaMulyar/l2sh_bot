@@ -143,11 +143,11 @@ def main():
     )
     sticker_upload = GetSticker()
     stircker_conv = ConversationHandler(
-        entry_points=[CommandHandler('new_sticker', sticker_upload.start)],
+        entry_points=[CommandHandler('sticker', sticker_upload.start)],
         states={
             1: [MessageHandler(filters.Sticker.ALL, sticker_upload.get_sticker)]
         },
-        fallbacks=[CommandHandler('stick_end', sticker_upload.end_uploading)]
+        fallbacks=[CommandHandler('end_sticker', sticker_upload.end_uploading)]
     )
 
     get_info_handler = CommandHandler('info', reset_cl.get_info_about_bot)

@@ -2,7 +2,8 @@ from telegram.ext import ConversationHandler
 from telegram import ReplyKeyboardRemove, ReplyKeyboardMarkup
 from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
-from py_scripts.funcs_back import db_sess, timetable_kbrd, put_to_db
+from py_scripts.funcs_back import db_sess, timetable_kbrd, put_to_db, check_busy
+from py_scripts.consts import COMMANDS
 
 
 class SetTimetable:
@@ -20,9 +21,11 @@ class SetTimetable:
         return kbd
 
     async def start(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return ConversationHandler.END
         context.user_data['in_conversation'] = True
+        context.user_data['DIALOG_CMD'] = '/' + COMMANDS['start']
         chat_id = update.message.chat.id
         if db_sess.query(User).filter(User.chat_id == chat_id).first():
             db_sess.commit()
@@ -31,6 +34,7 @@ class SetTimetable:
                 'Можете пользоваться ботом.\n'
                 'Все команды бота доступны в кнопке "Меню"',
                 reply_markup=await timetable_kbrd())
+            context.user_data['DIALOG_CMD'] = None
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
         await update.message.reply_text(
@@ -71,6 +75,7 @@ class SetTimetable:
                                             reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             context.user_data['INFO'] = dict()
+            context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         await update.message.reply_text(f'Укажите свою фамилию (пример: Некрасов)')
         return self.step_familia
@@ -90,6 +95,8 @@ class SetTimetable:
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
+        context.user_data['DIALOG_CMD'] = None
+        context.user_data['INFO'] = dict()
         return ConversationHandler.END
 
     async def get_third_name(self, update, context):
@@ -100,11 +107,14 @@ class SetTimetable:
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
+        context.user_data['DIALOG_CMD'] = None
+        context.user_data['INFO'] = dict()
         return ConversationHandler.END
 
     async def end_setting(self, update, context):
         context.user_data['in_conversation'] = False
         context.user_data['INFO'] = dict()
+        context.user_data['DIALOG_CMD'] = None
         await update.message.reply_text(f'Регистрация в системе прервана. Начать сначала: {self.command}',
                                         reply_markup=await timetable_kbrd())
         return ConversationHandler.END

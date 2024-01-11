@@ -1,9 +1,9 @@
 from datetime import timedelta
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import ConversationHandler
-from py_scripts.consts import path_to_changes, path_to_timetables
+from py_scripts.consts import path_to_changes, path_to_timetables, COMMANDS
 from py_scripts.funcs_back import bot, get_edits_in_timetable, save_edits_in_timetable_csv, \
-    db_sess, prepare_for_markdown, timetable_kbrd
+    db_sess, prepare_for_markdown, timetable_kbrd, check_busy
 from py_scripts.funcs_teachers import extract_timetable_for_teachers, get_edits_for_teacher
 from py_scripts.security import check_hash
 from py_scripts.timetables_csv import extract_timetable_for_students_6_9, extract_timetable_for_students_10_11
@@ -80,20 +80,21 @@ class LoadTimetables:
         return kbd
 
     async def start(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return ConversationHandler.END
+        context.user_data['DIALOG_CMD'] = '/' + COMMANDS['load']
+        context.user_data['in_conversation'] = True
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         await update.message.reply_text('Прервать загрузку расписаний: /end_load')
         if user and user.role == "admin":
             await update.message.reply_text(f'Выберите нужный класс', reply_markup=await self.classes_buttons())
-            context.user_data['in_conversation'] = True
             with open('list_new_timetable.txt', mode='w', encoding='utf-8') as f:
                 f.write('')
             f.close()
             return self.step_class
         await update.message.reply_text('Введите пароль админа:')
-        context.user_data['in_conversation'] = True
         return self.step_pswrd
 
     async def get_pswrd(self, update, context):
@@ -101,6 +102,7 @@ class LoadTimetables:
             await update.message.reply_text('Неверный пароль. Загрузка расписаний прервана. '
                                             'Начать сначала: /load')
             context.user_data['in_conversation'] = False
+            context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         await update.message.reply_text(f'Выберите нужный класс', reply_markup=await self.classes_buttons())
         with open('list_new_timetable.txt', mode='w', encoding='utf-8') as f:
@@ -156,6 +158,7 @@ class LoadTimetables:
         context.user_data['in_conversation'] = False
         context.user_data['FILE_UPLOADED'] = False
         context.user_data['FILE_UPLOADED2'] = False
+        context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END
 
 
@@ -290,18 +293,19 @@ class LoadEditsTT:
         return t
 
     async def start(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return ConversationHandler.END
+        context.user_data['in_conversation'] = True
+        context.user_data['DIALOG_CMD'] = '/' + COMMANDS['changes']
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         await update.message.reply_text('Прервать загрузку расписаний: /end_changes')
         if user and user.role == 'admin':
             await update.message.reply_text(f'Выберите дату изменений в расписании или напишите свою (формат: ДД.ММ.ГГГГ):',
                                             reply_markup=await self.dates_buttons())
-            context.user_data['in_conversation'] = True
             return self.step_date
         await update.message.reply_text('Введите пароль админа:')
-        context.user_data['in_conversation'] = True
         return self.step_pswrd
 
     async def get_pswrd(self, update, context):
@@ -310,6 +314,7 @@ class LoadEditsTT:
                                             'Начать сначала: /changes',
                                             reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
+            context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         await update.message.reply_text(
             f'Выберите дату изменений в расписании (формат: ДД.ММ.ГГГГ):',
@@ -347,6 +352,7 @@ class LoadEditsTT:
                 f'При попытке сохранить файл с изменениями произошла ошибка: {e}. Проверьте формат таблицы. Начать сначала: /changes',
                 reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
+            context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         next_day = not datetime.now().day == int(context.user_data["changes_date"].split('.')[0])
         try:
@@ -357,6 +363,7 @@ class LoadEditsTT:
                 f'При попытке сформировать изменения произошла ошибка: {e}. Проверьте формат таблицы. Начать сначала: /changes',
                 reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
+            context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         await bot.delete_message(update.message.chat.id, msg_.id)
 
@@ -373,6 +380,7 @@ class LoadEditsTT:
         await update.message.reply_text(
             f'Файл загружен. Проведена рассылка ученикам и учителям, у которых есть изменения.\n{res}\nНачать сначала: /changes',
             reply_markup=await timetable_kbrd())
+        context.user_data['DIALOG_CMD'] = None
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
 
@@ -380,4 +388,5 @@ class LoadEditsTT:
         await update.message.reply_text('Загрузка изменений прервана',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
+        context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END

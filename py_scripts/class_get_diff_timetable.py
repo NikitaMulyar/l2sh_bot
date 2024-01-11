@@ -1,5 +1,6 @@
 from telegram import ReplyKeyboardMarkup
-from py_scripts.funcs_back import timetable_kbrd, throttle2
+from py_scripts.funcs_back import timetable_kbrd, throttle2, check_busy
+from py_scripts.consts import COMMANDS
 from telegram.ext import ConversationHandler
 from py_scripts.funcs_students import get_standard_timetable_with_edits_for_student
 from py_scripts.funcs_teachers import get_standard_timetable_with_edits_for_teacher
@@ -24,9 +25,11 @@ class CheckStudentTT:
         return kbd
 
     async def start(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return ConversationHandler.END
         context.user_data['in_conversation'] = True
+        context.user_data['DIALOG_CMD'] = '/' + COMMANDS['check']
         await update.message.reply_text('С помощью этой команды можно быстро посмотреть расписание '
                                         'какого-то класса, ученика или учителя. Выберите из списка интересуемый класс.\n'
                                         'Прерваться: /end_check',
@@ -89,6 +92,7 @@ class CheckStudentTT:
     async def end_checking(self, update, context):
         context.user_data['in_conversation'] = False
         context.user_data['INFO'] = dict()
+        context.user_data['DIALOG_CMD'] = None
         await update.message.reply_text(f'Поиск ученика/учителя прерван. Начать сначала: /check',
                                         reply_markup=await timetable_kbrd())
         return ConversationHandler.END
