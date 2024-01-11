@@ -9,7 +9,6 @@ from sqlalchemy_scripts.users import User
 from datetime import datetime, timedelta
 import string
 from py_scripts.config import BOT_TOKEN
-import asyncio
 import os
 from py_scripts.consts import path_to_changes
 import pdfplumber
@@ -18,6 +17,15 @@ import pdfplumber
 db_session.global_init("database/telegram_bot.db")
 bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
+
+
+async def check_busy(update, context):
+    if context.user_data.get('in_conversation'):
+        cmd = context.user_data.get("DIALOG_CMD")
+        if cmd:
+            await update.message.reply_text(f'Сначала нужно завершить предыдущую цепочку команд: {cmd}')
+        return True
+    return False
 
 
 def throttle():
@@ -72,50 +80,6 @@ async def extra_school_timetable_kbrd():
     arr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
     kbd = ReplyKeyboardMarkup([[btn, btn2], arr], resize_keyboard=True)
     return kbd
-
-
-async def write_all(bot: telegram.Bot, text, all_=False, parse_mode=None):
-    all_users = db_sess.query(User).filter(User.role != "admin").filter(User.role != "teacher").all()
-    didnt_send = {}
-    if all_:
-        all_users = db_sess.query(User).all()
-    for user in all_users:
-        try:
-            if parse_mode:
-                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
-            else:
-                await asyncio.gather(bot.send_message(user.chat_id, text))
-        except Exception as e:
-            if e.__str__() not in didnt_send:
-                didnt_send[e.__str__()] = 1
-            else:
-                didnt_send[e.__str__()] += 1
-            continue
-    t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])
-    if t:
-        t = '❗️Сообщение не было отправлено некоторым пользователям по следующим причинам:\n' + t
-    return t
-
-
-async def write_admins(bot: telegram.Bot, text, parse_mode=None):
-    all_users = db_sess.query(User).filter((User.role == "admin") | (User.role == "teacher")).all()
-    didnt_send = {}
-    for user in all_users:
-        try:
-            if parse_mode:
-                await asyncio.gather(bot.send_message(user.chat_id, text, parse_mode='MarkdownV2'))
-            else:
-                await asyncio.gather(bot.send_message(user.chat_id, text))
-        except Exception as e:
-            if e.__str__() not in didnt_send:
-                didnt_send[e.__str__()] = 1
-            else:
-                didnt_send[e.__str__()] += 1
-            continue
-    t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])
-    if t:
-        t = '❗️Сообщение не было отправлено некоторым пользователям по следующим причинам:\n' + t
-    return t
 
 
 def prepare_for_markdown(text):
@@ -307,6 +271,7 @@ async def save_edits_in_timetable_csv(date):
                             df.loc[curr_ind] = [classes[i], urok_num[i], urok_po_rasp[i], zameny[i]]
                             curr_ind += 1
             dfs.append(df)
+    pdf.close()
     try:
         os.remove(path_to_changes + f'{date}_lessons.csv')
     except Exception:

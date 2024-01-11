@@ -1,11 +1,11 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ConversationHandler
-from py_scripts.funcs_back import db_sess, timetable_kbrd
+from py_scripts.funcs_back import db_sess, timetable_kbrd, check_busy
 from sqlalchemy_scripts.extra_lessons import Extra
 from sqlalchemy_scripts.user_to_extra import Extra_to_User
 from sqlalchemy_scripts.users import User
 import pandas as pd
-from py_scripts.consts import days_from_num_to_full_text
+from py_scripts.consts import days_from_num_to_full_text, COMMANDS
 
 
 class Extra_Lessons:
@@ -49,7 +49,8 @@ class Extra_Lessons:
         db_sess.commit()
 
     async def start(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return ConversationHandler.END
         user__id = update.message.from_user.id
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
@@ -61,6 +62,7 @@ class Extra_Lessons:
                                         'Если захотите закончить, напишите: "/end_extra".\n'
                                         'Давайте начнем выбирать: ✨')
         context.user_data['in_conversation'] = True
+        context.user_data['DIALOG_CMD'] = '/' + COMMANDS['extra']
         context.user_data['choose_count'] = 0
         return await self.choose_extra(update, context)
 
@@ -77,6 +79,7 @@ class Extra_Lessons:
                                                           'выбор! 🙌🏻 Теперь Вы можете посмотреть своё расписание с кружками.',
                                                           reply_markup="")
             context.user_data['in_conversation'] = False
+            context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         lesson = list(db_sess.query(Extra).filter(Extra.grade == grade).all())[context.user_data['choose_count']]
         context.user_data['choose_count'] += 1
@@ -121,4 +124,5 @@ class Extra_Lessons:
                                         'выбор! 🙌🏻 Теперь Вы можете посмотреть своё расписание с кружками.',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
+        context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END

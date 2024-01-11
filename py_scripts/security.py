@@ -2,12 +2,13 @@ import random
 import hashlib
 from sqlalchemy_scripts.users import User
 import logging
-from py_scripts.funcs_back import bot, timetable_kbrd, db_sess, prepare_for_markdown
+from py_scripts.funcs_back import bot, timetable_kbrd, db_sess, prepare_for_markdown, check_busy
 
 
 class Reset_Class:
     async def reset_admin_password(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return
         chat_id = update.message.chat.id
         author = db_sess.query(User).filter(User.chat_id == chat_id).first()
@@ -44,7 +45,8 @@ class Reset_Class:
         await update.message.reply_text(t, reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
 
     async def get_info_about_bot(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
@@ -63,7 +65,7 @@ class Reset_Class:
                      f'(chat_id: {user_.chat_id}, telegram_id: {user_.telegram_id})\n\n')
                 f.write(s)
                 i += 1
-            f.close()
+        f.close()
         await bot.send_document(chat_id, 'out/logs.log')
         await bot.send_document(chat_id, 'db_copy.txt')
         await bot.send_document(chat_id, 'database/telegram_bot.db')
@@ -72,6 +74,7 @@ class Reset_Class:
 def check_hash(password):
     with open('password', 'rt', encoding='utf-8') as f:
         password_hash = f.read()
+    f.close()
     return my_hash(password) == password_hash
 
 

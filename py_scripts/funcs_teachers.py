@@ -161,6 +161,10 @@ async def extract_timetable_for_teachers():
                     df.loc[df[col] == '', col] = '--'
             df.ffill(axis=0, inplace=True)
             df.to_csv(path_to_timetables_csv + f'{full_name}.csv')
+            with open('list_new_timetable.txt', mode='a', encoding='utf-8') as f:
+                f.write(f'{full_name}\n')
+            f.close()
+        pdf.close()
 
     for teacher, page_n in list(get_all_teachers()):
         await save_timetable_csv(teacher, page_n)
@@ -254,32 +258,3 @@ async def timetable_teacher_for_each_day(update, context, user):
     else:
         t = title + '\n' + t
     await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
-
-
-def extra_lessons_teachers_return(button_text, surname):  # Кружки на день для учителя
-    days = {"Пн": "Понедельник", "Вт": "Вторник", "Ср": "Среда", "Чт": "Четверг", "Пт": "Пятница", "Сб": "Суббота"}
-    day = days[button_text]
-    extra_lessons = db_sess.query(Extra).filter(Extra.teacher.like(f'{surname}%'), day == Extra.day).all()
-    full_text = []
-    extra_was = []
-    for extra_lesson in extra_lessons:
-        if extra_lesson.title in extra_was:
-            continue
-        text = "⤵️\n"
-        ex = db_sess.query(Extra).filter(Extra.teacher.like(f'{surname}%'), Extra.title == extra_lesson.title,
-                                         Extra.time == extra_lesson.time).all()
-        classes = []
-        for el in ex:
-            if str(el.grade) not in classes:
-                classes.append(str(el.grade))
-        extra_was.append(extra_lesson.title)
-        text += f"📚 {extra_lesson.title} ({'/'.join(classes)} класс)📚\n"
-        text += f"🕝 {extra_lesson.time} 🕝\n"
-        place = ""
-        if "зал" in extra_lesson.place or "online" in extra_lesson.place:
-            place = extra_lesson.place
-        else:
-            place = f"{extra_lesson.place} кабинет"
-        text += f'🏫 Место проведения: {place} 🏫\n'
-        full_text.append(text)
-    return "".join(full_text)

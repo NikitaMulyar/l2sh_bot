@@ -1,0 +1,948 @@
+2024-01-08 18:24:29,307 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 58, in get_info_about_bot
+    await bot.send_document(chat_id, 'out/logs.log')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 1328, in send_document
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: File must be non-empty
+2024-01-08 18:26:40,181 - root - WARNING - ПОЛЬЗОВАТЕЛЬ <delikatny_pon> <Муляр> <Никита> (chat_id: <562532936>, telegram_id: <562532936>) --->>> ВЫДАЛ ПРАВА НА СБРОС ПАРОЛЯ ПОЛЬЗОВАТЕЛЮ <lala_kac> <Малахов> <Александр Игоревич> (chat_id: <1461693159>, telegram_id: <1461693159>)
+2024-01-08 19:14:25,695 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:53:50,599 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:53:54,633 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:53:55,611 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:57:00,891 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:57:02,581 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:57:03,571 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:57:04,476 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:57:05,396 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:57:06,243 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:59:12,775 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:59:13,488 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 19:59:16,885 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 55, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 20:00:38,313 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 52, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 20:01:36,335 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_conversationhandler.py", line 857, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 52, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_get_diff_timetable.py", line 77, in get_day
+    await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 2624, in send_message
+    return await super().send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 846, in send_message
+    return await self._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 703, in _send_message
+    result = await self._post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 613, in _post
+    return await self._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_bot.py", line 641, in _do_post
+    return await request.post(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/request/_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message text is empty
+2024-01-08 20:05:51,565 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 37, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 251, in get_timetable
+    await extra_lessons_for_each_day(update, update.message.from_user.id, days[today])
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_extra_lesson.py", line 158, in extra_lessons_for_each_day
+    f'*Кружков на {days_from_num_to_full_text[days_from_short_text_to_num[update.message.text]].lower()} нет*',
+KeyError: '♟️Сегодня♟️'
+2024-01-08 20:05:58,851 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 37, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 251, in get_timetable
+    await extra_lessons_for_each_day(update, update.message.from_user.id, days[today])
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_extra_lesson.py", line 158, in extra_lessons_for_each_day
+    f'*Кружков на {days_from_num_to_full_text[days_from_short_text_to_num[update.message.text]].lower()} нет*',
+KeyError: '♟️Сегодня♟️'
+2024-01-08 20:09:43,930 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 37, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 251, in get_timetable
+    await extra_lessons_for_each_day(update, update.message.from_user.id, days[today])
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_extra_lesson.py", line 156, in extra_lessons_for_each_day
+    date_ = days_from_num_to_full_text[days_from_short_text_to_num[update.message.text]].lower()
+KeyError: '♟️Сегодня♟️'
+2024-01-08 20:17:41,951 - root - WARNING - ПОЛЬЗОВАТЕЛЬ <delikatny_pon> <Муляр> <Никита> (chat_id: <562532936>, telegram_id: <562532936>) --->>> СМЕНИЛ ПАРОЛЬ
+2024-01-08 20:23:00,330 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 37, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 39, in get_timetable
+    await timetable_teacher_for_each_day(context, user, update, edits_text, near=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_teachers.py", line 101, in timetable_teacher_for_each_day
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_extra_lesson.py", line 238, in extra_send_near
+    extra_text = extra_lessons_teachers_return(update.message.from_user.id, days[today])
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_extra_lesson.py", line 203, in extra_lessons_teachers_return
+    day = days[button_text]
+KeyError: 562532936
+2024-01-08 20:23:18,094 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 37, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 69, in get_timetable
+    await extra_lessons_for_all_days(update, update.message.from_user.id, teacher=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_extra_lesson.py", line 175, in extra_lessons_for_all_days
+    extra_text = extra_lessons_teachers_return(id, day)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_extra_lesson.py", line 203, in extra_lessons_teachers_return
+    day = days[button_text]
+KeyError: 562532936
+2024-01-08 22:35:22,007 - root - WARNING - ПОЛЬЗОВАТЕЛЬ <delikatny_pon> <Малахов> <Александр Игоревич> (chat_id: <562532936>, telegram_id: <562532936>) --->>> ВЫДАЛ ПРАВА НА СБРОС ПАРОЛЯ ПОЛЬЗОВАТЕЛЮ <lokisf8> <Лупиков> <Константин Васильевич> (chat_id: <871689175>, telegram_id: <871689175>)
+2024-01-08 22:37:27,013 - root - WARNING - ПОЛЬЗОВАТЕЛЬ <lokisf8> <Лупиков> <Константин Васильевич> (chat_id: <871689175>, telegram_id: <871689175>) --->>> ЗАБРАЛ ПРАВА НА СБРОС ПАРОЛЯ У ПОЛЬЗОВАТЕЛЯ <delikatny_pon> <Малахов> <Александр Игоревич> (chat_id: <562532936>, telegram_id: <562532936>)
+2024-01-08 22:45:40,437 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:48,036 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:50,677 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:52,657 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:53,243 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:53,711 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:54,076 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:54,531 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:54,770 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:55,138 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:55,556 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:55,856 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:45:56,206 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/security.py", line 60, in get_info_about_bot
+    with open('logs.log', mode='r', encoding='utf-8') as f2:
+FileNotFoundError: [Errno 2] No such file or directory: 'logs.log'
+2024-01-08 22:55:34,175 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:55:44,418 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 59, in get_timetable
+    update.message.text = days[today]
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_telegramobject.py", line 172, in __setattr__
+    raise AttributeError(
+AttributeError: Attribute `text` of class `Message` can't be set!
+2024-01-08 22:55:46,328 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 59, in get_timetable
+    update.message.text = days[today]
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_telegramobject.py", line 172, in __setattr__
+    raise AttributeError(
+AttributeError: Attribute `text` of class `Message` can't be set!
+2024-01-08 22:55:47,642 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 59, in get_timetable
+    update.message.text = days[today]
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_telegramobject.py", line 172, in __setattr__
+    raise AttributeError(
+AttributeError: Attribute `text` of class `Message` can't be set!
+2024-01-08 22:56:22,468 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:24,116 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:25,467 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:26,435 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:27,323 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:27,962 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:28,716 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:29,525 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:30,247 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:31,073 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:31,886 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 38, in get_timetable
+    await extra_send_near(update, context, flag=True)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_extra_lessons.py", line 89, in extra_send_near
+    today = datetime.now().weekday()
+AttributeError: module 'datetime' has no attribute 'now'
+2024-01-08 22:56:35,158 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_application.py", line 1234, in process_update
+    await coroutine
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/ext/_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/funcs_back.py", line 34, in wrapped
+    return await func(*args, **kwargs)
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/py_scripts/class_timetable.py", line 59, in get_timetable
+    update.message.text = days[today]
+  File "/Users/nikita/PycharmProjects/l2sh_bot_0/venv/lib/python3.10/site-packages/telegram/_telegramobject.py", line 172, in __setattr__
+    raise AttributeError(
+AttributeError: Attribute `text` of class `Message` can't be set!

@@ -1,5 +1,6 @@
 import telegram
-from py_scripts.funcs_back import db_sess, prepare_for_markdown, bot, timetable_kbrd
+from py_scripts.funcs_back import db_sess, prepare_for_markdown, bot, timetable_kbrd, check_busy
+from py_scripts.consts import COMMANDS
 from telegram.ext import ConversationHandler
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 
@@ -42,7 +43,8 @@ class MailTo:
         return kbd
 
     async def start(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return ConversationHandler.END
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
@@ -51,15 +53,15 @@ class MailTo:
                 f'Вы не заполнили свои данные. Напишите /start и заполните свои данные')
             return ConversationHandler.END
         await update.message.reply_text('Прервать настройку рассылки: /end_mail')
+        context.user_data['in_conversation'] = True
+        context.user_data['DIALOG_CMD'] = '/' + COMMANDS['mail']
         if user.role == 'admin':
             await update.message.reply_text(
                 f'*Рассылка осуществляется под аккаунтом\: {user.surname} {user.name}\, Админ*\n' +
                 prepare_for_markdown('Выберите параллель, к которой будет обращена рассылка:'),
                 reply_markup=await self.mailing_parallels_kbrd(), parse_mode='MarkdownV2')
-            context.user_data['in_conversation'] = True
             return self.step_parallel
         await update.message.reply_text('Введите пароль:')
-        context.user_data['in_conversation'] = True
         return self.step_pswrd
 
     async def get_psw(self, update, context):
@@ -67,6 +69,7 @@ class MailTo:
             await update.message.reply_text('Неверный пароль. Настройка рассылки прервана. '
                                             'Начать сначала: /mail')
             context.user_data['in_conversation'] = False
+            context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
@@ -142,8 +145,9 @@ class MailTo:
             if file_info.file_size / 1024 / 1024 > self.size_limit:
                 raise Exception
         except Exception as e:
-            print(e)
-            await update.message.reply_text('Файл слишком большой. Загрузка файлов продолжается. '
+            await update.message.reply_text(f'Файл не загружен, т.к. он весит более 20МБ или не '
+                                            f'умещается в лимит {self.size_limit}МБ. '
+                                            f'Загрузка файлов продолжается. '
                                             'Если вы хотите завершить прикрепление файлов, '
                                             'нажмите на кнопку "Готово"')
             return self.step_attachments
@@ -229,14 +233,17 @@ class MailTo:
             await update.message.reply_text(f'Настройка рассылки окончена.\n{t}\nНачать сначала: /mail',
                                             reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
+            context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         except Exception as e:
             await update.message.reply_text(
-                f'Ошибка: {e}. Попробуйте исправить текст и отправьте его заново. ❗️НЕЛЬЗЯ использовать нижнее подчеркивание и зачеркивание!')
+                f'Ошибка при форматировании текста (ошибка: {e}). Попробуйте исправить текст и '
+                f'отправьте его заново. ❗️НЕЛЬЗЯ использовать нижнее подчеркивание и зачеркивание!')
             return self.step_text
 
     async def end_mailing(self, update, context):
         await update.message.reply_text('Настройка рассылки прервана. Начать сначала: /mail',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
+        context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END

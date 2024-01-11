@@ -1,8 +1,9 @@
-from py_scripts.funcs_back import db_sess, bot, prepare_for_markdown, timetable_kbrd
+from py_scripts.funcs_back import db_sess, bot, prepare_for_markdown, timetable_kbrd, check_busy
 from telegram.ext import ConversationHandler
 from telegram import ReplyKeyboardMarkup
 from sqlalchemy_scripts.users import User
 import logging
+from py_scripts.consts import COMMANDS
 
 
 class GivePermissionToChangePsw:
@@ -14,7 +15,8 @@ class GivePermissionToChangePsw:
         return kbd
 
     async def start(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return ConversationHandler.END
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
@@ -26,6 +28,7 @@ class GivePermissionToChangePsw:
                 await update.message.reply_text(f'Нет доступа!')
                 return ConversationHandler.END
         context.user_data['in_conversation'] = True
+        context.user_data['DIALOG_CMD'] = '/' + COMMANDS['give']
         emoji = prepare_for_markdown('‼️')
         title = emoji + ' *ОБЯЗАТЕЛЬНО К ПРОЧТЕНИЮ* ' + emoji + '\n\n'
         text = ('_Правила использования функции выдачи прав на сброс пароля_\n'
@@ -64,6 +67,7 @@ class GivePermissionToChangePsw:
                 await update.message.reply_text(f'У пользователя {username2} уже есть данные права. '
                                                 f'Начать сначала: /give', reply_markup=await timetable_kbrd())
                 context.user_data['in_conversation'] = False
+                context.user_data['DIALOG_CMD'] = None
                 return ConversationHandler.END
             user.allow_changing = True
             db_sess.commit()
@@ -86,9 +90,11 @@ class GivePermissionToChangePsw:
             await update.message.reply_text('Выдача прав прервана.')
         await update.message.reply_text('Начать сначала: /give', reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
+        context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END
 
     async def end_give(self, update, context):
         await update.message.reply_text('Выдача прав прервана. Начать сначала: /give')
         context.user_data['in_conversation'] = False
+        context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END

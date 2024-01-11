@@ -2,7 +2,7 @@ import os
 from py_scripts.funcs_extra_lessons import extra_lessons_for_all_days, extra_send_day, extra_send_near
 from py_scripts.consts import path_to_timetables_csv, days_from_num_to_full_text_formatted
 from py_scripts.funcs_back import (throttle, extra_school_timetable_kbrd, prepare_for_markdown,
-                                   db_sess, timetable_kbrd)
+                                   db_sess, timetable_kbrd, check_busy)
 from py_scripts.funcs_students import get_timetable_for_user, get_timetable_for_user_6_9
 from py_scripts.funcs_teachers import timetable_teacher_for_each_day
 from datetime import datetime
@@ -16,7 +16,8 @@ from py_scripts.funcs_teachers import get_standard_timetable_with_edits_for_teac
 class GetTimetable:
     @throttle()
     async def get_timetable(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()

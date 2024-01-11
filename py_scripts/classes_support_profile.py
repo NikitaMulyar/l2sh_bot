@@ -1,11 +1,13 @@
-from py_scripts.funcs_back import throttle, db_sess, timetable_kbrd, prepare_for_markdown
+from py_scripts.funcs_back import (throttle, db_sess, timetable_kbrd, prepare_for_markdown,
+                                   check_busy)
 from sqlalchemy_scripts.users import User
 
 
 class Profile:
     @throttle()
     async def get_profile(self, update, context):
-        if context.user_data.get('in_conversation'):
+        is_busy = await check_busy(update, context)
+        if is_busy:
             return
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
@@ -13,14 +15,18 @@ class Profile:
             await update.message.reply_text(f'Для начала заполните свои данные: /start')
             return
         grade = user.grade
+        role = "ученик"
         if not grade:
             if user.role == "teacher":
                 grade = "Учитель"
+                role = "Учитель"
             else:
                 grade = "Админ"
+                role = "Учитель"
+
         t = (f'📠*Ваш профиль*📠\n\n' +
              prepare_for_markdown(f'Класс: {grade}\nИмя: {user.name}\nФамилия: {user.surname}\n'
-                                  f'Роль: {user.role}'))
+                                  f'Роль: {role}'))
         await update.message.reply_text(t, parse_mode='MarkdownV2',
                                         reply_markup=await timetable_kbrd())
 
