@@ -1,6 +1,6 @@
 1. @delikatny_pon Муляр Никита (chat_id: 562532936, telegram_id: 562532936)
 
-2. @agolod Голод Артем (chat_id: 606332301, telegram_id: 606332301)
+2. @agolod Голод Артём (chat_id: 606332301, telegram_id: 606332301)
 
 3. @None Гоголь Николай (chat_id: 701308486, telegram_id: 701308486)
 
@@ -26,51 +26,53 @@
 
 14. @illinkclick Ложечко Мария (chat_id: 1227199842, telegram_id: 1227199842)
 
-15. @ochabaeva Чабаева Ольга (chat_id: 1324954077, telegram_id: 1324954077)
+15. @sasha_petkov Петков Александр (chat_id: 1291862359, telegram_id: 1291862359)
 
-16. @ruannaj Рыжова Анна (chat_id: 1353056677, telegram_id: 1353056677)
+16. @ochabaeva Чабаева Ольга (chat_id: 1324954077, telegram_id: 1324954077)
 
-17. @lala_kac Малахов Александр Игоревич (chat_id: 1461693159, telegram_id: 1461693159)
+17. @ruannaj Рыжова Анна (chat_id: 1353056677, telegram_id: 1353056677)
 
-18. @UnaBellaBimba Лошадкина Полина (chat_id: 1479485988, telegram_id: 1479485988)
+18. @lala_kac Малахов Александр Игоревич (chat_id: 1461693159, telegram_id: 1461693159)
 
-19. @TimofeyMusikow Мусиков Тимофей (chat_id: 1570892596, telegram_id: 1570892596)
+19. @UnaBellaBimba Лошадкина Полина (chat_id: 1479485988, telegram_id: 1479485988)
 
-20. @EgorSomov2011 Сомов Егор (chat_id: 1581429708, telegram_id: 1581429708)
+20. @TimofeyMusikow Мусиков Тимофей (chat_id: 1570892596, telegram_id: 1570892596)
 
-21. @Muurmurk Привет Привет (chat_id: 1688655761, telegram_id: 1688655761)
+21. @EgorSomov2011 Сомов Егор (chat_id: 1581429708, telegram_id: 1581429708)
 
-22. @Nyashist Поликуров Филипп (chat_id: 1753708703, telegram_id: 1753708703)
+22. @Muurmurk Привет Привет (chat_id: 1688655761, telegram_id: 1688655761)
 
-23. @danis_ueldanov Жуков Фёдор (chat_id: 1861734434, telegram_id: 1861734434)
+23. @Nyashist Поликуров Филипп (chat_id: 1753708703, telegram_id: 1753708703)
 
-24. @mishkatram Калабашкин Михаил (chat_id: 1867982625, telegram_id: 1867982625)
+24. @danis_ueldanov Жуков Фёдор (chat_id: 1861734434, telegram_id: 1861734434)
 
-25. @None Бардамов Матвей (chat_id: 1904675912, telegram_id: 1904675912)
+25. @mishkatram Калабашкин Михаил (chat_id: 1867982625, telegram_id: 1867982625)
 
-26. @coriek Мельситдинова Александра (chat_id: 1919197388, telegram_id: 1919197388)
+26. @None Бардамов Матвей (chat_id: 1904675912, telegram_id: 1904675912)
 
-27. @ulupii_159 Волкова АПОЛЛИНАРИЯ (chat_id: 1926059201, telegram_id: 1926059201)
+27. @coriek Мельситдинова Александра (chat_id: 1919197388, telegram_id: 1919197388)
 
-28. @kak_b_pofig Бродская Ольга (chat_id: 1981404607, telegram_id: 1981404607)
+28. @ulupii_159 Бердникова Анна Олеговна (chat_id: 1926059201, telegram_id: 1926059201)
 
-29. @None Глушков Егор (chat_id: 2133987273, telegram_id: 2133987273)
+29. @kak_b_pofig Бродская Ольга (chat_id: 1981404607, telegram_id: 1981404607)
 
-30. @Anna_132933 Новожилова Анна (chat_id: 2138713576, telegram_id: 2138713576)
+30. @None Глушков Егор (chat_id: 2133987273, telegram_id: 2133987273)
 
-31. @kkchay Близнюк Анна (chat_id: 5079473063, telegram_id: 5079473063)
+31. @Anna_132933 Новожилова Анна (chat_id: 2138713576, telegram_id: 2138713576)
 
-32. @BARSIKER_BRO Гвггв Ркок (chat_id: 5142825693, telegram_id: 5142825693)
+32. @kkchay Близнюк Анна (chat_id: 5079473063, telegram_id: 5079473063)
 
-33. @VsevKomarov Кашс Всеволод (chat_id: 5190251868, telegram_id: 5190251868)
+33. @BARSIKER_BRO Гвггв Ркок (chat_id: 5142825693, telegram_id: 5142825693)
 
-34. @alexeylob Лобанов Алексей (chat_id: 5205976501, telegram_id: 5205976501)
+34. @VsevKomarov Кашс Всеволод (chat_id: 5190251868, telegram_id: 5190251868)
 
-35. @Lisa_Mozgo Мозго Елизавета (chat_id: 5284132670, telegram_id: 5284132670)
+35. @alexeylob Лобанов Алексей (chat_id: 5205976501, telegram_id: 5205976501)
 
-36. @Vika_Basharova Башарова Виктория (chat_id: 5364753214, telegram_id: 5364753214)
+36. @Lisa_Mozgo Мозго Елизавета (chat_id: 5284132670, telegram_id: 5284132670)
 
-37. @shakurmi Шакурова Мира (chat_id: 6100029058, telegram_id: 6100029058)
+37. @Vika_Basharova Башарова Виктория (chat_id: 5364753214, telegram_id: 5364753214)
 
-38. @zxclavushka Нифантов Вячеслав (chat_id: 6378032316, telegram_id: 6378032316)
+38. @shakurmi Шакурова Мира (chat_id: 6100029058, telegram_id: 6100029058)
+
+39. @zxclavushka Нифантов Вячеслав (chat_id: 6378032316, telegram_id: 6378032316)
 

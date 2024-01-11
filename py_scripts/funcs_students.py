@@ -1,5 +1,5 @@
 from py_scripts.funcs_back import prepare_for_markdown, get_edits_in_timetable, db_sess
-from py_scripts.consts import days_from_short_text_to_num, days_from_num_to_full_text, lessons_keys
+from py_scripts.consts import days_from_short_text_to_num, days_from_num_to_full_text_formatted, lessons_keys
 from datetime import datetime
 import os
 import pandas as pd
@@ -185,7 +185,7 @@ async def get_standard_timetable_with_edits_for_student(context, day_name, stude
     app = f' для ученика {txt}'
     if not flag:
         app = ''
-    title = f'*Расписание на _{days_from_num_to_full_text[day]}_*{app}\n\n'
+    title = f'*Расписание на _{days_from_num_to_full_text_formatted[day]}_*{app}\n\n'
     t = ""
     edits_text = ""
     context.user_data['NEXT_DAY_TT'] = False
