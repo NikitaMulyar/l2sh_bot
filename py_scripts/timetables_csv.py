@@ -35,9 +35,9 @@ async def extract_timetable_for_students_10_11():
                 for col in df.columns.values:
                     df.loc[df[col] == '', col] = '--'
             df.ffill(axis=1, inplace=True)
-            df.to_csv(path_to_timetables_csv + f'{full_name} {class_}.csv')
+            df.to_csv(path_to_timetables_csv + f'{full_name.replace("ё", "е")} {class_}.csv')
             with open('list_new_timetable.txt', mode='a', encoding='utf-8') as f:
-                f.write(f'{full_name} {class_}\n')
+                f.write(f'{full_name.replace("ё", "е")} {class_}\n')
             f.close()
         pdf.close()
 
