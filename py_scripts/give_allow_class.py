@@ -76,7 +76,9 @@ class GivePermissionToChangePsw:
                                            f'Команды\:\n'
                                            f'\/reset \- сброс пароля\n'
                                            f'\/give \- выдача прав на сброс пароля\n'
-                                           f'\/end\_give \- закончить выдачу прав', parse_mode='MarkdownV2')
+                                           f'\/end\_give \- закончить выдачу прав\n'
+                                           f'\/take \- лишить пользователя права на сброс пароля\n'
+                                           f'\/end\_take \- закончить лишение прав', parse_mode='MarkdownV2')
             await bot.pin_chat_message(user.chat_id, msg.id)
             logging.warning(f'ПОЛЬЗОВАТЕЛЬ <{author.telegram_tag}> <{author.surname}> '
                              f'<{author.name}> (chat_id: <{author.chat_id}>, telegram_id: '

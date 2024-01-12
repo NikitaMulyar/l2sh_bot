@@ -43,6 +43,11 @@ class Reset_Class:
         t = f"Произошёл сброс пароля и очистка всех администраторов из базы данных\.\nНовый пароль\: `{passw}`"
         logging.warning(inform_about_changing)
         await update.message.reply_text(t, reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+        for user in db_sess.query(User).filter(User.allow_changing == 1).all():
+            try:
+                await bot.send_message(user.chat_id, t, parse_mode='MarkdownV2')
+            except Exception:
+                continue
 
     async def get_info_about_bot(self, update, context):
         is_busy = await check_busy(update, context)

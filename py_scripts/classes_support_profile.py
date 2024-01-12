@@ -15,14 +15,14 @@ class Profile:
             await update.message.reply_text(f'Для начала заполните свои данные: /start')
             return
         grade = user.grade
-        role = "ученик"
+        role = "Ученик"
         if not grade:
             if user.role == "teacher":
                 grade = "Учитель"
                 role = "Учитель"
             else:
                 grade = "Админ"
-                role = "Учитель"
+                role = "Админ"
 
         t = (f'📠*Ваш профиль*📠\n\n' +
              prepare_for_markdown(f'Класс: {grade}\nИмя: {user.name}\nФамилия: {user.surname}\n'
