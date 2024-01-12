@@ -81,12 +81,12 @@ class SetTimetable:
         return self.step_familia
 
     async def get_familia(self, update, context):
-        context.user_data['INFO']['Familia'] = update.message.text
+        context.user_data['INFO']['Familia'] = update.message.text.replace("ё", "е")
         await update.message.reply_text(f'Укажите свое ПОЛНОЕ имя (пример: Николай)')
         return self.step_name
 
     async def get_name(self, update, context):
-        context.user_data['INFO']['Name'] = update.message.text
+        context.user_data['INFO']['Name'] = update.message.text.replace("ё", "е")
         if context.user_data['INFO']['Class'] == 'admin' or context.user_data['INFO']['Class'] == 'teacher':
             await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
             return self.step_third_name
@@ -100,7 +100,7 @@ class SetTimetable:
         return ConversationHandler.END
 
     async def get_third_name(self, update, context):
-        context.user_data['INFO']['Otchestvo'] = update.message.text
+        context.user_data['INFO']['Otchestvo'] = update.message.text.replace("ё", "е")
         put_to_db(update, context.user_data['INFO']['Name'] + ' ' +
                   context.user_data['INFO']['Otchestvo'], context.user_data['INFO']['Familia'],
                   context.user_data['INFO']['Class'], update.message.from_user.username)
