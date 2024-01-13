@@ -36,6 +36,7 @@ for_datetime = {'0\n08:30 - 08:55': ((8, 20),
 path_to_timetables = 'timetables/'
 path_to_changes = 'changes_tt/'
 path_to_timetables_csv = 'timetables_csv/'
+path_to_server_files = 'server_files/'
 
 COMMANDS = {'start': 'end',
             'edit': 'end_edit',

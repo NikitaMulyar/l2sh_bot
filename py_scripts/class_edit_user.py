@@ -40,7 +40,7 @@ class Edit_User(SetTimetable):
         return self.step_class
 
     async def get_name(self, update, context):
-        context.user_data['INFO']['Name'] = update.message.text
+        context.user_data['INFO']['Name'] = update.message.text.replace("ё", "е")
         if context.user_data['INFO']['Class'] == 'admin' or context.user_data['INFO']['Class'] == 'teacher':
             await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
             return self.step_third_name
@@ -55,7 +55,7 @@ class Edit_User(SetTimetable):
         return ConversationHandler.END
 
     async def get_third_name(self, update, context):
-        context.user_data['INFO']['Otchestvo'] = update.message.text
+        context.user_data['INFO']['Otchestvo'] = update.message.text.replace("ё", "е")
         await clear_all_extra(update, context)
         update_db(update, context.user_data['INFO']['Name'] + ' ' +
                   context.user_data['INFO']['Otchestvo'], context.user_data['INFO']['Familia'],

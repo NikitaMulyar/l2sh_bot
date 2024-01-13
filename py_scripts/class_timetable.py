@@ -2,7 +2,7 @@ import os
 from py_scripts.funcs_extra_lessons import extra_lessons_for_all_days, extra_send_day, extra_send_near
 from py_scripts.consts import path_to_timetables_csv, days_from_num_to_full_text_formatted
 from py_scripts.funcs_back import (throttle, extra_school_timetable_kbrd, prepare_for_markdown,
-                                   db_sess, timetable_kbrd, check_busy)
+                                   db_sess, timetable_kbrd, check_busy, intensive_kbrd, get_intensive)
 from py_scripts.funcs_students import get_timetable_for_user, get_timetable_for_user_6_9
 from py_scripts.funcs_teachers import timetable_teacher_for_each_day
 from datetime import datetime
@@ -28,6 +28,20 @@ class GetTimetable:
             await update.message.reply_text('Выберите интересующий Вас день',
                                             reply_markup=await extra_school_timetable_kbrd())
             context.user_data['EXTRA_CLICKED'] = True
+        elif update.message.text == '⚡️Интенсивы⚡️':
+            await update.message.reply_text('Выберите интересующий Вас предмет',
+                                            reply_markup=await intensive_kbrd())
+            context.user_data['EXTRA_CLICKED2'] = True
+        elif context.user_data.get('EXTRA_CLICKED2'):
+            context.user_data['EXTRA_CLICKED2'] = False
+            if user.role == 'teacher':
+                await update.message.reply_text(await get_intensive(update.message.text, teacher=True,
+                                                                    name=user.name, surname=user.surname),
+                                                reply_markup=await timetable_kbrd(), parse_mode='MArkdownV2')
+            else:
+                await update.message.reply_text(
+                    await get_intensive(update.message.text, parallel=user.number),
+                    reply_markup=await timetable_kbrd(), parse_mode='MArkdownV2')
         elif user.role == 'teacher' or user.role == 'admin':
             if update.message.text == '📚Ближайшее расписание📚':
                 if (user.role == 'admin' or user.role == 'teacher') and not os.path.exists(
