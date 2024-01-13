@@ -15,6 +15,8 @@ from py_scripts.stickers_class import GetSticker
 from py_scripts.security import Reset_Class
 from py_scripts.give_allow_class import GivePermissionToChangePsw
 from py_scripts.take_allow_class import TakePermissionToChangePsw
+import gc
+gc.set_debug(gc.DEBUG_LEAK)
 
 
 try:
