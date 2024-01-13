@@ -35,13 +35,10 @@ class GetTimetable:
         elif context.user_data.get('EXTRA_CLICKED2'):
             context.user_data['EXTRA_CLICKED2'] = False
             if user.role == 'teacher':
-                await update.message.reply_text(await get_intensive(update.message.text, teacher=True,
-                                                                    name=user.name, surname=user.surname),
-                                                reply_markup=await timetable_kbrd(), parse_mode='MArkdownV2')
+                text_inten = await get_intensive(update.message.text, teacher=True, name=user.name, surname=user.surname)
             else:
-                await update.message.reply_text(
-                    await get_intensive(update.message.text, parallel=user.number),
-                    reply_markup=await timetable_kbrd(), parse_mode='MArkdownV2')
+                text_inten = await get_intensive(update.message.text, parallel=user.number)
+            await update.message.reply_text(text_inten, reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
         elif user.role == 'teacher' or user.role == 'admin':
             if update.message.text == '📚Ближайшее расписание📚':
                 if (user.role == 'admin' or user.role == 'teacher') and not os.path.exists(

@@ -345,7 +345,7 @@ async def get_intensive(subject, teacher=False, parallel=10, surname='Бибик
     month_ = str(time_2.month).rjust(2, '0')
     tomorrow_file = f'changes_tt/intensive_{subject}_{day_}.{month_}.{time_2.year}.csv'
     if not (os.path.exists(today_file) or os.path.exists(tomorrow_file)):
-        return 'В ближайшее время у Вас нет интенсивов\.'
+        return f'В ближайшее время у Вас нет интенсивов по предмету {prepare_for_markdown(subject)}\.'
     today_text = ''
     tomorrow_text = ''
     if os.path.exists(today_file):
@@ -378,7 +378,10 @@ async def get_intensive(subject, teacher=False, parallel=10, surname='Бибик
         if tomorrow_text:
             tomorrow_text = (f'Интенсивы на *{prepare_for_markdown(f"{day_}.{month_}.{time_2.year}")}* по предмету '
                           f'*{prepare_for_markdown(subject)}*\n\n') + tomorrow_text + '\n\n'
-    return today_text + tomorrow_text
+    res = today_text + tomorrow_text
+    if not res:
+        return f'В ближайшее время у Вас нет интенсивов по предмету {prepare_for_markdown(subject)}\.'
+    return res
 
 
 async def get_edits_in_timetable(next_day_tt):
