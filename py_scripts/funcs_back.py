@@ -70,7 +70,8 @@ async def timetable_kbrd():
     btn = KeyboardButton('📚Ближайшее расписание📚')
     btn3 = KeyboardButton('🎨Мои кружки🎨')
     arr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
-    kbd = ReplyKeyboardMarkup([[btn], arr, [btn3]], resize_keyboard=True)
+    inten = KeyboardButton('⚡️Интенсивы⚡️')
+    kbd = ReplyKeyboardMarkup([[btn], arr, [inten], [btn3]], resize_keyboard=True)
     return kbd
 
 
@@ -79,6 +80,14 @@ async def extra_school_timetable_kbrd():
     btn2 = KeyboardButton('🎭Все кружки🎭')
     arr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
     kbd = ReplyKeyboardMarkup([[btn, btn2], arr], resize_keyboard=True)
+    return kbd
+
+
+async def intensive_kbrd():
+    with open('intensives.txt', mode='r', encoding='utf-8') as f:
+        subjects = list(set(f.read().split('\n')[:-1]))
+    f.close()
+    kbd = ReplyKeyboardMarkup([[i] for i in subjects], resize_keyboard=True)
     return kbd
 
 
@@ -133,6 +142,11 @@ async def save_edits_in_timetable_csv(date):
             t.extend(t2[0])
         arr = []
         t2 = []
+        intensive_subjects_arr = {}
+        intensive_title = []
+        first_time_intensive_title = True
+        intensive_subject_name = ''
+        intensive_handler = None
         flag_started_lesson = False
         days = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
         for j in range(len(t)):
@@ -143,16 +157,36 @@ async def save_edits_in_timetable_csv(date):
                     cnt += 1
                 if el and ('Изменения' in el or any([ddd in el for ddd in days])):
                     flag = True
+                if el and 'интенсив' in el.lower():
+                    intensive_handler = j  # запоминаем индекс начала интенсивов
             if cnt == 5 and arr and all(
                     [isinstance(Q, str) and not Q for Q in t[j]]):
                 t2.append(arr)
                 arr = []
                 continue
-            elif flag:
+            elif flag or intensive_handler and j - intensive_handler == 0:
                 if arr:
                     t2.append(arr)
                     arr = []
                     continue
+            elif intensive_handler:
+                new_arr = []
+                for elem in t[j]:
+                    if elem:
+                        elem = elem.strip(' ').strip('\n').strip(' ').strip('\n')
+                        new_arr.append(elem)
+                if len(new_arr) == 1:
+                    intensive_subject_name = new_arr[0]
+                    intensive_subjects_arr[intensive_subject_name] = [intensive_title.copy()]
+                    continue
+                if len(new_arr) == 2:
+                    new_arr = [intensive_subjects_arr[intensive_subject_name][-1][0]] + new_arr
+                if first_time_intensive_title:
+                    intensive_title = new_arr.copy()
+                    intensive_title[-1] = 'Инфо'
+                    first_time_intensive_title = False
+                else:
+                    intensive_subjects_arr[intensive_subject_name].append(new_arr)
             else:
                 if t[j][1] and not flag_started_lesson or 'Предмет' == t[j][3]:
                     tmp = t[j]
@@ -280,12 +314,71 @@ async def save_edits_in_timetable_csv(date):
         os.remove(path_to_changes + f'{date}_cabinets.csv')
     except Exception:
         pass
+    if not os.path.exists('intensives.txt'):
+        with open('intensives.txt', mode='w', encoding='utf-8') as f:
+            f.write('')
+        f.close()
+    with open('intensives.txt', mode='a', encoding='utf-8') as f:
+        for key, value in intensive_subjects_arr.items():
+            df = pd.DataFrame(value[1:], columns=value[0])
+            df.to_csv(path_to_changes + f'intensive_{key}_{date}.csv')
+            f.write(f'{key}\n')
+    f.close()
     for i in range(len(dfs)):
         dfs[i] = dfs[i].sort_values(['Урок №'])
         name = 'cabinets'
         if 'Замены' in dfs[i].columns.values:
             name = 'lessons'
         dfs[i].to_csv(path_to_changes + f'{date}_{name}.csv')
+
+
+async def get_intensive(subject, teacher=False, parallel=10, surname='Бибиков', name='Павел'):
+    time_ = datetime.now()
+    day_ = str(time_.day).rjust(2, '0')
+    month_ = str(time_.month).rjust(2, '0')
+    today_file = f'changes_tt/intensive_{subject}_{day_}.{month_}.{time_.year}.csv'
+    time_copy = f'{day_}.{month_}.{time_.year}'
+    if time_.weekday() == 5:
+        time_ = time_ + timedelta(days=1)
+    time_2 = time_ + timedelta(days=1)
+    day_ = str(time_2.day).rjust(2, '0')
+    month_ = str(time_2.month).rjust(2, '0')
+    tomorrow_file = f'changes_tt/intensive_{subject}_{day_}.{month_}.{time_2.year}.csv'
+    if not (os.path.exists(today_file) or os.path.exists(tomorrow_file)):
+        return 'В ближайшее время у Вас нет интенсивов\.'
+    today_text = ''
+    tomorrow_text = ''
+    if os.path.exists(today_file):
+        df = pd.read_csv(today_file, dtype=object)
+        df['Инфо'] = df['Инфо'].str.split('\n').str.join(', ')
+        for i in range(len(df.index)):
+            if teacher:
+                if f'{surname} {name[0]}' in df.iloc[i]['Инфо']:
+                    today_text += ('*' + prepare_for_markdown(f'{df.iloc[i]["Время"]}') + '*' +
+                                   prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}'))
+            else:
+                if f'{parallel}' in df.iloc[i]['Класс']:
+                    today_text += ('*' + prepare_for_markdown(f'{df.iloc[i]["Время"]}') + '*' +
+                                   prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}'))
+        if today_text:
+            today_text = (f'Интенсивы на *{prepare_for_markdown(time_copy)}* по предмету '
+                          f'*{prepare_for_markdown(subject)}*\n\n') + today_text + '\n\n'
+    if os.path.exists(tomorrow_file):
+        df = pd.read_csv(tomorrow_file, dtype=object)
+        df['Инфо'] = df['Инфо'].str.split('\n').str.join(', ')
+        for i in range(len(df.index)):
+            if teacher:
+                if f'{surname} {name[0]}' in df.iloc[i]['Инфо']:
+                    tomorrow_text += ('*' + prepare_for_markdown(f'{df.iloc[i]["Время"]}') + '*' +
+                                   prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}\n'))
+            else:
+                if f'{parallel}' in df.iloc[i]['Класс']:
+                    tomorrow_text += ('*' + prepare_for_markdown(f'{df.iloc[i]["Время"]}') + '*' +
+                                   prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}\n'))
+        if tomorrow_text:
+            tomorrow_text = (f'Интенсивы на *{prepare_for_markdown(f"{day_}.{month_}.{time_2.year}")}* по предмету '
+                          f'*{prepare_for_markdown(subject)}*\n\n') + tomorrow_text + '\n\n'
+    return today_text + tomorrow_text
 
 
 async def get_edits_in_timetable(next_day_tt):
