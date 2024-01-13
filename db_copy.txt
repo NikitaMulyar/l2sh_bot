@@ -1,4 +1,4 @@
-1. @delikatny_pon Муляр Никита (chat_id: 562532936, telegram_id: 562532936)
+1. @delikatny_pon Критченкова Анна Михайловна (chat_id: 562532936, telegram_id: 562532936)
 
 2. @agolod Голод Артём (chat_id: 606332301, telegram_id: 606332301)
 
@@ -78,7 +78,9 @@
 
 40. @Vika_Basharova Башарова Виктория (chat_id: 5364753214, telegram_id: 5364753214)
 
-41. @shakurmi Шакурова Мира (chat_id: 6100029058, telegram_id: 6100029058)
+41. @None Пашнюк Марк (chat_id: 5458812060, telegram_id: 5458812060)
 
-42. @zxclavushka Нифантов Вячеслав (chat_id: 6378032316, telegram_id: 6378032316)
+42. @shakurmi Шакурова Мира (chat_id: 6100029058, telegram_id: 6100029058)
+
+43. @zxclavushka Нифантов Вячеслав (chat_id: 6378032316, telegram_id: 6378032316)
 
