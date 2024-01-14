@@ -8,7 +8,7 @@ import numpy as np
 from py_scripts.consts import days_from_short_text_to_num
 
 
-async def extract_timetable_for_students_10_11():
+async def extract_timetable_for_students_10_11(updating=False):
     def get_all_students():
         if not os.path.exists(path_to_timetables + '10-11.pdf'):
             return None
@@ -41,13 +41,24 @@ async def extract_timetable_for_students_10_11():
             f.close()
         pdf.close()
 
+    if updating:
+        print('\033[33m10-11 grade students\' timetables are processing.\033[0m')
+        cnt = 0
     for student in list(get_all_students()):
         if student is None:
-            continue
+            break
         await save_timetable_csv(student[0], student[1], student[2])
+        if updating:
+            cnt += 1
+    else:
+        if updating:
+            print(f'\033[32m10-11 grade students\' timetables (total: {cnt}) are processed successfully.\033[0m')
+        return
+    if updating:
+        print(f'\033[31m10-11 grade students\' timetables are not found.\033[0m')
 
 
-async def extract_timetable_for_students_6_9():
+async def extract_timetable_for_students_6_9(updating=False):
     def get_all_classes():
         if not os.path.exists(path_to_timetables + '6-9.pdf'):
             return None
@@ -88,7 +99,18 @@ async def extract_timetable_for_students_6_9():
             f.close()
         pdf.close()
 
+    if updating:
+        print('\033[33m6-9 grade students\' timetables are processing.\033[0m')
+        cnt = 0
     for class_ in list(get_all_classes()):
         if class_ is None:
-            continue
+            break
         await save_timetable_csv(class_[0], class_[1])
+        if updating:
+            cnt += 1
+    else:
+        if updating:
+            print(f'\033[32m6-9 grade students\' timetables (total: {cnt}) are processed successfully.\033[0m')
+        return
+    if updating:
+        print(f'\033[31m6-9 grade students\' timetables are not found.\033[0m')

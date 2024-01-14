@@ -53,12 +53,12 @@ class CheckStudentTT:
         return self.step_familia
 
     async def get_familia(self, update, context):
-        context.user_data['INFO']['Familia'] = update.message.text
+        context.user_data['INFO']['Familia'] = update.message.text.replace('ё', 'е')
         await update.message.reply_text(f'Укажите ПОЛНОЕ имя пользователя (пример: Николай)')
         return self.step_name
 
     async def get_name(self, update, context):
-        context.user_data['INFO']['Name'] = update.message.text
+        context.user_data['INFO']['Name'] = update.message.text.replace('ё', 'е')
         kbrd = await self.days_buttons()
         await update.message.reply_text('Выберите день недели для расписания',
                                         reply_markup=kbrd)

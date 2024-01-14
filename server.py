@@ -16,6 +16,12 @@ from py_scripts.security import Reset_Class
 from py_scripts.give_allow_class import GivePermissionToChangePsw
 from py_scripts.take_allow_class import TakePermissionToChangePsw
 import gc
+import argparse
+import asyncio
+from py_scripts.timetables_csv import extract_timetable_for_students_6_9, extract_timetable_for_students_10_11
+from py_scripts.funcs_teachers import extract_timetable_for_teachers
+
+
 gc.enable()
 
 
@@ -39,7 +45,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def main():
+def main(do_update=False):
     application = Application.builder().token(BOT_TOKEN).build()
     start_dialog = SetTimetable()
     timetable__ = GetTimetable()
@@ -48,6 +54,10 @@ def main():
     load_tt = LoadTimetables()
     load_changes_in_tt = LoadEditsTT()
     extra_lesson_dialog = Extra_Lessons()
+    if do_update:
+        asyncio.gather(extract_timetable_for_teachers(updating=True))
+        asyncio.gather(extract_timetable_for_students_6_9(updating=True))
+        asyncio.gather(extract_timetable_for_students_10_11(updating=True))
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start_dialog.start)],
@@ -166,5 +176,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--update', action="store_true", help="The flag which says to update timetables or not.")
+    args = parser.parse_args()
+    main(do_update=args.update)
     db_sess.close()

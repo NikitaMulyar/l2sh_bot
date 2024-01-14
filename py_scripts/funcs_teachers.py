@@ -137,8 +137,10 @@ async def get_standard_timetable_with_edits_for_teacher(context, day, name, fami
     return t
 
 
-async def extract_timetable_for_teachers():
+async def extract_timetable_for_teachers(updating=False):
     def get_all_teachers():
+        if not os.path.exists(path_to_timetables + 'teachers.pdf'):
+            return None, None
         reader = PyPDF2.PdfReader(f"{path_to_timetables}teachers.pdf")
         i = -1
         for page in reader.pages:
@@ -166,8 +168,21 @@ async def extract_timetable_for_teachers():
             f.close()
         pdf.close()
 
+    if updating:
+        print('\033[33mTeachers\' timetables are processing.\033[0m')
+        cnt = 0
     for teacher, page_n in list(get_all_teachers()):
+        if teacher is None:
+            break
         await save_timetable_csv(teacher, page_n)
+        if updating:
+            cnt += 1
+    else:
+        if updating:
+            print(f'\033[32mTeachers\' timetables (total: {cnt}) are processed successfully.\033[0m')
+        return
+    if updating:
+        print(f'\033[31mTeachers\' timetables are not found.\033[0m')
 
 
 async def get_timetable_for_teacher(context, full_name):
