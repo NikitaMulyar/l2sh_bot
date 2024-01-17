@@ -175,7 +175,7 @@ async def save_edits_in_timetable_csv(date):
                     if elem:
                         elem = elem.strip(' ').strip('\n').strip(' ').strip('\n')
                         new_arr.append(elem)
-                if len(new_arr) == 1:
+                if len(new_arr) == 1 and 'кл' not in new_arr[0]:
                     intensive_subject_name = new_arr[0]
                     intensive_subjects_arr[intensive_subject_name] = [intensive_title.copy()]
                     continue
@@ -186,6 +186,8 @@ async def save_edits_in_timetable_csv(date):
                     intensive_title[-1] = 'Инфо'
                     first_time_intensive_title = False
                 else:
+                    if len(new_arr) == 1:
+                        new_arr.extend(intensive_subjects_arr[intensive_subject_name][-1][1:])
                     intensive_subjects_arr[intensive_subject_name].append(new_arr)
             else:
                 if t[j][1] and not flag_started_lesson or 'Предмет' == t[j][3]:

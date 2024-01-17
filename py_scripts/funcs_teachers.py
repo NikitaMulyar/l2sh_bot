@@ -78,7 +78,7 @@ async def get_edits_for_teacher(context, surname, name):
                     if curr.strip(' '):
                         if surname.replace('ё', 'е') in curr.replace('ё', 'е') and \
                                 name.replace('ё', 'е')[0] in curr.replace('ё', 'е'):
-                            text += curr
+                            text += curr.replace('ё', 'е')
                             flag = True
                 if flag:
                     t += for_which_day
@@ -91,7 +91,7 @@ async def get_standard_timetable_with_edits_for_teacher(context, day, name, fami
                                                             days_from_short_text_to_num[day])
     if lessons.empty:
         return f'В этот день нет уроков'
-    app = f' для учителя {familia} {name}'
+    app = prepare_for_markdown(f' для учителя {familia} {name}')
     if not flag:
         app = ''
     title = f'*Расписание на _{days_from_num_to_full_text_formatted[day]}_*{app}\n\n'

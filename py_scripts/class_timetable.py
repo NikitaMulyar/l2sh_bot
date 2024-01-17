@@ -85,7 +85,7 @@ class GetTimetable:
                 else:
                     lessons, day = await get_timetable_for_user_6_9(context, user.grade)
                 if lessons.empty:
-                    txt = (user.surname + ' ' + user.name + ' ' + user.grade)
+                    txt = prepare_for_markdown(user.surname + ' ' + user.name + ' ' + user.grade)
                     class_txt = user.grade
 
                     await update.message.reply_text(f'Ученика "{txt}" не найдено или отсутствует '
