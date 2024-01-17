@@ -180,14 +180,46 @@ async def save_edits_in_timetable_csv(date):
                     intensive_subjects_arr[intensive_subject_name] = [intensive_title.copy()]
                     continue
                 if len(new_arr) == 2:
-                    new_arr = [intensive_subjects_arr[intensive_subject_name][-1][0]] + new_arr
+                    flag_missed_class = True
+                    flag_missed_lesson = True
+                    flag_missed_subject = True
+                    for i in new_arr:
+                        if 'кл' in i:
+                            flag_missed_class = False
+                        if i.count(':') != 0:
+                            flag_missed_lesson = False
+                        if i.count('.') >= 2:
+                            flag_missed_subject = False
+                    if flag_missed_class:
+                        new_arr = [intensive_subjects_arr[intensive_subject_name][-1][0]] + new_arr
+                    if flag_missed_lesson:
+                        new_arr = [new_arr[0], intensive_subjects_arr[intensive_subject_name][-1][1], new_arr[1]]
+                    if flag_missed_subject:
+                        new_arr = new_arr + [intensive_subjects_arr[intensive_subject_name][-1][2]]
                 if first_time_intensive_title:
                     intensive_title = new_arr.copy()
                     intensive_title[-1] = 'Инфо'
                     first_time_intensive_title = False
                 else:
                     if len(new_arr) == 1:
-                        new_arr.extend(intensive_subjects_arr[intensive_subject_name][-1][1:])
+                        flag_have_class = False
+                        flag_have_lesson = False
+                        flag_have_subject = False
+                        for i in new_arr:
+                            if 'кл' in i:
+                                flag_have_class = True
+                            if i.count(':') != 0:
+                                flag_have_lesson = True
+                            if i.count('.') >= 2:
+                                flag_have_subject = True
+                        if flag_have_class:
+                            new_arr.extend(intensive_subjects_arr[intensive_subject_name][-1][1:])
+                        if flag_have_lesson:
+                            new_arr = [intensive_subjects_arr[intensive_subject_name][-1][0],
+                                       new_arr[0],
+                                       intensive_subjects_arr[intensive_subject_name][-1][2]]
+                        if flag_have_subject:
+                            new_arr = intensive_subjects_arr[intensive_subject_name][-1][:2] + [new_arr[0]]
                     intensive_subjects_arr[intensive_subject_name].append(new_arr)
             else:
                 if t[j][1] and not flag_started_lesson or 'Предмет' == t[j][3]:
