@@ -145,9 +145,19 @@ async def extract_timetable_for_teachers(updating=False):
         i = -1
         for page in reader.pages:
             i += 1
-            info = page.extract_text().split('\n')[-1].split()
-            info[2] = info[2][0]
-            yield " ".join(info[1:3]), i
+            info = page.extract_text().split('\n')  # [-1].split()
+            if len(info) > 10:
+                info[2] = info[2][0]
+                yield " ".join(info[1:3]), i
+            else:
+                info = info[-1].split()
+                ind = -1
+                for j in range(len(info) - 1, -1, -1):
+                    if 'учитель' in info[j].lower():
+                        ind = j + 1
+                        break
+                info[ind + 1] = info[ind + 1][0]
+                yield " ".join(info[ind:ind + 2]), i
 
     async def save_timetable_csv(full_name, page_n):
         with pdfplumber.open(f"{path_to_timetables}teachers.pdf") as pdf:

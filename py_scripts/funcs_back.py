@@ -355,11 +355,11 @@ async def get_intensive(subject, teacher=False, parallel=10, surname='Бибик
             if teacher:
                 if f'{surname} {name[0]}' in df.iloc[i]['Инфо']:
                     today_text += ('*' + prepare_for_markdown(f'{df.iloc[i]["Время"]}') + '*' +
-                                   prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}'))
+                                   prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}\n'))
             else:
                 if f'{parallel}' in df.iloc[i]['Класс']:
                     today_text += ('*' + prepare_for_markdown(f'{df.iloc[i]["Время"]}') + '*' +
-                                   prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}'))
+                                   prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}\n'))
         if today_text:
             today_text = (f'Интенсивы на *{prepare_for_markdown(time_copy)}* по предмету '
                           f'*{prepare_for_markdown(subject)}*\n\n') + today_text + '\n\n'
