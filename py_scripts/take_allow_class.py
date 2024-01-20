@@ -1,7 +1,7 @@
 from py_scripts.funcs_back import db_sess, bot, prepare_for_markdown, timetable_kbrd, check_busy
 from py_scripts.consts import COMMANDS
-from telegram.ext import ConversationHandler
-from telegram import ReplyKeyboardMarkup
+from telegram.ext import ConversationHandler, ContextTypes
+from telegram import ReplyKeyboardMarkup, Update
 from sqlalchemy_scripts.users import User
 import logging
 
@@ -14,7 +14,7 @@ class TakePermissionToChangePsw:
         kbd = ReplyKeyboardMarkup([['✅Да', '❌Нет']], resize_keyboard=True)
         return kbd
 
-    async def start(self, update, context):
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return ConversationHandler.END
@@ -39,7 +39,7 @@ class TakePermissionToChangePsw:
                                         'права на сброс пароля (пример: @username)\nПрерваться: /end_take')
         return self.step_get_username
 
-    async def get_username(self, update, context):
+    async def get_username(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         username = update.message.text
         username = username[1:] if username[0] == '@' else username
         username2 = '@' + username
@@ -49,7 +49,7 @@ class TakePermissionToChangePsw:
         context.user_data['GIVE_USER_PERMIS'] = username
         return self.step_confirm
 
-    async def get_confirmed(self, update, context):
+    async def get_confirmed(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         username = context.user_data['GIVE_USER_PERMIS']
         username2 = '@' + username
         if update.message.text == '✅Да':
@@ -90,7 +90,7 @@ class TakePermissionToChangePsw:
         context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END
 
-    async def end_give(self, update, context):
+    async def end_give(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Процесс лишения прав прерван. Начать сначала: /take')
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None

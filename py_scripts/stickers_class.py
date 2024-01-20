@@ -1,5 +1,6 @@
 from py_scripts.funcs_back import db_sess, bot, throttle, check_busy
-from telegram.ext import ConversationHandler
+from telegram.ext import ConversationHandler, ContextTypes
+from telegram import Update
 from sqlalchemy_scripts.stickers_table import Sticker
 from random import choice
 from sqlalchemy_scripts.users import User
@@ -9,7 +10,7 @@ from py_scripts.consts import COMMANDS
 class GetSticker:
     step_upload = 1
 
-    async def start(self, update, context):
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return ConversationHandler.END
@@ -29,7 +30,7 @@ class GetSticker:
         return self.step_upload
 
     @throttle()
-    async def get_sticker(self, update, context):
+    async def get_sticker(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         sticker_id = update.message.sticker.file_id
         sticker_unique_id = update.message.sticker.file_unique_id
         if not db_sess.query(Sticker).filter(Sticker.file_unique_id == sticker_unique_id).first():
@@ -41,13 +42,13 @@ class GetSticker:
             await update.message.reply_text(f'Такой стикер уже есть, давай другой! Закончить: /stick_end')
         return self.step_upload
 
-    async def end_uploading(self, update, context):
+    async def end_uploading(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Ура! Готово!')
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END
 
-    async def send_random_sticker(self, update, context):
+    async def send_random_sticker(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return
@@ -56,7 +57,7 @@ class GetSticker:
             sticker = choice(list_)
             await bot.send_sticker(update.message.chat.id, sticker.file_id)
 
-    async def erase_all(self, update, context):
+    async def erase_all(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return

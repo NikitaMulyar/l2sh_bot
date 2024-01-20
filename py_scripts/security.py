@@ -3,10 +3,12 @@ import hashlib
 from sqlalchemy_scripts.users import User
 import logging
 from py_scripts.funcs_back import bot, timetable_kbrd, db_sess, prepare_for_markdown, check_busy
+from telegram.ext import ContextTypes
+from telegram import Update
 
 
 class Reset_Class:
-    async def reset_admin_password(self, update, context):
+    async def reset_admin_password(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return
@@ -49,7 +51,7 @@ class Reset_Class:
             except Exception:
                 continue
 
-    async def get_info_about_bot(self, update, context):
+    async def get_info_about_bot(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return

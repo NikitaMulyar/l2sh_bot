@@ -1,8 +1,7 @@
-from datetime import datetime
+import requests
 
-now_ = datetime.now()
 
-tmp = '11.01.2024'.split('.')
-edits_date = (int(tmp[2]), int(tmp[1]), int(tmp[0]))
-today_date = (now_.year, now_.month, now_.day)
-print(now_.isoformat())
+res = requests.get('https://engine.lifeis.porn/api/millionaire.php', params={
+    'qType': 1, 'count': 2
+}).json()
+print(res)

@@ -1,7 +1,7 @@
-from telegram import ReplyKeyboardMarkup
+from telegram import ReplyKeyboardMarkup, Update
 from py_scripts.funcs_back import timetable_kbrd, throttle2, check_busy
 from py_scripts.consts import COMMANDS
-from telegram.ext import ConversationHandler
+from telegram.ext import ConversationHandler, ContextTypes
 from py_scripts.funcs_students import get_standard_timetable_with_edits_for_student
 from py_scripts.funcs_teachers import get_standard_timetable_with_edits_for_teacher
 from py_scripts.funcs_extra_lessons import extra_send_day
@@ -24,7 +24,7 @@ class CheckStudentTT:
         kbd = ReplyKeyboardMarkup([arr], resize_keyboard=True)
         return kbd
 
-    async def start(self, update, context):
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return ConversationHandler.END
@@ -37,7 +37,7 @@ class CheckStudentTT:
         context.user_data['INFO'] = dict()
         return self.step_class
 
-    async def get_class(self, update, context):
+    async def get_class(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text not in self.classes:
             await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
             return self.step_class
@@ -52,12 +52,12 @@ class CheckStudentTT:
         await update.message.reply_text(f'Укажите фамилию пользователя (пример: Некрасов)')
         return self.step_familia
 
-    async def get_familia(self, update, context):
+    async def get_familia(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Familia'] = update.message.text.replace('ё', 'е')
         await update.message.reply_text(f'Укажите ПОЛНОЕ имя пользователя (пример: Николай)')
         return self.step_name
 
-    async def get_name(self, update, context):
+    async def get_name(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Name'] = update.message.text.replace('ё', 'е')
         kbrd = await self.days_buttons()
         await update.message.reply_text('Выберите день недели для расписания',
@@ -65,7 +65,7 @@ class CheckStudentTT:
         return self.step_date
 
     @throttle2()
-    async def get_day(self, update, context):
+    async def get_day(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text not in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
             kbrd = await self.days_buttons()
             await update.message.reply_text('Выберите день недели для расписания',
@@ -89,7 +89,7 @@ class CheckStudentTT:
         await update.message.reply_text('Выберите день или закончите выбор командой: /end_check')
         return self.step_date
 
-    async def end_checking(self, update, context):
+    async def end_checking(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['in_conversation'] = False
         context.user_data['INFO'] = dict()
         context.user_data['DIALOG_CMD'] = None

@@ -11,11 +11,13 @@ from py_scripts.consts import days_from_short_text_to_num, lessons_keys, for_dat
 from py_scripts.funcs_students import get_edits_for_student
 from py_scripts.funcs_students import get_standard_timetable_with_edits_for_student
 from py_scripts.funcs_teachers import get_standard_timetable_with_edits_for_teacher
+from telegram.ext import ContextTypes
+from telegram import Update
 
 
 class GetTimetable:
     @throttle()
-    async def get_timetable(self, update, context):
+    async def get_timetable(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context, flag=True)
         if is_busy:
             return

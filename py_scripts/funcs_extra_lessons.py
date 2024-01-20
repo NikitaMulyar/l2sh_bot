@@ -3,6 +3,8 @@ from datetime import datetime
 from sqlalchemy_scripts.user_to_extra import Extra_to_User, Extra
 from py_scripts.consts import days_from_short_text_to_num, days_from_num_to_full_text_formatted, \
     days_from_num_to_full_text, days_from_short_text_to_full
+from telegram import Update
+from telegram.ext import ContextTypes
 
 
 def extra_lessons_return(id, button_text):  # Кружки на день для ученика
@@ -49,7 +51,7 @@ def extra_lessons_teachers_return(button_text, surname):  # Кружки на д
     return "".join(full_text)
 
 
-async def extra_lessons_for_all_days(update, id, teacher=False, surname=''):
+async def extra_lessons_for_all_days(update: Update, id, teacher=False, surname=''):
     list_text_res = []
     text_res = ""
     for day, day_number in days_from_short_text_to_num.items():
@@ -73,7 +75,7 @@ async def extra_lessons_for_all_days(update, id, teacher=False, surname=''):
             await update.message.reply_text(el, reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
 
 
-async def extra_send_near(update, context, flag=False, surname=''):
+async def extra_send_near(update: Update, context: ContextTypes.DEFAULT_TYPE, flag=False, surname=''):
     today = datetime.now().weekday()
     if context.user_data['NEXT_DAY_TT']:
         today = (today + 1) % 7
@@ -92,7 +94,7 @@ async def extra_send_near(update, context, flag=False, surname=''):
     return
 
 
-async def extra_send_day(update, text__=None, surname=None, flag=False, no_kbrd=False):
+async def extra_send_day(update: Update, text__=None, surname=None, flag=False, no_kbrd=False):
     if not text__:
         text__ = update.message.text
     if flag:
