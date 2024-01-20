@@ -1,5 +1,5 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ConversationHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import ConversationHandler, ContextTypes
 from py_scripts.funcs_back import db_sess, timetable_kbrd, check_busy
 from sqlalchemy_scripts.extra_lessons import Extra
 from sqlalchemy_scripts.user_to_extra import Extra_to_User
@@ -48,7 +48,7 @@ class Extra_Lessons:
             self.count[i + 6] = counter
         db_sess.commit()
 
-    async def start(self, update, context):
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return ConversationHandler.END
@@ -69,7 +69,7 @@ class Extra_Lessons:
         context.user_data['choose_count'] = 0
         return await self.choose_extra(update, context)
 
-    async def choose_extra(self, update, context):
+    async def choose_extra(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message:
             user__id = update.message.from_user.id
         else:
@@ -104,7 +104,7 @@ class Extra_Lessons:
             await update.callback_query.edit_message_text(text, reply_markup=reply_markup)
         return 1
 
-    async def yes_no(self, update, context):
+    async def yes_no(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         query = update.callback_query
         await query.answer()
         num = query.data
@@ -122,7 +122,7 @@ class Extra_Lessons:
         db_sess.commit()
         return await self.choose_extra(update, context)
 
-    async def get_out(self, update, context):
+    async def get_out(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('🌟 Загрузка кружков завершена! Большое спасибо за Ваш '
                                         'выбор! 🙌🏻 Теперь Вы можете посмотреть своё расписание с кружками.',
                                         reply_markup=await timetable_kbrd())

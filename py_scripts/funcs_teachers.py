@@ -9,9 +9,11 @@ import os
 from datetime import datetime
 from py_scripts.consts import days_from_num_to_full_text, days_from_short_text_to_num
 from sqlalchemy_scripts.user_to_extra import Extra
+from telegram.ext import ContextTypes
+from telegram import Update
 
 
-async def create_list_of_edits_lessons_for_teacher(df):
+async def create_list_of_edits_lessons_for_teacher(df: pd.DataFrame):
     res = []
     for j in df.index.values:
         number_of_lesson = " ".join(df.iloc[j]['Урок №'].split('\n'))
@@ -48,7 +50,7 @@ async def create_list_of_edits_lessons_for_teacher(df):
     return sorted(res, key=lambda x: x[1])
 
 
-async def get_edits_for_teacher(context, surname, name):
+async def get_edits_for_teacher(context: ContextTypes.DEFAULT_TYPE, surname, name):
     t = ""
     edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
     if ('завтра' in for_which_day and context.user_data['NEXT_DAY_TT'] or
@@ -86,7 +88,7 @@ async def get_edits_for_teacher(context, surname, name):
     return t
 
 
-async def get_standard_timetable_with_edits_for_teacher(context, day, name, familia, flag=True):
+async def get_standard_timetable_with_edits_for_teacher(context: ContextTypes.DEFAULT_TYPE, day, name, familia, flag=True):
     lessons, day = await get_standard_timetable_for_teacher(f'{familia} {name[0]}',
                                                             days_from_short_text_to_num[day])
     if lessons.empty:
@@ -146,18 +148,22 @@ async def extract_timetable_for_teachers(updating=False):
         for page in reader.pages:
             i += 1
             info = page.extract_text().split('\n')  # [-1].split()
-            if len(info) > 10:
-                info[2] = info[2][0]
-                yield " ".join(info[1:3]), i
-            else:
-                info = info[-1].split()
-                ind = -1
-                for j in range(len(info) - 1, -1, -1):
-                    if 'учитель' in info[j].lower():
-                        ind = j + 1
-                        break
+            # if info[-1].count(' ') < 2:
+            #     info[2] = info[2][0]
+            #     yield " ".join(info[1:3]), i
+            # else:
+            info_copy = info[-1]
+            info = info[-1].split()
+            ind = -1
+            for j in range(len(info) - 1, -1, -1):
+                if 'учитель' in info[j].lower():
+                    ind = j + 1
+                    break
+            if info_copy.count(' ') >= 2:
                 info[ind + 1] = info[ind + 1][0]
                 yield " ".join(info[ind:ind + 2]), i
+            else:
+                yield info[ind], i
 
     async def save_timetable_csv(full_name, page_n):
         with pdfplumber.open(f"{path_to_timetables}teachers.pdf") as pdf:
@@ -195,7 +201,7 @@ async def extract_timetable_for_teachers(updating=False):
         print(f'\033[31mTeachers\' timetables are not found.\033[0m')
 
 
-async def get_timetable_for_teacher(context, full_name):
+async def get_timetable_for_teacher(context: ContextTypes.DEFAULT_TYPE, full_name):
     if not os.path.exists(path_to_timetables_csv + f'{full_name}.csv'):
         return pd.DataFrame(), -1
     now_ = datetime.now()
@@ -240,7 +246,7 @@ async def extract_teacher_timetable_for_day(day, full_name):
     return df, day
 
 
-async def timetable_teacher_for_each_day(update, context, user):
+async def timetable_teacher_for_each_day(update: Update, context: ContextTypes.DEFAULT_TYPE, user):
     lessons, day = await get_timetable_for_teacher(context, f'{user.surname} {user.name[0]}')
     if lessons.empty:
         await update.message.reply_text(f'На {days_from_num_to_full_text_formatted[day]} у Вас нет уроков')

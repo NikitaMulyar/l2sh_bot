@@ -6,6 +6,8 @@ import pandas as pd
 import numpy as np
 from py_scripts.consts import path_to_timetables_csv
 from sqlalchemy_scripts.user_to_extra import Extra, Extra_to_User
+from telegram.ext import ContextTypes
+from telegram import Update
 
 
 async def extract_timetable_for_day_6_9(day, class_):
@@ -24,7 +26,7 @@ async def get_standard_timetable_for_user_6_9(class_, day):
     return timetable_, day
 
 
-async def get_timetable_for_user_6_9(context, class_):
+async def get_timetable_for_user_6_9(context: ContextTypes.DEFAULT_TYPE, class_):
     if not os.path.exists(path_to_timetables_csv + f'{class_}.csv'):
         return pd.DataFrame(), -1
     # day = (datetime.now() - timedelta(hours=3)).weekday()
@@ -67,7 +69,7 @@ async def get_standard_timetable_for_user(full_name, class_, day):
     return timetable_, day
 
 
-async def get_timetable_for_user(context, full_name, class_):
+async def get_timetable_for_user(context: ContextTypes.DEFAULT_TYPE, full_name, class_):
     if not os.path.exists(path_to_timetables_csv + f'{full_name} {class_}.csv'):
         return pd.DataFrame(), -1
     now_ = datetime.now()  # - timedelta(hours=3)
@@ -93,7 +95,7 @@ async def get_timetable_for_user(context, full_name, class_):
     return timetable_, day
 
 
-async def create_list_of_edits_lessons_for_student(df, student_class):
+async def create_list_of_edits_lessons_for_student(df: pd.DataFrame, student_class):
     res = []
     for j in df.index.values:
         number_of_lesson = " ".join(df.iloc[j]['Урок №'].split('\n'))
@@ -137,7 +139,7 @@ async def create_list_of_edits_lessons_for_student(df, student_class):
     return sorted(res, key=lambda x: x[1])
 
 
-async def get_edits_for_student(context, student_class):
+async def get_edits_for_student(context: ContextTypes.DEFAULT_TYPE, student_class):
     t = ""
     edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
     if ('завтра' in for_which_day and context.user_data['NEXT_DAY_TT'] or
@@ -170,7 +172,7 @@ async def get_edits_for_student(context, student_class):
     return t
 
 
-async def get_standard_timetable_with_edits_for_student(context, day_name, student_class, student_name, student_familia,
+async def get_standard_timetable_with_edits_for_student(context: ContextTypes.DEFAULT_TYPE, day_name, student_class, student_name, student_familia,
                                                         flag=True):
     if int(student_class[:-1]) >= 10:
         lessons, day = await get_standard_timetable_for_user(f'{student_familia} {student_name}',

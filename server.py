@@ -1,6 +1,7 @@
 import logging
 import os
-from telegram.ext import Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler, ConversationHandler
+from telegram.ext import (Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler,
+                          ConversationHandler, PollAnswerHandler, PollHandler)
 from py_scripts.class_timetable import GetTimetable
 from py_scripts.class_edit_user import Edit_User
 from py_scripts.class_mailing import MailTo
@@ -20,7 +21,7 @@ import argparse
 import asyncio
 from py_scripts.timetables_csv import extract_timetable_for_students_6_9, extract_timetable_for_students_10_11
 from py_scripts.funcs_teachers import extract_timetable_for_teachers
-
+from py_scripts.game_class import GameMillioner
 
 gc.enable()
 
@@ -164,6 +165,16 @@ def main(do_update=False):
 
     get_info_handler = CommandHandler('info', reset_cl.get_info_about_bot)
 
+    game__ = GameMillioner()
+    conv_game = ConversationHandler(
+        entry_points=[CommandHandler('game', game__.start)],
+        states={
+            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, game__.send_poll)],
+            2: [PollAnswerHandler(game__.get_answer)]
+        },
+        fallbacks=[CommandHandler('end_game', game__.end)], per_chat=False, per_user=True
+    )
+
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
                                        4: [mailto_handler], 5: [load_tt_handler], 6: [prof_handler],
                                        7: [sup_hadler], 8: [load_changes_in_tt_handler], 9: [config_extra],
@@ -171,7 +182,7 @@ def main(do_update=False):
                                        12: [MessageHandler(filters.Sticker.ALL, sticker_upload.send_random_sticker)],
                                        13: [CommandHandler('erase_all', sticker_upload.erase_all)],
                                        14: [reset_handler], 15: [giving_conver], 16: [get_info_handler],
-                                       17: [taking_conver]})
+                                       17: [taking_conver], 18: [conv_game]})
     application.run_polling()
 
 

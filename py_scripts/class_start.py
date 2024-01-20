@@ -1,5 +1,5 @@
-from telegram.ext import ConversationHandler
-from telegram import ReplyKeyboardRemove, ReplyKeyboardMarkup
+from telegram.ext import ConversationHandler, ContextTypes
+from telegram import ReplyKeyboardRemove, ReplyKeyboardMarkup, Update
 from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
 from py_scripts.funcs_back import db_sess, timetable_kbrd, put_to_db, check_busy
@@ -20,7 +20,7 @@ class SetTimetable:
         kbd = ReplyKeyboardMarkup(classes, resize_keyboard=True)
         return kbd
 
-    async def start(self, update, context):
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return ConversationHandler.END
@@ -44,7 +44,7 @@ class SetTimetable:
         context.user_data['INFO'] = dict()
         return self.step_class
 
-    async def get_class(self, update, context):
+    async def get_class(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text not in self.classes:
             await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
             return self.step_class
@@ -68,7 +68,7 @@ class SetTimetable:
                                         reply_markup=ReplyKeyboardRemove())
         return self.step_familia
 
-    async def get_psw(self, update, context):
+    async def get_psw(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not check_hash(update.message.text):
             await update.message.reply_text('Неверный пароль. Настройка данных прервана. '
                                             f'Начать сначала: {self.command}',
@@ -80,12 +80,12 @@ class SetTimetable:
         await update.message.reply_text(f'Укажите свою фамилию (пример: Некрасов)')
         return self.step_familia
 
-    async def get_familia(self, update, context):
+    async def get_familia(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Familia'] = update.message.text.replace("ё", "е")
         await update.message.reply_text(f'Укажите свое ПОЛНОЕ имя (пример: Николай)')
         return self.step_name
 
-    async def get_name(self, update, context):
+    async def get_name(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Name'] = update.message.text.replace("ё", "е")
         if context.user_data['INFO']['Class'] == 'admin' or context.user_data['INFO']['Class'] == 'teacher':
             await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
@@ -99,7 +99,7 @@ class SetTimetable:
         context.user_data['INFO'] = dict()
         return ConversationHandler.END
 
-    async def get_third_name(self, update, context):
+    async def get_third_name(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Otchestvo'] = update.message.text.replace("ё", "е")
         put_to_db(update, context.user_data['INFO']['Name'] + ' ' +
                   context.user_data['INFO']['Otchestvo'], context.user_data['INFO']['Familia'],
@@ -111,7 +111,7 @@ class SetTimetable:
         context.user_data['INFO'] = dict()
         return ConversationHandler.END
 
-    async def end_setting(self, update, context):
+    async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['in_conversation'] = False
         context.user_data['INFO'] = dict()
         context.user_data['DIALOG_CMD'] = None

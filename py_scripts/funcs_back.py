@@ -3,7 +3,8 @@ import functools
 
 import pandas as pd
 import telegram
-from telegram import KeyboardButton, ReplyKeyboardMarkup, Bot
+from telegram import KeyboardButton, ReplyKeyboardMarkup, Bot, Update
+from telegram.ext import ContextTypes
 from sqlalchemy_scripts import db_session
 from sqlalchemy_scripts.users import User
 from datetime import datetime, timedelta
@@ -19,7 +20,7 @@ bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
 
 
-async def check_busy(update, context, flag=False):
+async def check_busy(update: Update, context: ContextTypes.DEFAULT_TYPE, flag=False):
     if context.user_data.get('in_conversation'):
         cmd = context.user_data.get("DIALOG_CMD")
         if cmd and not flag:
@@ -101,7 +102,7 @@ def prepare_for_markdown(text):
     return res
 
 
-def put_to_db(update, name, surname, role, username, grade=None):
+def put_to_db(update: Update, name, surname, role, username, grade=None):
     user__id = update.message.from_user.id
     chat_id = update.message.chat.id
     num = grade
@@ -114,7 +115,7 @@ def put_to_db(update, name, surname, role, username, grade=None):
         db_sess.commit()
 
 
-def update_db(update, name, surname, role, username, grade=None):
+def update_db(update: Update, name, surname, role, username, grade=None):
     chat_id = update.message.chat.id
     user = db_sess.query(User).filter(User.chat_id == chat_id).first()
     user.surname = surname

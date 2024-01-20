@@ -1,6 +1,6 @@
 from datetime import timedelta
-from telegram import ReplyKeyboardMarkup
-from telegram.ext import ConversationHandler
+from telegram import ReplyKeyboardMarkup, Update
+from telegram.ext import ConversationHandler, ContextTypes
 from py_scripts.consts import path_to_changes, path_to_timetables, COMMANDS
 from py_scripts.funcs_back import bot, get_edits_in_timetable, save_edits_in_timetable_csv, \
     db_sess, prepare_for_markdown, timetable_kbrd, check_busy
@@ -45,7 +45,7 @@ async def write_about_new_timetable():
     return t
 
 
-async def write_about_edits(context, text):
+async def write_about_edits(context: ContextTypes.DEFAULT_TYPE, text):
     all_users = db_sess.query(User).all()
     didnt_send = {}
     for user in all_users:
@@ -79,7 +79,7 @@ class LoadTimetables:
         kbd = ReplyKeyboardMarkup(arr, resize_keyboard=True)
         return kbd
 
-    async def start(self, update, context):
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return ConversationHandler.END
@@ -97,7 +97,7 @@ class LoadTimetables:
         await update.message.reply_text('Введите пароль админа:')
         return self.step_pswrd
 
-    async def get_pswrd(self, update, context):
+    async def get_pswrd(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not check_hash(update.message.text):
             await update.message.reply_text('Неверный пароль. Загрузка расписаний прервана. '
                                             'Начать сначала: /load')
@@ -110,7 +110,7 @@ class LoadTimetables:
         f.close()
         return self.step_class
 
-    async def get_class(self, update, context):
+    async def get_class(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text not in self.classes:
             await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
             return self.step_class
@@ -118,7 +118,7 @@ class LoadTimetables:
         await update.message.reply_text(f'Загрузите файл .pdf')
         return self.step_file
 
-    async def load_pdf(self, update, context):
+    async def load_pdf(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         file_info = await bot.get_file(update.message.document.file_id)
         if context.user_data['filename'] == 'Учителя':
             context.user_data['filename'] = 'teachers'
@@ -143,7 +143,7 @@ class LoadTimetables:
         await update.message.reply_text(f'Выберите нужный класс', reply_markup=await self.classes_buttons())
         return self.step_class
 
-    async def end_setting(self, update, context):
+    async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         res = await write_about_new_timetable()
         if context.user_data.get('FILE_UPLOADED2'):
             await update.message.reply_text(
@@ -292,7 +292,7 @@ class LoadEditsTT:
                         t += text
         return t
 
-    async def start(self, update, context):
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return ConversationHandler.END
@@ -308,7 +308,7 @@ class LoadEditsTT:
         await update.message.reply_text('Введите пароль админа:')
         return self.step_pswrd
 
-    async def get_pswrd(self, update, context):
+    async def get_pswrd(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not check_hash(update.message.text):
             await update.message.reply_text('Неверный пароль. Загрузка изменений прервана. '
                                             'Начать сначала: /changes',
@@ -321,7 +321,7 @@ class LoadEditsTT:
             reply_markup=await self.dates_buttons())
         return self.step_date
 
-    async def get_date(self, update, context):
+    async def get_date(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         try:
             tmp = update.message.text.split('.')
             date__ = datetime(year=int(tmp[2]), month=int(tmp[1]), day=int(tmp[0]))
@@ -333,7 +333,7 @@ class LoadEditsTT:
         await update.message.reply_text(f'Загрузите файл .pdf')
         return self.step_file
 
-    async def load_pdf(self, update, context):
+    async def load_pdf(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         #with open('list_new_edits.txt', mode='w', encoding='utf-8') as f:
         #    f.write('')
         #    f.close()
@@ -384,7 +384,7 @@ class LoadEditsTT:
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
 
-    async def end_setting(self, update, context):
+    async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Загрузка изменений прервана',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False

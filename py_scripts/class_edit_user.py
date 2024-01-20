@@ -1,12 +1,13 @@
-from telegram.ext import ConversationHandler
+from telegram.ext import ConversationHandler, ContextTypes
 from sqlalchemy_scripts.users import User
 from py_scripts.class_start import SetTimetable
 from py_scripts.funcs_back import update_db, db_sess, timetable_kbrd, check_busy
 from sqlalchemy_scripts.user_to_extra import Extra_to_User
 from py_scripts.consts import COMMANDS
+from telegram import Update
 
 
-async def clear_all_extra(update, context):
+async def clear_all_extra(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     chat_id = update.message.chat.id
     user = db_sess.query(User).filter(User.chat_id == chat_id).first()
@@ -21,7 +22,7 @@ async def clear_all_extra(update, context):
 class Edit_User(SetTimetable):
     command = '/edit'
 
-    async def start(self, update, context):
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return ConversationHandler.END
@@ -39,7 +40,7 @@ class Edit_User(SetTimetable):
         context.user_data['INFO'] = dict()
         return self.step_class
 
-    async def get_name(self, update, context):
+    async def get_name(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Name'] = update.message.text.replace("ё", "е")
         if context.user_data['INFO']['Class'] == 'admin' or context.user_data['INFO']['Class'] == 'teacher':
             await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
@@ -54,7 +55,7 @@ class Edit_User(SetTimetable):
         context.user_data['INFO'] = dict()
         return ConversationHandler.END
 
-    async def get_third_name(self, update, context):
+    async def get_third_name(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Otchestvo'] = update.message.text.replace("ё", "е")
         await clear_all_extra(update, context)
         update_db(update, context.user_data['INFO']['Name'] + ' ' +

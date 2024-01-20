@@ -1,8 +1,8 @@
 import telegram
 from py_scripts.funcs_back import db_sess, prepare_for_markdown, bot, timetable_kbrd, check_busy
 from py_scripts.consts import COMMANDS
-from telegram.ext import ConversationHandler
-from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram.ext import ConversationHandler, ContextTypes
+from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 
 from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
@@ -42,7 +42,7 @@ class MailTo:
                                   resize_keyboard=True)
         return kbd
 
-    async def start(self, update, context):
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return ConversationHandler.END
@@ -64,7 +64,7 @@ class MailTo:
         await update.message.reply_text('Введите пароль:')
         return self.step_pswrd
 
-    async def get_psw(self, update, context):
+    async def get_psw(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not check_hash(update.message.text):
             await update.message.reply_text('Неверный пароль. Настройка рассылки прервана. '
                                             'Начать сначала: /mail')
@@ -82,7 +82,7 @@ class MailTo:
             reply_markup=await self.mailing_parallels_kbrd(), parse_mode='MarkdownV2')
         return self.step_parallel
 
-    async def get_parallel(self, update, context):
+    async def get_parallel(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text in ['Всем', 'Админ', 'Учителя']:
             context.user_data['PARAL'] = update.message.text
             context.user_data['CLASS'] = update.message.text
@@ -100,7 +100,7 @@ class MailTo:
                                             context.user_data['PARAL']))
         return self.step_class
 
-    async def get_class(self, update, context):
+    async def get_class(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text == 'Всем':
             context.user_data['CLASS'] = update.message.text
             await update.message.reply_text('Напишите сообщение для расслыки:',
@@ -117,7 +117,7 @@ class MailTo:
                                         reply_markup=ReplyKeyboardRemove())
         return self.step_text
 
-    async def get_text(self, update, context):
+    async def get_text(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['MESSAGE'] = update.message.text_markdown_v2
         text_ = 'Прикрепите вложения по желанию\.\n*⚠️Инструкция по прикреплению файлов*\n' + \
             prepare_for_markdown(f'1. Суммарный размер файлов не может превышать {self.size_limit}МБ. '
@@ -134,7 +134,7 @@ class MailTo:
         context.user_data['FILES_SIZE'] = 0
         return self.step_attachments
 
-    async def get_attachments(self, update, context):
+    async def get_attachments(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         try:
             if update.message.audio is None:
                 file_info = await bot.get_file(update.message.document.file_id)
@@ -170,12 +170,12 @@ class MailTo:
                                         'нажмите на кнопку "Готово"')
         return self.step_attachments
 
-    async def get_ready(self, update, context):
+    async def get_ready(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text == '📧Готово📧':
             return await self.send_message(update, context)
         return self.step_attachments
 
-    async def send_message(self, update, context):
+    async def send_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         chat_id = update.message.chat.id
         author = db_sess.query(User).filter(User.chat_id == chat_id).first()
         if context.user_data['PARAL'] == 'Админ':
@@ -241,7 +241,7 @@ class MailTo:
                 f'отправьте его заново. ❗️НЕЛЬЗЯ использовать нижнее подчеркивание и зачеркивание!')
             return self.step_text
 
-    async def end_mailing(self, update, context):
+    async def end_mailing(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Настройка рассылки прервана. Начать сначала: /mail',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
