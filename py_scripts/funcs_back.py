@@ -197,31 +197,46 @@ async def save_edits_in_timetable_csv(date):
                         new_arr = [new_arr[0], intensive_subjects_arr[intensive_subject_name][-1][1], new_arr[1]]
                     if flag_missed_subject:
                         new_arr = new_arr + [intensive_subjects_arr[intensive_subject_name][-1][2]]
-                if first_time_intensive_title:
+                if len(new_arr) == 1:
+                    flag_have_class = False
+                    flag_have_lesson = False
+                    flag_have_subject = False
+                    for i in new_arr:
+                        if 'кл' in i:
+                            flag_have_class = True
+                        if i.count(':') != 0:
+                            flag_have_lesson = True
+                        if i.count('.') >= 2:
+                            flag_have_subject = True
+                    if flag_have_class:
+                        new_arr.extend(intensive_subjects_arr[intensive_subject_name][-1][1:])
+                    if flag_have_lesson:
+                        new_arr = [intensive_subjects_arr[intensive_subject_name][-1][0],
+                                   new_arr[0],
+                                   intensive_subjects_arr[intensive_subject_name][-1][2]]
+                    if flag_have_subject:
+                        new_arr = intensive_subjects_arr[intensive_subject_name][-1][:2] + [
+                            new_arr[0]]
+                if first_time_intensive_title and len(new_arr) == 3:
                     intensive_title = new_arr.copy()
                     intensive_title[-1] = 'Инфо'
                     first_time_intensive_title = False
-                else:
-                    if len(new_arr) == 1:
-                        flag_have_class = False
-                        flag_have_lesson = False
-                        flag_have_subject = False
-                        for i in new_arr:
-                            if 'кл' in i:
-                                flag_have_class = True
-                            if i.count(':') != 0:
-                                flag_have_lesson = True
-                            if i.count('.') >= 2:
-                                flag_have_subject = True
-                        if flag_have_class:
-                            new_arr.extend(intensive_subjects_arr[intensive_subject_name][-1][1:])
-                        if flag_have_lesson:
-                            new_arr = [intensive_subjects_arr[intensive_subject_name][-1][0],
-                                       new_arr[0],
-                                       intensive_subjects_arr[intensive_subject_name][-1][2]]
-                        if flag_have_subject:
-                            new_arr = intensive_subjects_arr[intensive_subject_name][-1][:2] + [new_arr[0]]
+                elif len(new_arr) == 3:
                     intensive_subjects_arr[intensive_subject_name].append(new_arr)
+                if len(new_arr) == 4:
+                    subjects = ['физика', ' матем', 'эколог', 'эконом']
+                    ind_subj = None
+                    for i in range(len(new_arr)):
+                        for possib_subj in subjects:
+                            if possib_subj in new_arr[i].lower():
+                                ind_subj = i
+                                break
+                        if ind_subj:
+                            break
+                    title = ['Класс', 'Время', 'Инфо']
+                    if not intensive_subjects_arr.get(new_arr[ind_subj]):
+                        intensive_subjects_arr[new_arr[ind_subj]] = [title]
+                    intensive_subjects_arr[new_arr[ind_subj]].append(new_arr[:ind_subj] + new_arr[ind_subj + 1:])
             else:
                 if t[j][1] and not flag_started_lesson or 'Предмет' == t[j][3]:
                     tmp = t[j]
@@ -368,6 +383,7 @@ async def save_edits_in_timetable_csv(date):
 
 
 async def get_intensive(subject, teacher=False, parallel=10, surname='Бибиков', name='Павел'):
+    parallel = int(parallel)
     time_ = datetime.now()
     day_ = str(time_.day).rjust(2, '0')
     month_ = str(time_.month).rjust(2, '0')
@@ -392,7 +408,9 @@ async def get_intensive(subject, teacher=False, parallel=10, surname='Бибик
                     today_text += ('*' + prepare_for_markdown(f'{df.iloc[i]["Время"]}') + '*' +
                                    prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}\n'))
             else:
-                if f'{parallel}' in df.iloc[i]['Класс']:
+                if f'{parallel}' in df.iloc[i]['Класс'] or ('-' in df.iloc[i]['Класс'] and
+                                                            (f'{parallel - 1}' in df.iloc[i]['Класс'] or
+                                                             f'{parallel + 1}' in df.iloc[i]['Класс'])):
                     today_text += ('*' + prepare_for_markdown(f'{df.iloc[i]["Время"]}') + '*' +
                                    prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}\n'))
         if today_text:
@@ -407,7 +425,11 @@ async def get_intensive(subject, teacher=False, parallel=10, surname='Бибик
                     tomorrow_text += ('*' + prepare_for_markdown(f'{df.iloc[i]["Время"]}') + '*' +
                                    prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}\n'))
             else:
-                if f'{parallel}' in df.iloc[i]['Класс']:
+                if f'{parallel}' in df.iloc[i]['Класс'] or ('-' in df.iloc[i]['Класс'] and
+                                                            (f'{parallel - 1}' in df.iloc[i][
+                                                                'Класс'] or
+                                                             f'{parallel + 1}' in df.iloc[i][
+                                                                 'Класс'])):
                     tomorrow_text += ('*' + prepare_for_markdown(f'{df.iloc[i]["Время"]}') + '*' +
                                    prepare_for_markdown(f' - {df.iloc[i]["Класс"]}: {df.iloc[i]["Инфо"]}\n'))
         if tomorrow_text:
