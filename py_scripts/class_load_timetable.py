@@ -318,7 +318,7 @@ class LoadEditsTT:
             return ConversationHandler.END
         await update.message.reply_text(
             f'Выберите дату изменений в расписании (формат: ДД.ММ.ГГГГ):\n'
-            f'',
+            f'ВАЖНО: Пока что можно загружать изменения только на предложенные даты!',
             reply_markup=await self.dates_buttons())
         return self.step_date
 
