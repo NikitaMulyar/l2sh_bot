@@ -253,7 +253,7 @@ async def get_standard_timetable_with_edits_for_student(context: ContextTypes.DE
 
     if edits_text:
         t = title + '_' + prepare_for_markdown(
-            f'⚠️Обратите внимание, что для {student_class} ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
+            f'⚠️Обратите внимание, что для {student_class} ниже есть изменения в расписании!') + '_\n\n' + t + edits_text
     else:
         t = title + '\n' + t + edits_text
     return t

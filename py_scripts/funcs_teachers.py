@@ -133,7 +133,7 @@ async def get_standard_timetable_with_edits_for_teacher(context: ContextTypes.DE
             continue
     if edits_text:
         t = title + '_' + prepare_for_markdown(
-            '⚠️Обратите внимание, что у Вас есть изменения в расписании!\n\n') + '_' + t + edits_text
+            '⚠️Обратите внимание, что у Вас есть изменения в расписании!') + '_\n\n' + t + edits_text
     else:
         t = title + '\n' + t + edits_text
     return t
@@ -285,7 +285,7 @@ async def timetable_teacher_for_each_day(update: Update, context: ContextTypes.D
     edits_text = await get_edits_for_teacher(context, user.surname, user.name)
     if edits_text:
         t = title + '_' + prepare_for_markdown(
-            '⚠️Обратите внимание, что у Вас есть изменения в расписании!\n\n') + '_' + t + edits_text
+            '⚠️Обратите внимание, что у Вас есть изменения в расписании!') + '_\n\n' + t + edits_text
     else:
         t = title + '\n' + t
     await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())

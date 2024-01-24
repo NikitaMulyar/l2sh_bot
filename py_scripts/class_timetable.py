@@ -157,7 +157,7 @@ class GetTimetable:
                 edits_text = await get_edits_for_student(context, user.grade)
                 if edits_text:
                     t = title + '_' + prepare_for_markdown(
-                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!\n\n') + '_' + t + edits_text
+                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!') + '_\n\n' + t + edits_text
                 else:
                     t = title + '\n' + t
                 await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
