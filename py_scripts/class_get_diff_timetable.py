@@ -15,7 +15,7 @@ class CheckStudentTT:
     step_date = 4
 
     async def classes_buttons(self):
-        classes = [['6А', '6Б', '6В']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(7, 12)] + [["Учитель"]]
+        classes = [["Учитель"]] + [['6А', '6Б', '6В']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(7, 12)]
         kbd = ReplyKeyboardMarkup(classes, resize_keyboard=True)
         return kbd
 
@@ -54,7 +54,10 @@ class CheckStudentTT:
 
     async def get_familia(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Familia'] = update.message.text.replace('ё', 'е')
-        await update.message.reply_text(f'Укажите ПОЛНОЕ имя пользователя (пример: Николай)')
+        app_ = ''
+        if context.user_data['INFO']['Class'] == 'Учитель':
+            app_ = '(или первую букву полного имени) '
+        await update.message.reply_text(f'Укажите ПОЛНОЕ имя пользователя {app_}(пример: Николай)')
         return self.step_name
 
     async def get_name(self, update: Update, context: ContextTypes.DEFAULT_TYPE):

@@ -317,7 +317,8 @@ class LoadEditsTT:
             context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         await update.message.reply_text(
-            f'Выберите дату изменений в расписании (формат: ДД.ММ.ГГГГ):',
+            f'Выберите дату изменений в расписании (формат: ДД.ММ.ГГГГ):\n'
+            f'',
             reply_markup=await self.dates_buttons())
         return self.step_date
 

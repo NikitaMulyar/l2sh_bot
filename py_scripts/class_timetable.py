@@ -36,7 +36,7 @@ class GetTimetable:
             context.user_data['EXTRA_CLICKED2'] = True
         elif context.user_data.get('EXTRA_CLICKED2'):
             context.user_data['EXTRA_CLICKED2'] = False
-            if user.role == 'teacher':
+            if user.role == 'teacher' or user.role == 'admin':
                 text_inten = await get_intensive(update.message.text, teacher=True, name=user.name, surname=user.surname)
             else:
                 text_inten = await get_intensive(update.message.text, parallel=user.number)

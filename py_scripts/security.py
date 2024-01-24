@@ -36,9 +36,9 @@ class Reset_Class:
             except Exception:
                 continue
         admins = db_sess.query(User).filter((User.telegram_id == 562532936) | (User.telegram_id == 871689175)).all()
-        inform_about_changing = (f'ПОЛЬЗОВАТЕЛЬ <{author.telegram_tag}> <{author.surname}> '
+        inform_about_changing = (f'USER username: <{author.telegram_tag}> <{author.surname}> '
                                  f'<{author.name}> (chat_id: <{author.chat_id}>, telegram_id: '
-                                 f'<{author.telegram_id}>) --->>> СМЕНИЛ ПАРОЛЬ')
+                                 f'<{author.telegram_id}>) --->>> RESET PASSWROD')
         for user in admins:
             await bot.send_message(user.chat_id, prepare_for_markdown(inform_about_changing + '\n') +
                                    f"Новый пароль\: `{passw}`",  parse_mode='MarkdownV2')

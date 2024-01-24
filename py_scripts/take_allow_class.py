@@ -75,9 +75,9 @@ class TakePermissionToChangePsw:
                                                        f'Если вы считаете\, что это ошибка \- напишите '
                                                        f'в тех\. поддержку \- \/support',
                                          parse_mode='MarkdownV2')
-            logging.warning(f'ПОЛЬЗОВАТЕЛЬ <{author.telegram_tag}> <{author.surname}> '
+            logging.warning(f'USER username: <{author.telegram_tag}> <{author.surname}> '
                              f'<{author.name}> (chat_id: <{author.chat_id}>, telegram_id: '
-                             f'<{author.telegram_id}>) --->>> ЗАБРАЛ ПРАВА НА СБРОС ПАРОЛЯ У ПОЛЬЗОВАТЕЛЯ '
+                             f'<{author.telegram_id}>) --->>> TOOK RIGHTS FOR PASSWORD RESETTING AT USER '
                              f'<{user.telegram_tag}> <{user.surname}> <{user.name}> (chat_id: '
                              f'<{user.chat_id}>, telegram_id: <{user.telegram_id}>)')
             await update.message.reply_text(
