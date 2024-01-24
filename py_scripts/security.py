@@ -86,7 +86,7 @@ def check_hash(password):
 
 
 def new_password():
-    chars = '+-/*!&$#?=@<>abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+    chars = '+-/*!&$#?=@<>abcdefghijknpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
     password = ''
     for i in range(12):
         password += random.choice(chars)
