@@ -490,3 +490,73 @@ async def get_edits_in_timetable(next_day_tt):
         df.fillna('', inplace=True)
         dfs.append(df)
     return dfs, day
+
+
+async def create_list_of_all_edits(df: pd.DataFrame):
+    res = []
+    for j in df.index.values:
+        number_of_lesson = " ".join(df.iloc[j]['Урок №'].split('\n'))
+        if 'Замены' in df.columns.values:
+            if df.iloc[j]['Урок №'] == '' and j == 0:
+                continue
+            subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
+            subject = " ".join(subject.split('\n'))
+            class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
+            if teacher_cabinet != '':
+                teacher_cabinet = teacher_cabinet.split('\n')
+                cabinet = teacher_cabinet[-1]
+                teacher = " ".join(teacher_cabinet[:-1])
+                if cabinet.count('.') == 2 and 'зал' not in cabinet:
+                    # Учитель
+                    res.append([f"{class__}, ", number_of_lesson, subject,
+                                cabinet,
+                                df.iloc[j][
+                                    'Урок по расписанию']])  # Кабинет не указан, длина 5
+                else:
+                    res.append([f"{class__}, ", number_of_lesson,
+                                subject + ', ' + cabinet, teacher,
+                                df.iloc[j][
+                                    'Урок по расписанию']])  # Все указано, длина 5
+            else:
+                tmp = " ".join(df.iloc[j]['Урок по расписанию'].split('\n'))
+                res.append([f"{class__}, ", number_of_lesson,
+                            subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
+        else:
+            class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
+            res.append([f"{class__}, ", number_of_lesson,
+                        df.iloc[j]['Замены кабинетов'],
+                        df.iloc[j]['Урок по расписанию']])  # Изменения кабинетов, длина 4
+    return sorted(res, key=lambda x: x[1])
+
+
+async def get_edits_all(context: ContextTypes.DEFAULT_TYPE):
+    t = ""
+    edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
+    if ('завтра' in for_which_day and context.user_data['NEXT_DAY_TT'] or
+            'сегодня' in for_which_day and not context.user_data.get('NEXT_DAY_TT')):
+        if len(edits_in_tt) != 0:
+            for df in edits_in_tt:
+                sorted_res = await create_list_of_all_edits(df)
+                text = '_' + prepare_for_markdown(df.columns.values[-1]) + '_\n\n'
+                flag = False
+                for line in sorted_res:
+                    urok_po_rasp = " ".join(line[-1].split("\n"))
+                    curr = ""
+                    if len(line) == 3:
+                        curr += prepare_for_markdown(
+                            f'{line[0]}{line[1]} урок(и): {line[2]}\n\n')
+                    elif len(line) == 4:  # Замены каб.
+                        if line[2] == urok_po_rasp == '':
+                            curr += prepare_for_markdown(f'{line[0]}{line[1]}\n\n')
+                        else:
+                            curr += prepare_for_markdown(
+                                f'{line[0]}{line[1]} урок(и): {line[2]}\n(Урок по расписанию: '
+                                f'{urok_po_rasp})\n\n')
+                    else:
+                        curr += prepare_for_markdown(
+                            f'{line[0]}{line[1]} урок(и): {line[2]} (учитель: {line[3]})'
+                            f'\n(Урок по расписанию: {urok_po_rasp})\n\n')
+                    text += curr.replace('ё', 'е')
+                t += for_which_day
+                t += text
+    return t

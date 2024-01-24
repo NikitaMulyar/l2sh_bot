@@ -3,7 +3,7 @@ from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ConversationHandler, ContextTypes
 from py_scripts.consts import path_to_changes, path_to_timetables, COMMANDS
 from py_scripts.funcs_back import bot, get_edits_in_timetable, save_edits_in_timetable_csv, \
-    db_sess, prepare_for_markdown, timetable_kbrd, check_busy
+    db_sess, prepare_for_markdown, timetable_kbrd, check_busy, get_edits_all
 from py_scripts.funcs_teachers import extract_timetable_for_teachers, get_edits_for_teacher
 from py_scripts.security import check_hash
 from py_scripts.timetables_csv import extract_timetable_for_students_6_9, extract_timetable_for_students_10_11
@@ -300,7 +300,7 @@ class LoadEditsTT:
         context.user_data['DIALOG_CMD'] = '/' + COMMANDS['changes']
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        await update.message.reply_text('Прервать загрузку расписаний: /end_changes')
+        await update.message.reply_text('Прервать загрузку изменений: /end_changes')
         if user and user.role == 'admin':
             await update.message.reply_text(f'Выберите дату изменений в расписании или напишите свою (формат: ДД.ММ.ГГГГ):',
                                             reply_markup=await self.dates_buttons())
