@@ -381,6 +381,7 @@ class LoadEditsTT:
         await update.message.reply_text(
             f'Файл загружен. Проведена рассылка ученикам и учителям, у которых есть изменения.\n{res}\nНачать сначала: /changes',
             reply_markup=await timetable_kbrd())
+        await update.message.reply_text(f'Все изменения \(просмотр для Вас\)\:\n\n{edits_text}', parse_mode='MarkdownV2')
         context.user_data['DIALOG_CMD'] = None
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
