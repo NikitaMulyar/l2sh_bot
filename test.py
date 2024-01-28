@@ -1,7 +1,9 @@
-import requests
+import asyncio
+
+import aiohttp
 
 
-res = requests.get('https://engine.lifeis.porn/api/millionaire.php', params={
-    'qType': 1, 'count': 2
-}).json()
-print(res)
+session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
+r = asyncio.run(session.get('https://www6b3.wolframalpha.com/Calculate/MSP/MSP2361h5431b06g574g1200002f73d9c30943fi2i?MSPStoreType=image/gif&s=6'))
+r = asyncio.run(r.content.read())
+print(r)
