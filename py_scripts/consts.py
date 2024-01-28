@@ -47,4 +47,5 @@ COMMANDS = {'start': 'end',
             'give': 'end_give',
             'take': 'end_take',
             'check': 'end_check',
-            'sticker': 'end_sticker'}
+            'sticker': 'end_sticker',
+            'wolfram': 'end_wolfram'}
