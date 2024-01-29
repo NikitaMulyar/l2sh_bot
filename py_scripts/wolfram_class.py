@@ -1,16 +1,7 @@
-import datetime
-import pprint
-
 import aiohttp
 import wolframalpha
-from telegram import (KeyboardButton, KeyboardButtonPollType, Poll, ReplyKeyboardMarkup,
-                      ReplyKeyboardRemove, Update, InputMediaDocument)
-import telegram
-from telegram.ext import (Application, CommandHandler, ContextTypes, MessageHandler,
-                          PollAnswerHandler, PollHandler, filters, ConversationHandler,
-                          JobQueue, Job)
-import requests
-from random import shuffle
+from telegram import Update, InputMediaDocument
+from telegram.ext import ContextTypes, ConversationHandler
 from py_scripts.funcs_back import check_busy
 from py_scripts.consts import COMMANDS
 from py_scripts.config import app_id
@@ -56,7 +47,7 @@ class WolframClient:
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
-            return
+            return ConversationHandler.END
         await update.message.reply_text(f'Привет!\n'
                                         f'С помощью этой команды можно сделать запрос на сайт https://www.wolframalpha.com/ !\n'
                                         f'Ответ придет в виде картинок.\n'

@@ -1,7 +1,10 @@
 import logging
 import os
+
+import aiohttp
 from telegram.ext import (Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler,
-                          ConversationHandler, PollAnswerHandler, PollHandler)
+                          ConversationHandler, PollHandler, PollAnswerHandler)
+from telegram import Update
 from py_scripts.class_timetable import GetTimetable
 from py_scripts.class_edit_user import Edit_User
 from py_scripts.class_mailing import MailTo
@@ -22,6 +25,8 @@ import asyncio
 from py_scripts.timetables_csv import extract_timetable_for_students_6_9, extract_timetable_for_students_10_11
 from py_scripts.funcs_teachers import extract_timetable_for_teachers
 from py_scripts.wolfram_class import WolframClient
+from py_scripts.game_class import GameMillioner
+
 
 gc.enable()
 
@@ -165,15 +170,8 @@ def main(do_update=False):
 
     get_info_handler = CommandHandler('info', reset_cl.get_info_about_bot)
 
-    """game__ = GameMillioner()
-    conv_game = ConversationHandler(
-        entry_points=[CommandHandler('game', game__.start)],
-        states={
-            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, game__.send_poll)],
-            2: [PollAnswerHandler(game__.get_answer)]
-        },
-        fallbacks=[CommandHandler('end_game', game__.end)], per_chat=False, per_user=True
-    )"""
+    game__ = GameMillioner()
+    game_handler = CommandHandler('game', game__.send_poll)
 
     wolfram_ex = WolframClient()
     wolfram_handler = ConversationHandler(
@@ -191,8 +189,9 @@ def main(do_update=False):
                                        12: [MessageHandler(filters.Sticker.ALL, sticker_upload.send_random_sticker)],
                                        13: [CommandHandler('erase_all', sticker_upload.erase_all)],
                                        14: [reset_handler], 15: [giving_conver], 16: [get_info_handler],
-                                       17: [taking_conver], 18: [wolfram_handler]})
-    application.run_polling()
+                                       17: [taking_conver], 18: [wolfram_handler],
+                                       19: [game_handler], 20: [PollAnswerHandler(game__.get_answer)]})
+    application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == '__main__':
