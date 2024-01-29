@@ -91,11 +91,11 @@ async def get_edits_for_teacher(context: ContextTypes.DEFAULT_TYPE, surname, nam
 async def get_standard_timetable_with_edits_for_teacher(context: ContextTypes.DEFAULT_TYPE, day, name, familia, flag=True):
     lessons, day = await get_standard_timetable_for_teacher(f'{familia} {name[0]}',
                                                             days_from_short_text_to_num[day])
-    if lessons.empty:
-        return f'В этот день нет уроков'
     app = prepare_for_markdown(f' для учителя {familia} {name}')
+    t_app = prepare_for_markdown(f'⚠️Обратите внимание, что у учителя {familia} {name} есть изменения в расписании!')
     if not flag:
         app = ''
+        t_app = prepare_for_markdown(f'⚠️Обратите внимание, что у Вас есть изменения в расписании!')
     title = f'*Расписание на _{days_from_num_to_full_text_formatted[day]}_*{app}\n\n'
     t = ""
     edits_text = ""
@@ -132,10 +132,11 @@ async def get_standard_timetable_with_edits_for_teacher(context: ContextTypes.DE
         except Exception as e:
             continue
     if edits_text:
-        t = title + '_' + prepare_for_markdown(
-            '⚠️Обратите внимание, что у Вас есть изменения в расписании!') + '_\n\n' + t + edits_text
-    else:
+        t = title + '_' + t_app + '_\n\n' + t + edits_text
+    elif not lessons.empty:
         t = title + '\n' + t + edits_text
+    else:
+        t = 'В этот день нет уроков\.'
     return t
 
 
@@ -248,9 +249,6 @@ async def extract_teacher_timetable_for_day(day, full_name):
 
 async def timetable_teacher_for_each_day(update: Update, context: ContextTypes.DEFAULT_TYPE, user):
     lessons, day = await get_timetable_for_teacher(context, f'{user.surname} {user.name[0]}')
-    if lessons.empty:
-        await update.message.reply_text(f'На {days_from_num_to_full_text_formatted[day]} у Вас нет уроков')
-        return
     title = f'*Расписание на _{days_from_num_to_full_text_formatted[day]}_*\n\n'
     t = ""
     time_now = datetime.now()  # - timedelta(hours=3)
@@ -286,6 +284,8 @@ async def timetable_teacher_for_each_day(update: Update, context: ContextTypes.D
     if edits_text:
         t = title + '_' + prepare_for_markdown(
             '⚠️Обратите внимание, что у Вас есть изменения в расписании!') + '_\n\n' + t + edits_text
-    else:
+    elif not lessons.empty:
         t = title + '\n' + t
+    else:
+        t = f'На {days_from_num_to_full_text_formatted[day]} у Вас нет уроков'
     await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
