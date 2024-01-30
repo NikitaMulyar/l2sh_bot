@@ -1,5 +1,5 @@
 import telegram
-from py_scripts.funcs_back import db_sess, prepare_for_markdown, bot, timetable_kbrd, check_busy
+from py_scripts.funcs_back import db_sess, prepare_for_markdown, timetable_kbrd, check_busy
 from py_scripts.consts import COMMANDS
 from telegram.ext import ConversationHandler, ContextTypes
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
@@ -129,7 +129,7 @@ class MailTo:
                                  '4. ⚠️Если вы захотите завершить прикрепление файлов, нажмите на кнопку "Готово"')
         await update.message.reply_text(text_, reply_markup=await self.attachments_kbrd(),
                                         parse_mode='MarkdownV2')
-        await bot.send_photo(update.message.chat.id, 'data/instruction.jpg')
+        await context.bot.send_photo(update.message.chat.id, 'data/instruction.jpg')
         context.user_data['ATTACHMENTS'] = []
         context.user_data['FILES_SIZE'] = 0
         return self.step_attachments
@@ -137,10 +137,10 @@ class MailTo:
     async def get_attachments(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         try:
             if update.message.audio is None:
-                file_info = await bot.get_file(update.message.document.file_id)
+                file_info = await context.bot.get_file(update.message.document.file_id)
                 file_id = update.message.document.file_id
             else:
-                file_info = await bot.get_file(update.message.audio.file_id)
+                file_info = await context.bot.get_file(update.message.audio.file_id)
                 file_id = update.message.audio.file_id
             if file_info.file_size / 1024 / 1024 > self.size_limit:
                 raise Exception
@@ -207,12 +207,13 @@ class MailTo:
         for user in all_users:
             try:
                 if len(arr) >= 2:
-                    await bot.send_media_group(user.chat_id, arr, caption=mail_text, parse_mode='MarkdownV2')
+                    msg = await context.bot.send_media_group(user.chat_id, arr, caption=mail_text, parse_mode='MarkdownV2')
                 elif len(arr) == 1:
-                    await bot.send_document(user.chat_id, context.user_data['ATTACHMENTS'][0],
+                    msg = await context.bot.send_document(user.chat_id, context.user_data['ATTACHMENTS'][0],
                                             caption=mail_text, parse_mode='MarkdownV2')
                 else:
-                    await bot.send_message(user.chat_id, mail_text, parse_mode='MarkdownV2')
+                    msg = await context.bot.send_message(user.chat_id, mail_text, parse_mode='MarkdownV2')
+                await msg.pin()
             except Exception as e:
                 if e.__str__() not in didnt_send:
                     didnt_send[e.__str__()] = 1

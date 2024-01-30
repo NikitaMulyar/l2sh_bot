@@ -21,18 +21,16 @@ async def extract_timetable_for_day_6_9(day, class_):
 
 async def get_standard_timetable_for_user_6_9(class_, day):
     if not os.path.exists(path_to_timetables_csv + f'{class_}.csv'):
-        return pd.DataFrame(), -1
+        return pd.DataFrame(), day
     timetable_, day = await extract_timetable_for_day_6_9(day, class_)
     return timetable_, day
 
 
 async def get_timetable_for_user_6_9(context: ContextTypes.DEFAULT_TYPE, class_):
-    if not os.path.exists(path_to_timetables_csv + f'{class_}.csv'):
-        return pd.DataFrame(), -1
-    # day = (datetime.now() - timedelta(hours=3)).weekday()
-    # !!!!!!!!!!!!!!!!!!!
-    now_ = datetime.now()  # - timedelta(hours=3)
+    now_ = datetime.now()
     day = now_.weekday()
+    if not os.path.exists(path_to_timetables_csv + f'{class_}.csv'):
+        return pd.DataFrame(), day
     if day == 6:
         timetable_, day = await extract_timetable_for_day_6_9(0, class_)
         context.user_data['NEXT_DAY_TT'] = True
@@ -64,16 +62,16 @@ async def extract_timetable_for_day(day, full_name, class_):
 
 async def get_standard_timetable_for_user(full_name, class_, day):
     if not os.path.exists(path_to_timetables_csv + f'{full_name} {class_}.csv'):
-        return pd.DataFrame(), -1
+        return pd.DataFrame(), day
     timetable_, day = await extract_timetable_for_day(day, full_name, class_)
     return timetable_, day
 
 
 async def get_timetable_for_user(context: ContextTypes.DEFAULT_TYPE, full_name, class_):
-    if not os.path.exists(path_to_timetables_csv + f'{full_name} {class_}.csv'):
-        return pd.DataFrame(), -1
-    now_ = datetime.now()  # - timedelta(hours=3)
+    now_ = datetime.now()
     day = now_.weekday()
+    if not os.path.exists(path_to_timetables_csv + f'{full_name} {class_}.csv'):
+        return pd.DataFrame(), day
     if day == 6:
         timetable_, day = await extract_timetable_for_day(0, full_name, class_)
         context.user_data['NEXT_DAY_TT'] = True

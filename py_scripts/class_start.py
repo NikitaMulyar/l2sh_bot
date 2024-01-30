@@ -1,5 +1,5 @@
 from telegram.ext import ConversationHandler, ContextTypes
-from telegram import ReplyKeyboardRemove, ReplyKeyboardMarkup, Update
+from telegram import ReplyKeyboardMarkup, Update
 from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
 from py_scripts.funcs_back import db_sess, timetable_kbrd, put_to_db, check_busy
@@ -16,8 +16,8 @@ class SetTimetable:
     command = '/start'
 
     async def classes_buttons(self):
-        classes = [['6А', '6Б', '6В']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(7, 12)] + [['Админ', 'Учитель']]
-        kbd = ReplyKeyboardMarkup(classes, resize_keyboard=True)
+        classes = [['Админ', 'Учитель']] + [['6А', '6Б', '6В']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(7, 12)]
+        kbd = ReplyKeyboardMarkup(classes, resize_keyboard=True, one_time_keyboard=True)
         return kbd
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -28,7 +28,6 @@ class SetTimetable:
         context.user_data['DIALOG_CMD'] = '/' + COMMANDS['start']
         chat_id = update.message.chat.id
         if db_sess.query(User).filter(User.chat_id == chat_id).first():
-            db_sess.commit()
             await update.message.reply_text(
                 'Здравствуйте! Я вижу, что Вы уже есть в системе.\n'
                 'Можете пользоваться ботом.\n'
@@ -46,17 +45,18 @@ class SetTimetable:
 
     async def get_class(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text not in self.classes:
-            await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
+            await update.message.reply_text(f'Указан неверный класс "{update.message.text}"',
+                                            reply_markup=await self.classes_buttons())
             return self.step_class
         chat_id = update.message.chat.id
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         if user and update.message.text == 'Админ' and user.role != "admin":
             context.user_data['INFO']['Class'] = "admin"
-            await update.message.reply_text('Введите пароль:', reply_markup=ReplyKeyboardRemove())
+            await update.message.reply_text('Введите пароль:')
             return self.step_pswrd
         elif update.message.text == 'Админ':
             context.user_data['INFO']['Class'] = "admin"
-            await update.message.reply_text('Введите пароль:', reply_markup=ReplyKeyboardRemove())
+            await update.message.reply_text('Введите пароль:')
             return self.step_pswrd
         if update.message.text == 'Учитель':
             context.user_data['INFO']['Class'] = "teacher"
@@ -64,8 +64,7 @@ class SetTimetable:
             context.user_data['INFO']['Class'] = "admin"
         else:
             context.user_data['INFO']['Class'] = update.message.text
-        await update.message.reply_text(f'Укажите свою фамилию (пример: Некрасов)',
-                                        reply_markup=ReplyKeyboardRemove())
+        await update.message.reply_text(f'Укажите свою фамилию (пример: Некрасов)')
         return self.step_familia
 
     async def get_psw(self, update: Update, context: ContextTypes.DEFAULT_TYPE):

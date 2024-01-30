@@ -1,4 +1,4 @@
-from py_scripts.funcs_back import db_sess, bot, throttle, check_busy
+from py_scripts.funcs_back import db_sess, throttle, check_busy
 from telegram.ext import ConversationHandler, ContextTypes
 from telegram import Update
 from sqlalchemy_scripts.stickers_table import Sticker
@@ -26,7 +26,7 @@ class GetSticker:
             return ConversationHandler.END
         context.user_data['in_conversation'] = True
         context.user_data['DIALOG_CMD'] = '/' + COMMANDS['sticker']
-        await update.message.reply_text(f'Жду стикер! Закончить: /stick_end')
+        await update.message.reply_text(f'Жду стикер! Закончить: /end_sticker')
         return self.step_upload
 
     @throttle()
@@ -55,7 +55,7 @@ class GetSticker:
         list_ = db_sess.query(Sticker).all()
         if list_:
             sticker = choice(list_)
-            await bot.send_sticker(update.message.chat.id, sticker.file_id)
+            await context.bot.send_sticker(update.message.chat.id, sticker.file_id)
 
     async def erase_all(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)

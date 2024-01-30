@@ -2,7 +2,7 @@ import random
 import hashlib
 from sqlalchemy_scripts.users import User
 import logging
-from py_scripts.funcs_back import bot, timetable_kbrd, db_sess, prepare_for_markdown, check_busy
+from py_scripts.funcs_back import timetable_kbrd, db_sess, prepare_for_markdown, check_busy
 from telegram.ext import ContextTypes
 from telegram import Update
 
@@ -28,10 +28,9 @@ class Reset_Class:
         passw = prepare_for_markdown(new_password())
         for user in del_adm:
             try:
-                await bot.send_message(user.chat_id,
+                await context.bot.send_message(user.chat_id,
                                        "*Произошёл сброс пароля и очистка всех администраторов из базы данных\.\n"
-                                       "Обратитесь в поддержку за новым паролем*" +
-                                       prepare_for_markdown(': /support'),
+                                       "Обратитесь в поддержку за новым паролем*\: \/support",
                                        parse_mode='MarkdownV2')
             except Exception:
                 continue
@@ -40,14 +39,16 @@ class Reset_Class:
                                  f'<{author.name}> (chat_id: <{author.chat_id}>, telegram_id: '
                                  f'<{author.telegram_id}>) --->>> RESET PASSWROD')
         for user in admins:
-            await bot.send_message(user.chat_id, prepare_for_markdown(inform_about_changing + '\n') +
+            msg = await context.bot.send_message(user.chat_id, prepare_for_markdown(inform_about_changing + '\n') +
                                    f"Новый пароль\: `{passw}`",  parse_mode='MarkdownV2')
+            await msg.pin()
         t = f"Произошёл сброс пароля и очистка всех администраторов из базы данных\.\nНовый пароль\: `{passw}`"
         logging.warning(inform_about_changing)
         await update.message.reply_text(t, reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
         for user in db_sess.query(User).filter(User.allow_changing == 1).all():
             try:
-                await bot.send_message(user.chat_id, t, parse_mode='MarkdownV2')
+                msg = await context.bot.send_message(user.chat_id, t, parse_mode='MarkdownV2')
+                await msg.pin()
             except Exception:
                 continue
 
@@ -73,9 +74,9 @@ class Reset_Class:
                 f.write(s)
                 i += 1
         f.close()
-        await bot.send_document(chat_id, 'out/logs.log')
-        await bot.send_document(chat_id, 'db_copy.txt')
-        await bot.send_document(chat_id, 'database/telegram_bot.db')
+        await context.bot.send_document(chat_id, 'out/logs.log')
+        await context.bot.send_document(chat_id, 'db_copy.txt')
+        await context.bot.send_document(chat_id, 'database/telegram_bot.db')
 
 
 def check_hash(password):

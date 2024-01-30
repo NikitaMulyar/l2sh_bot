@@ -9,14 +9,12 @@ from sqlalchemy_scripts import db_session
 from sqlalchemy_scripts.users import User
 from datetime import datetime, timedelta
 import string
-from py_scripts.config import BOT_TOKEN
 import os
 from py_scripts.consts import path_to_changes
 import pdfplumber
 
 
 db_session.global_init("database/telegram_bot.db")
-bot = Bot(BOT_TOKEN)
 db_sess = db_session.create_session()
 
 
