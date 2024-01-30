@@ -203,10 +203,10 @@ async def extract_timetable_for_teachers(updating=False):
 
 
 async def get_timetable_for_teacher(context: ContextTypes.DEFAULT_TYPE, full_name):
-    if not os.path.exists(path_to_timetables_csv + f'{full_name}.csv'):
-        return pd.DataFrame(), -1
     now_ = datetime.now()
     day = now_.weekday()
+    if not os.path.exists(path_to_timetables_csv + f'{full_name}.csv'):
+        return pd.DataFrame(), day
     if day == 6:
         timetable_, day = await extract_teacher_timetable_for_day(0, full_name)
         context.user_data['NEXT_DAY_TT'] = True
@@ -232,7 +232,7 @@ async def get_timetable_for_teacher(context: ContextTypes.DEFAULT_TYPE, full_nam
 
 async def get_standard_timetable_for_teacher(full_name, day):
     if not os.path.exists(path_to_timetables_csv + f'{full_name}.csv'):
-        return pd.DataFrame(), -1
+        return pd.DataFrame(), day
     timetable_, day = await extract_teacher_timetable_for_day(day, full_name)
     return timetable_, day
 
