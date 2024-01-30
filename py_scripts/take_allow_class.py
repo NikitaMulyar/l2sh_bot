@@ -1,4 +1,4 @@
-from py_scripts.funcs_back import db_sess, bot, prepare_for_markdown, timetable_kbrd, check_busy
+from py_scripts.funcs_back import db_sess, prepare_for_markdown, timetable_kbrd, check_busy
 from py_scripts.consts import COMMANDS
 from telegram.ext import ConversationHandler, ContextTypes
 from telegram import ReplyKeyboardMarkup, Update
@@ -70,11 +70,15 @@ class TakePermissionToChangePsw:
             user.allow_changing = False
             db_sess.commit()
             author = db_sess.query(User).filter(User.chat_id == update.message.chat.id).first()
-            await bot.send_message(user.chat_id, f'Пользователь *{prepare_for_markdown("@" + author.telegram_tag)}* '
-                                                       f'забрал у вас право на сброс пароля\.\n'
-                                                       f'Если вы считаете\, что это ошибка \- напишите '
-                                                       f'в тех\. поддержку \- \/support',
-                                         parse_mode='MarkdownV2')
+            error_text = ''
+            try:
+                await context.bot.send_message(user.chat_id, f'Пользователь *{prepare_for_markdown("@" + author.telegram_tag)}* '
+                                                           f'забрал у вас право на сброс пароля\.\n'
+                                                           f'Если вы считаете\, что это ошибка \- напишите '
+                                                           f'в тех\. поддержку \- \/support',
+                                             parse_mode='MarkdownV2')
+            except Exception:
+                error_text = '*Пользователь не получил уведомление о лишении прав\!*'
             logging.warning(f'USER username: <{author.telegram_tag}> <{author.surname}> '
                              f'<{author.name}> (chat_id: <{author.chat_id}>, telegram_id: '
                              f'<{author.telegram_id}>) --->>> TOOK RIGHTS FOR PASSWORD RESETTING AT USER '
@@ -82,7 +86,7 @@ class TakePermissionToChangePsw:
                              f'<{user.chat_id}>, telegram_id: <{user.telegram_id}>)')
             await update.message.reply_text(
                 f'Теперь *{prepare_for_markdown(username2)}* _НЕ_ имеет право '
-                f'менять пароль и выдавать такое право другим', parse_mode='MarkdownV2')
+                f'менять пароль и выдавать такое право другим\.\n{error_text}', parse_mode='MarkdownV2')
         else:
             await update.message.reply_text('Процесс лишения прав прерван.')
         await update.message.reply_text('Начать сначала: /take', reply_markup=await timetable_kbrd())
@@ -91,7 +95,8 @@ class TakePermissionToChangePsw:
         return ConversationHandler.END
 
     async def end_give(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        await update.message.reply_text('Процесс лишения прав прерван. Начать сначала: /take')
+        await update.message.reply_text('Процесс лишения прав прерван. Начать сначала: /take',
+                                        reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END

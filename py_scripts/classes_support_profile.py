@@ -29,12 +29,11 @@ class Profile:
         t = (f'📠*Ваш профиль*📠\n\n' +
              prepare_for_markdown(f'Класс: {grade}\nИмя: {user.name}\nФамилия: {user.surname}\n'
                                   f'Роль: {role}'))
-        await update.message.reply_text(t, parse_mode='MarkdownV2',
-                                        reply_markup=await timetable_kbrd())
+        await update.message.reply_text(t, parse_mode='MarkdownV2')
 
 
 class Support:
     @throttle()
     async def get_supp(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        await update.message.reply_text('Чат тех-поддержки: @help_group_l2sh',
-                                        reply_markup=await timetable_kbrd())
+        await update.message.reply_text('Чат тех-поддержки: @help_group_l2sh\n'
+                                        'Админы: @delikatny_pon (Никита), @lokisf8 (Матвей)')

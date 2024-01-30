@@ -34,7 +34,7 @@ class GameMillioner:
 
         poll = await context.bot.send_poll(update.message.chat.id, res['data'][0]['question'],
                                            options=ans, type=telegram.Poll.QUIZ,
-                                           correct_option_id=correct_id, open_period=20,
+                                           correct_option_id=correct_id, open_period=60,
                                            is_anonymous=False)
         context.bot_data[str(poll.poll.id)] = [poll.poll.correct_option_id, level + 1]
 

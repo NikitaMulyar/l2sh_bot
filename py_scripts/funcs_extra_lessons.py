@@ -90,7 +90,7 @@ async def extra_send_near(update: Update, context: ContextTypes.DEFAULT_TYPE, fl
     have_extra_or_not = f'*Кружки на {days_from_num_to_full_text_formatted[today]}*\n\n{text}'
     if text == '':
         have_extra_or_not = f'*Кружков на {days_from_num_to_full_text_formatted[today]} нет*'
-    await update.message.reply_text(have_extra_or_not, reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
+    await update.message.reply_text(have_extra_or_not, parse_mode='MarkdownV2')
     return
 
 

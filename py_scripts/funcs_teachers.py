@@ -288,4 +288,4 @@ async def timetable_teacher_for_each_day(update: Update, context: ContextTypes.D
         t = title + '\n' + t
     else:
         t = f'На {days_from_num_to_full_text_formatted[day]} у Вас нет уроков'
-    await update.message.reply_text(t, parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
+    await update.message.reply_text(t, parse_mode='MarkdownV2')

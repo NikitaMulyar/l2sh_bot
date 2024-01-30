@@ -16,7 +16,7 @@ class CheckStudentTT:
 
     async def classes_buttons(self):
         classes = [["Учитель"]] + [['6А', '6Б', '6В']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(7, 12)]
-        kbd = ReplyKeyboardMarkup(classes, resize_keyboard=True)
+        kbd = ReplyKeyboardMarkup(classes, resize_keyboard=True, one_time_keyboard=True)
         return kbd
 
     async def days_buttons(self):
@@ -39,7 +39,8 @@ class CheckStudentTT:
 
     async def get_class(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text not in self.classes:
-            await update.message.reply_text(f'Указан неверный класс "{update.message.text}"')
+            await update.message.reply_text(f'Указан неверный класс "{update.message.text}"',
+                                            reply_markup=await self.classes_buttons())
             return self.step_class
         context.user_data['INFO']['Class'] = update.message.text
         if "6" <= update.message.text[:-1] <= "9":

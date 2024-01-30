@@ -56,7 +56,7 @@ class Extra_Lessons:
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
         if not user:
             await update.message.reply_text(f'⚠️Для начала заполните свои данные: /start')
-            return
+            return ConversationHandler.END
         if user.role == 'admin' or user.role == 'teacher':
             await update.message.reply_text(f'Вы не можете записываться на кружки.')
             return ConversationHandler.END

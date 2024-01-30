@@ -2,7 +2,7 @@ from datetime import timedelta
 from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ConversationHandler, ContextTypes
 from py_scripts.consts import path_to_changes, path_to_timetables, COMMANDS
-from py_scripts.funcs_back import bot, get_edits_in_timetable, save_edits_in_timetable_csv, \
+from py_scripts.funcs_back import get_edits_in_timetable, save_edits_in_timetable_csv, \
     db_sess, prepare_for_markdown, timetable_kbrd, check_busy, get_edits_all
 from py_scripts.funcs_teachers import extract_timetable_for_teachers, get_edits_for_teacher
 from py_scripts.security import check_hash
@@ -12,7 +12,7 @@ from datetime import datetime
 from py_scripts.funcs_students import get_edits_for_student
 
 
-async def write_about_new_timetable():
+async def write_about_new_timetable(context: ContextTypes.DEFAULT_TYPE):
     all_users = db_sess.query(User).all()
     didnt_send = {}
     with open('list_new_timetable.txt', mode='r', encoding='utf-8') as f:
@@ -30,9 +30,9 @@ async def write_about_new_timetable():
             var2 = f'{user.surname} {user.name} {user.grade}'
             var3 = f'{user.surname} {user.name[0]}'
             if var1 in arr_to_write or var2 in arr_to_write:
-                await bot.send_message(user.chat_id, text12, parse_mode='MarkdownV2')
+                await context.bot.send_message(user.chat_id, text12, parse_mode='MarkdownV2')
             elif var3 in arr_to_write:
-                await bot.send_message(user.chat_id, text3, parse_mode='MarkdownV2')
+                await context.bot.send_message(user.chat_id, text3, parse_mode='MarkdownV2')
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
@@ -55,7 +55,7 @@ async def write_about_edits(context: ContextTypes.DEFAULT_TYPE, text):
             else:
                 edits_text = await get_edits_for_teacher(context, user.surname, user.name)
             if edits_text:
-                await bot.send_message(user.chat_id, text + edits_text, parse_mode='MarkdownV2')
+                await context.bot.send_message(user.chat_id, text + edits_text, parse_mode='MarkdownV2')
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
@@ -119,7 +119,7 @@ class LoadTimetables:
         return self.step_file
 
     async def load_pdf(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        file_info = await bot.get_file(update.message.document.file_id)
+        file_info = await context.bot.get_file(update.message.document.file_id)
         if context.user_data['filename'] == 'Учителя':
             context.user_data['filename'] = 'teachers'
         await file_info.download_to_drive(path_to_timetables +
@@ -135,16 +135,16 @@ class LoadTimetables:
             else:
                 await extract_timetable_for_students_10_11()
                 context.user_data['FILE_UPLOADED'] = True
-            await bot.delete_message(update.message.chat.id, msg_.id)
+            await context.bot.delete_message(update.message.chat.id, msg_.id)
             await update.message.reply_text('Файл загружен. Завершить: /end_load')
         except Exception as e:
-            await bot.delete_message(update.message.chat.id, msg_.id)
+            await context.bot.delete_message(update.message.chat.id, msg_.id)
             await update.message.reply_text(f'При попытке сформировать расписание произошла ошибка: {e}. Проверьте формат файла.')
         await update.message.reply_text(f'Выберите нужный класс', reply_markup=await self.classes_buttons())
         return self.step_class
 
     async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        res = await write_about_new_timetable()
+        res = await write_about_new_timetable(context)
         if context.user_data.get('FILE_UPLOADED2'):
             await update.message.reply_text(
                 f'Учителя получили уведомление о новых расписаниях.',
@@ -339,7 +339,7 @@ class LoadEditsTT:
         #    f.write('')
         #    f.close()
         now_ = datetime.now()
-        file_info = await bot.get_file(update.message.document.file_id)
+        file_info = await context.bot.get_file(update.message.document.file_id)
         await file_info.download_to_drive(
             path_to_changes + f"{context.user_data['changes_date']}.pdf")
         msg_ = await update.message.reply_text(
@@ -348,7 +348,7 @@ class LoadEditsTT:
         try:
             await save_edits_in_timetable_csv(context.user_data['changes_date'])
         except Exception as e:
-            await bot.delete_message(update.message.chat.id, msg_.id)
+            await context.bot.delete_message(update.message.chat.id, msg_.id)
             await update.message.reply_text(
                 f'При попытке сохранить файл с изменениями произошла ошибка: {e}. Проверьте формат таблицы. Начать сначала: /changes',
                 reply_markup=await timetable_kbrd())
@@ -359,14 +359,14 @@ class LoadEditsTT:
         try:
             edits_text = await self.get_edits(next_day)
         except Exception as e:
-            await bot.delete_message(update.message.chat.id, msg_.id)
+            await context.bot.delete_message(update.message.chat.id, msg_.id)
             await update.message.reply_text(
                 f'При попытке сформировать изменения произошла ошибка: {e}. Проверьте формат таблицы. Начать сначала: /changes',
                 reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
-        await bot.delete_message(update.message.chat.id, msg_.id)
+        await context.bot.delete_message(update.message.chat.id, msg_.id)
 
         tmp = context.user_data["changes_date"].split('.')
         edits_date = (int(tmp[2]), int(tmp[1]), int(tmp[0]))
