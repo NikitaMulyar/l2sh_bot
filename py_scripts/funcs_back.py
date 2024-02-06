@@ -154,7 +154,7 @@ async def save_edits_in_timetable_csv(date):
             for el in t[j]:
                 if not el:
                     cnt += 1
-                if el and ('Изменения' in el or any([ddd in el for ddd in days])):
+                if el and ('изменения' in el.lower() or any([ddd in el for ddd in days])):
                     flag = True
                 if el and 'интенсив' in el.lower():
                     intensive_handler = j  # запоминаем индекс начала интенсивов
@@ -174,7 +174,7 @@ async def save_edits_in_timetable_csv(date):
                     if elem:
                         elem = elem.strip(' ').strip('\n').strip(' ').strip('\n')
                         new_arr.append(elem)
-                if len(new_arr) == 1 and 'кл' not in new_arr[0]:
+                if len(new_arr) == 1 and 'кл' not in new_arr[0].lower():
                     intensive_subject_name = new_arr[0]
                     intensive_subjects_arr[intensive_subject_name] = [intensive_title.copy()]
                     continue
@@ -183,7 +183,7 @@ async def save_edits_in_timetable_csv(date):
                     flag_missed_lesson = True
                     flag_missed_subject = True
                     for i in new_arr:
-                        if 'кл' in i:
+                        if 'кл' in i.lower():
                             flag_missed_class = False
                         if i.count(':') != 0:
                             flag_missed_lesson = False
@@ -200,7 +200,7 @@ async def save_edits_in_timetable_csv(date):
                     flag_have_lesson = False
                     flag_have_subject = False
                     for i in new_arr:
-                        if 'кл' in i:
+                        if 'кл' in i.lower():
                             flag_have_class = True
                         if i.count(':') != 0:
                             flag_have_lesson = True
@@ -242,7 +242,7 @@ async def save_edits_in_timetable_csv(date):
                         tmp.append(None)
                         if len(tmp) > 5:
                             raise Exception("Неверный формат таблицы")
-                    if tmp[3] and 'Замен' in tmp[3] and tmp[4] is not None:
+                    if tmp[3] and 'замен' in tmp[3].lower() and tmp[4] is not None:
                         tmp[3] += tmp[4]
                         tmp[4] = None
                     for i in range(len(tmp)):
@@ -488,73 +488,3 @@ async def get_edits_in_timetable(next_day_tt):
         df.fillna('', inplace=True)
         dfs.append(df)
     return dfs, day
-
-
-async def create_list_of_all_edits(df: pd.DataFrame):
-    res = []
-    for j in df.index.values:
-        number_of_lesson = " ".join(df.iloc[j]['Урок №'].split('\n'))
-        if 'Замены' in df.columns.values:
-            if df.iloc[j]['Урок №'] == '' and j == 0:
-                continue
-            subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
-            subject = " ".join(subject.split('\n'))
-            class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
-            if teacher_cabinet != '':
-                teacher_cabinet = teacher_cabinet.split('\n')
-                cabinet = teacher_cabinet[-1]
-                teacher = " ".join(teacher_cabinet[:-1])
-                if cabinet.count('.') == 2 and 'зал' not in cabinet:
-                    # Учитель
-                    res.append([f"{class__}, ", number_of_lesson, subject,
-                                cabinet,
-                                df.iloc[j][
-                                    'Урок по расписанию']])  # Кабинет не указан, длина 5
-                else:
-                    res.append([f"{class__}, ", number_of_lesson,
-                                subject + ', ' + cabinet, teacher,
-                                df.iloc[j][
-                                    'Урок по расписанию']])  # Все указано, длина 5
-            else:
-                tmp = " ".join(df.iloc[j]['Урок по расписанию'].split('\n'))
-                res.append([f"{class__}, ", number_of_lesson,
-                            subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
-        else:
-            class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
-            res.append([f"{class__}, ", number_of_lesson,
-                        df.iloc[j]['Замены кабинетов'],
-                        df.iloc[j]['Урок по расписанию']])  # Изменения кабинетов, длина 4
-    return sorted(res, key=lambda x: x[1])
-
-
-async def get_edits_all(context: ContextTypes.DEFAULT_TYPE):
-    t = ""
-    edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
-    if ('завтра' in for_which_day and context.user_data['NEXT_DAY_TT'] or
-            'сегодня' in for_which_day and not context.user_data.get('NEXT_DAY_TT')):
-        if len(edits_in_tt) != 0:
-            for df in edits_in_tt:
-                sorted_res = await create_list_of_all_edits(df)
-                text = '_' + prepare_for_markdown(df.columns.values[-1]) + '_\n\n'
-                flag = False
-                for line in sorted_res:
-                    urok_po_rasp = " ".join(line[-1].split("\n"))
-                    curr = ""
-                    if len(line) == 3:
-                        curr += prepare_for_markdown(
-                            f'{line[0]}{line[1]} урок(и): {line[2]}\n\n')
-                    elif len(line) == 4:  # Замены каб.
-                        if line[2] == urok_po_rasp == '':
-                            curr += prepare_for_markdown(f'{line[0]}{line[1]}\n\n')
-                        else:
-                            curr += prepare_for_markdown(
-                                f'{line[0]}{line[1]} урок(и): {line[2]}\n(Урок по расписанию: '
-                                f'{urok_po_rasp})\n\n')
-                    else:
-                        curr += prepare_for_markdown(
-                            f'{line[0]}{line[1]} урок(и): {line[2]} (учитель: {line[3]})'
-                            f'\n(Урок по расписанию: {urok_po_rasp})\n\n')
-                    text += curr.replace('ё', 'е')
-                t += for_which_day
-                t += text
-    return t

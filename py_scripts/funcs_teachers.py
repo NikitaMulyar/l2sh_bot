@@ -30,35 +30,35 @@ async def create_list_of_edits_lessons_for_teacher(df: pd.DataFrame):
                 if cabinet.count('.') == 2 and 'зал' not in cabinet:
                     # Учитель
                     res.append([f"{class__}, ", number_of_lesson, subject,
-                                cabinet,
+                                cabinet + ' каб.',
                                 df.iloc[j][
-                                    'Урок по расписанию']])  # Кабинет не указан, длина 5
+                                    'Урок по расписанию'] + ' каб.'])  # Кабинет не указан, длина 5
                 else:
                     res.append([f"{class__}, ", number_of_lesson,
-                                subject + ', ' + cabinet, teacher,
+                                subject + ', ' + cabinet + ' каб.', teacher,
                                 df.iloc[j][
-                                    'Урок по расписанию']])  # Все указано, длина 5
+                                    'Урок по расписанию'] + ' каб.'])  # Все указано, длина 5
             else:
                 tmp = " ".join(df.iloc[j]['Урок по расписанию'].split('\n'))
                 res.append([f"{class__}, ", number_of_lesson,
-                            subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
+                            subject + f"\n(Урок по расписанию: {tmp} каб.)"])  # Отмена урока, длина 3
         else:
             class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
             res.append([f"{class__}, ", number_of_lesson,
                         df.iloc[j]['Замены кабинетов'],
-                        df.iloc[j]['Урок по расписанию']])  # Изменения кабинетов, длина 4
+                        df.iloc[j]['Урок по расписанию'] + ' каб.'])  # Изменения кабинетов, длина 4
     return sorted(res, key=lambda x: x[1])
 
 
 async def get_edits_for_teacher(context: ContextTypes.DEFAULT_TYPE, surname, name):
-    t = ""
+    result0 = []
     edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
     if ('завтра' in for_which_day and context.user_data['NEXT_DAY_TT'] or
             'сегодня' in for_which_day and not context.user_data.get('NEXT_DAY_TT')):
         if len(edits_in_tt) != 0:
             for df in edits_in_tt:
                 sorted_res = await create_list_of_edits_lessons_for_teacher(df)
-                text = '_' + prepare_for_markdown(df.columns.values[-1]) + '_\n\n'
+                result = ['_' + prepare_for_markdown(df.columns.values[-1]) + '_\n\n']
                 flag = False
                 for line in sorted_res:
                     urok_po_rasp = " ".join(line[-1].split("\n"))
@@ -80,12 +80,12 @@ async def get_edits_for_teacher(context: ContextTypes.DEFAULT_TYPE, surname, nam
                     if curr.strip(' '):
                         if surname.replace('ё', 'е') in curr.replace('ё', 'е') and \
                                 name.replace('ё', 'е')[0] in curr.replace('ё', 'е'):
-                            text += curr.replace('ё', 'е')
+                            result.append(curr.replace('ё', 'е'))
                             flag = True
                 if flag:
-                    t += for_which_day
-                    t += text
-    return t
+                    result0.append(for_which_day)
+                    result0.extend(result)
+    return result0
 
 
 async def get_standard_timetable_with_edits_for_teacher(context: ContextTypes.DEFAULT_TYPE, day, name, familia, flag=True):
@@ -132,11 +132,11 @@ async def get_standard_timetable_with_edits_for_teacher(context: ContextTypes.DE
         except Exception as e:
             continue
     if edits_text:
-        t = title + '_' + t_app + '_\n\n' + t + edits_text
+        t = (title + '_' + t_app + '_\n\n' + t, edits_text)
     elif not lessons.empty:
-        t = title + '\n' + t + edits_text
+        t = (title + '\n' + t,)
     else:
-        t = 'В этот день нет уроков\.'
+        t = ('В этот день нет уроков\.',)
     return t
 
 
@@ -283,9 +283,19 @@ async def timetable_teacher_for_each_day(update: Update, context: ContextTypes.D
     edits_text = await get_edits_for_teacher(context, user.surname, user.name)
     if edits_text:
         t = title + '_' + prepare_for_markdown(
-            '⚠️Обратите внимание, что у Вас есть изменения в расписании!') + '_\n\n' + t + edits_text
+            '⚠️Обратите внимание, что у Вас есть изменения в расписании!') + '_\n\n' + t
+        total_len = len(t)
+        ind = 0
+        while ind < len(edits_text) and total_len + len(edits_text[ind]) < 4000:
+            total_len += len(edits_text[ind])
+            ind += 1
+        await context.bot.send_message(user.chat_id, t + "".join(edits_text[:ind]),
+                                       parse_mode='MarkdownV2')
+        await context.bot.send_message(user.chat_id, "".join(edits_text[ind:]),
+                                       parse_mode='MarkdownV2')
     elif not lessons.empty:
         t = title + '\n' + t
+        await update.message.reply_text(t, parse_mode='MarkdownV2')
     else:
         t = f'На {days_from_num_to_full_text_formatted[day]} у Вас нет уроков'
-    await update.message.reply_text(t, parse_mode='MarkdownV2')
+        await update.message.reply_text(t, parse_mode='MarkdownV2')

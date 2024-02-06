@@ -81,7 +81,18 @@ class CheckStudentTT:
                                                                             context.user_data['INFO']['Day'],
                                                                             context.user_data['INFO']['Name'],
                                                                             context.user_data['INFO']['Familia'])
-            await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+            if len(send_text) == 1:
+                await update.message.reply_text(send_text[0], parse_mode='MarkdownV2')
+            else:
+                total_len = len(send_text[0])
+                ind = 0
+                while ind < len(send_text[1]) and total_len + len(send_text[1][ind]) < 4000:
+                    total_len += len(send_text[1][ind])
+                    ind += 1
+                await update.message.reply_text(send_text[0] + "".join(send_text[1][:ind]),
+                                                parse_mode='MarkdownV2')
+                await update.message.reply_text("".join(send_text[1][ind:]),
+                                                parse_mode='MarkdownV2')
             await extra_send_day(update, surname=context.user_data['INFO']['Familia'], flag=True, no_kbrd=True)
         else:
             send_text = await get_standard_timetable_with_edits_for_student(context,
@@ -89,7 +100,18 @@ class CheckStudentTT:
                                             context.user_data['INFO']['Class'],
                                             context.user_data['INFO']['Name'],
                                             context.user_data['INFO']['Familia'])
-            await update.message.reply_text(send_text, parse_mode='MarkdownV2')
+            if len(send_text) == 1:
+                await update.message.reply_text(send_text[0], parse_mode='MarkdownV2')
+            else:
+                total_len = len(send_text[0])
+                ind = 0
+                while ind < len(send_text[1]) and total_len + len(send_text[1][ind]) < 4000:
+                    total_len += len(send_text[1][ind])
+                    ind += 1
+                await update.message.reply_text(send_text[0] + "".join(send_text[1][:ind]),
+                                                parse_mode='MarkdownV2')
+                await update.message.reply_text("".join(send_text[1][ind:]),
+                                                parse_mode='MarkdownV2')
         await update.message.reply_text('Выберите день или закончите выбор командой: /end_check')
         return self.step_date
 

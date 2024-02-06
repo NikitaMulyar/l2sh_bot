@@ -97,12 +97,33 @@ async def create_list_of_edits_lessons_for_student(df: pd.DataFrame, student_cla
     res = []
     for j in df.index.values:
         number_of_lesson = " ".join(df.iloc[j]['Урок №'].split('\n'))
+
+        class_copy = ''
+        allowed_symbols = 'АБВГД67891011\n'
+        for elem in df.iloc[j]['Класс'].upper():
+            if elem not in allowed_symbols:
+                continue
+            class_copy += elem
+        class_copy = class_copy.strip(' ').strip('\n').strip(' ').strip('\n').split('\n')
+        flag = None
+        if isinstance(class_copy, list):
+            for elem in class_copy:
+                if student_class[:-1] in elem and student_class[-1] in elem:
+                    flag = True
+                    break
+                if elem.isdigit() and student_class[:-1] in elem:
+                    flag = True
+                    break
+        else:
+            if student_class[:-1] in class_copy and student_class[-1] in class_copy:
+                flag = True
+            if class_copy.isdigit() and student_class[:-1] in class_copy:
+                flag = True
+
         if 'Замены' in df.columns.values:
             if df.iloc[j]['Урок №'] == '' and j == 0:
                 continue
-            if student_class[:-1] in df.iloc[j]['Класс'] and (
-                    student_class[-1].upper() in df.iloc[j]['Класс'].upper() or 'классы' in
-                    df.iloc[j]['Класс'].lower()):
+            if flag:
                 subject, teacher_cabinet = df.iloc[j]['Замены'].split('//')
                 subject = " ".join(subject.split('\n'))
                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
@@ -113,61 +134,58 @@ async def create_list_of_edits_lessons_for_student(df: pd.DataFrame, student_cla
                     if cabinet.count('.') == 2:
                         # Учитель
                         res.append([f"{class__}, ", number_of_lesson, subject,
-                                    cabinet,
+                                    cabinet + ' каб.',
                                     df.iloc[j][
-                                        'Урок по расписанию']])  # Кабинет не указан, длина 5
+                                        'Урок по расписанию'] + ' каб.'])  # Кабинет не указан, длина 5
                     else:
                         res.append([f"{class__}, ", number_of_lesson,
-                                    subject + ', ' + cabinet, teacher,
+                                    subject + ', ' + cabinet + ' каб.', teacher,
                                     df.iloc[j][
-                                        'Урок по расписанию']])  # Все указано, длина 5
+                                        'Урок по расписанию'] + ' каб.'])  # Все указано, длина 5
                 else:
                     tmp = " ".join(df.iloc[j]['Урок по расписанию'].split('\n'))
                     res.append([f"{class__}, ", number_of_lesson,
-                                subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
+                                subject + f"\n(Урок по расписанию: {tmp} каб.)"])  # Отмена урока, длина 3
         else:
-            if student_class[:-1] in df.iloc[j]['Класс'] and (
-                    student_class[-1].upper() in df.iloc[j]['Класс'].upper() or 'классы' in
-                    df.iloc[j]['Класс'].lower()):
+            if flag:
                 class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
                 res.append([f"{class__}, ", number_of_lesson,
                             df.iloc[j]['Замены кабинетов'],
                             df.iloc[j][
-                                'Урок по расписанию']])  # Изменения кабинетов, длина 4
+                                'Урок по расписанию'] + ' каб.'])  # Изменения кабинетов, длина 4
     return sorted(res, key=lambda x: x[1])
 
 
 async def get_edits_for_student(context: ContextTypes.DEFAULT_TYPE, student_class):
-    t = ""
+    result0 = []
     edits_in_tt, for_which_day = await get_edits_in_timetable(context.user_data['NEXT_DAY_TT'])
     if ('завтра' in for_which_day and context.user_data['NEXT_DAY_TT'] or
             'сегодня' in for_which_day and not context.user_data.get('NEXT_DAY_TT')):
         if len(edits_in_tt) != 0:
             for df in edits_in_tt:
                 sorted_res = await create_list_of_edits_lessons_for_student(df, student_class)
-                text = '_' + prepare_for_markdown(df.columns.values[-1]) + '_\n'
+                result = ['_' + prepare_for_markdown(df.columns.values[-1]) + '_\n']
                 flag = False
                 for line in sorted_res:
                     flag = True
                     urok_po_rasp = " ".join(line[-1].split("\n"))
                     if len(line) == 3:
-                        text += prepare_for_markdown(
-                            f'{line[0]}{line[1]} урок(и): {line[2]}\n\n')
+                        result.append(prepare_for_markdown(f'{line[0]}{line[1]} урок(и): {line[2]}\n\n'))
                     elif len(line) == 4:  # Замены каб.
                         if line[2] == urok_po_rasp == '':
-                            text += prepare_for_markdown(f'{line[0]}{line[1]}\n\n')
+                            result.append(prepare_for_markdown(f'{line[0]}{line[1]}\n\n'))
                         else:
-                            text += prepare_for_markdown(
+                            result.append(prepare_for_markdown(
                                 f'{line[0]}{line[1]} урок(и): {line[2]}\n(Урок по расписанию: '
-                                f'{urok_po_rasp})\n\n')
+                                f'{urok_po_rasp})\n\n'))
                     else:
-                        text += prepare_for_markdown(
+                        result.append(prepare_for_markdown(
                             f'{line[0]}{line[1]} урок(и): {line[2]} (учитель: {line[3]})'
-                            f'\n(Урок по расписанию: {urok_po_rasp})\n\n')
+                            f'\n(Урок по расписанию: {urok_po_rasp})\n\n'))
                 if flag:
-                    t += for_which_day
-                    t += text
-    return t
+                    result0.append(for_which_day)
+                    result0.extend(result)
+    return result0
 
 
 async def get_standard_timetable_with_edits_for_student(context: ContextTypes.DEFAULT_TYPE, day_name, student_class, student_name, student_familia,
@@ -250,10 +268,10 @@ async def get_standard_timetable_with_edits_for_student(context: ContextTypes.DE
             continue
 
     if edits_text:
-        t = title + '_' + prepare_for_markdown(
-            f'⚠️Обратите внимание, что для {student_class} ниже есть изменения в расписании!') + '_\n\n' + t + edits_text
+        t = (title + '_' + prepare_for_markdown(
+            f'⚠️Обратите внимание, что для {student_class} ниже есть изменения в расписании!') + '_\n\n' + t, edits_text)
     else:
-        t = title + '\n' + t + edits_text
+        t = (title + '\n' + t,)
     return t
 
 

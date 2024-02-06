@@ -60,7 +60,18 @@ class GetTimetable:
                                                                         update.message.text,
                                                                         user.name, user.surname,
                                                                         flag=False)
-                await update.message.reply_text(t, parse_mode='MarkdownV2')
+                if len(t) == 1:
+                    await update.message.reply_text(t[0], parse_mode='MarkdownV2')
+                else:
+                    total_len = len(t[0])
+                    ind = 0
+                    while ind < len(t[1]) and total_len + len(t[1][ind]) < 4000:
+                        total_len += len(t[1][ind])
+                        ind += 1
+                    await update.message.reply_text(t[0] + "".join(t[1][:ind]),
+                                                    parse_mode='MarkdownV2')
+                    await update.message.reply_text("".join(t[1][ind:]),
+                                                    parse_mode='MarkdownV2')
                 await extra_send_day(update, flag=True, surname=user.surname, no_kbrd=True)
             elif context.user_data.get('EXTRA_CLICKED') and update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
                 context.user_data['EXTRA_CLICKED'] = False
@@ -154,19 +165,38 @@ class GetTimetable:
                         continue
                 t += '\n'
                 edits_text = await get_edits_for_student(context, user.grade)
+                ind = None
                 if edits_text:
                     t = title + '_' + prepare_for_markdown(
-                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!') + '_\n\n' + t + edits_text
+                        '⚠️Обратите внимание, что для Вашего класса ниже есть изменения в расписании!') + '_\n\n' + t
+                    total_len = len(t)
+                    ind = 0
+                    while ind < len(edits_text) and total_len + len(edits_text[ind]) < 4000:
+                        total_len += len(edits_text[ind])
+                        ind += 1
+                    await update.message.reply_text(t + "".join(edits_text[:ind]), parse_mode='MarkdownV2')
+                    await update.message.reply_text("".join(edits_text[ind:]), parse_mode='MarkdownV2')
                 else:
                     t = title + '\n' + t
-                await update.message.reply_text(t, parse_mode='MarkdownV2')
+                    await update.message.reply_text(t, parse_mode='MarkdownV2')
                 await extra_send_near(update, context)
             elif (not context.user_data.get('EXTRA_CLICKED') and
                   update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']):
                 t = await get_standard_timetable_with_edits_for_student(context, update.message.text,
                                                                         user.grade, user.name,
                                                                         user.surname, flag=False)
-                await update.message.reply_text(t, parse_mode='MarkdownV2')
+                if len(t) == 1:
+                    await update.message.reply_text(t[0], parse_mode='MarkdownV2')
+                else:
+                    total_len = len(t[0])
+                    ind = 0
+                    while ind < len(t[1]) and total_len + len(t[1][ind]) < 4000:
+                        total_len += len(t[1][ind])
+                        ind += 1
+                    await update.message.reply_text(t[0] + "".join(t[1][:ind]),
+                                                    parse_mode='MarkdownV2')
+                    await update.message.reply_text("".join(t[1][ind:]),
+                                                    parse_mode='MarkdownV2')
                 await extra_send_day(update, no_kbrd=True)
             elif context.user_data.get('EXTRA_CLICKED') and update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
                 context.user_data['EXTRA_CLICKED'] = False
