@@ -3,7 +3,7 @@ from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ConversationHandler, ContextTypes
 from py_scripts.consts import path_to_changes, path_to_timetables, COMMANDS
 from py_scripts.funcs_back import get_edits_in_timetable, save_edits_in_timetable_csv, \
-    db_sess, prepare_for_markdown, timetable_kbrd, check_busy, get_edits_all
+    db_sess, prepare_for_markdown, timetable_kbrd, check_busy
 from py_scripts.funcs_teachers import extract_timetable_for_teachers, get_edits_for_teacher
 from py_scripts.security import check_hash
 from py_scripts.timetables_csv import extract_timetable_for_students_6_9, extract_timetable_for_students_10_11
@@ -55,7 +55,13 @@ async def write_about_edits(context: ContextTypes.DEFAULT_TYPE, text):
             else:
                 edits_text = await get_edits_for_teacher(context, user.surname, user.name)
             if edits_text:
-                await context.bot.send_message(user.chat_id, text + edits_text, parse_mode='MarkdownV2')
+                total_len = len(text)
+                ind = 0
+                while ind < len(edits_text) and total_len + len(edits_text[ind]) < 4000:
+                    total_len += len(edits_text[ind])
+                    ind += 1
+                await context.bot.send_message(user.chat_id, text + "".join(edits_text[:ind]), parse_mode='MarkdownV2')
+                await context.bot.send_message(user.chat_id, "".join(edits_text[ind:]), parse_mode='MarkdownV2')
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
@@ -217,7 +223,7 @@ class LoadEditsTT:
         return kbd
 
     async def get_edits(self, next_day):
-        t = ""
+        result0 = []
         edits_in_tt, for_which_day = await get_edits_in_timetable(next_day)
         if ('завтра' in for_which_day and next_day or 'сегодня' in for_which_day and not next_day):
             if len(edits_in_tt) != 0:
@@ -238,59 +244,51 @@ class LoadEditsTT:
                                 if cabinet.count('.') == 2:
                                     # Учитель
                                     res.append([f"{class__}, ", number_of_lesson, subject,
-                                                cabinet,
+                                                cabinet + ' каб.',
                                                 df.iloc[j][
-                                                    'Урок по расписанию']])  # Кабинет не указан, длина 5
+                                                    'Урок по расписанию'] + ' каб.'])  # Кабинет не указан, длина 5
                                 else:
                                     res.append([f"{class__}, ", number_of_lesson,
-                                                subject + ', ' + cabinet, teacher,
+                                                subject + ', ' + cabinet + ' каб.', teacher,
                                                 df.iloc[j][
-                                                    'Урок по расписанию']])  # Все указано, длина 5
+                                                    'Урок по расписанию'] + ' каб.'])  # Все указано, длина 5
                             else:
                                 tmp = " ".join(df.iloc[j]['Урок по расписанию'].split('\n'))
                                 res.append([f"{class__}, ", number_of_lesson,
-                                            subject + f"\n(Урок по расписанию: {tmp})"])  # Отмена урока, длина 3
+                                            subject + f"\n(Урок по расписанию: {tmp} каб.)"])  # Отмена урока, длина 3
                         else:
                             class__ = " ".join(df.iloc[j]['Класс'].split('\n'))
                             res.append([f"{class__}, ", number_of_lesson,
                                         df.iloc[j]['Замены кабинетов'],
-                                        df.iloc[j]['Урок по расписанию']])  # Изменения кабинетов, длина 4
+                                        df.iloc[j]['Урок по расписанию'] + ' каб.'])  # Изменения кабинетов, длина 4
                     sorted_res = sorted(res, key=lambda x: x[1])
-                    text = '_' + prepare_for_markdown(df.columns.values[-1]) + '_\n\n'
                     flag = False
+                    result = ['_' + prepare_for_markdown(df.columns.values[-1]) + '_\n\n']
                     for line in sorted_res:
                         flag = True
                         urok_po_rasp = " ".join(line[-1].split("\n"))
                         if len(line) == 3:
-                            text += prepare_for_markdown(
+                            text = prepare_for_markdown(
                                 f'{line[0]}{line[1]} урок(и): {line[2]}\n\n')
-                            #with open('list_new_edits.txt', mode='a', encoding='utf-8') as f:
-                            #    f.write(f'{line[0]}\n')
-                            #    f.close()
+                            result.append(text)
                         elif len(line) == 4:  # Замены каб.
                             if line[2] == urok_po_rasp == '':
-                                text += prepare_for_markdown(f'{line[0]}{line[1]}\n\n')
-                                #with open('list_new_edits.txt', mode='a', encoding='utf-8') as f:
-                                #    f.write(f'{line[0]}\n{line[1]}\n')
-                                #    f.close()
+                                text = prepare_for_markdown(f'{line[0]}{line[1]}\n\n')
+                                result.append(text)
                             else:
-                                text += prepare_for_markdown(
+                                text = prepare_for_markdown(
                                     f'{line[0]}{line[1]} урок(и): {line[2]}\n(Урок по расписанию: '
                                     f'{urok_po_rasp})\n\n')
-                                #with open('list_new_edits.txt', mode='a', encoding='utf-8') as f:
-                                #    f.write(f'{line[0]}\n{line[2]}\n{urok_po_rasp}\n')
-                                #    f.close()
+                                result.append(text)
                         else:
-                            text += prepare_for_markdown(
+                            text = prepare_for_markdown(
                                 f'{line[0]}{line[1]} урок(и): {line[2]} (учитель: {line[3]})'
                                 f'\n(Урок по расписанию: {urok_po_rasp})\n\n')
-                            #with open('list_new_edits.txt', mode='a', encoding='utf-8') as f:
-                            #    f.write(f'{line[0]}\n{line[2]}\n{line[3]}\n{urok_po_rasp}\n')
-                            #    f.close()
+                            result.append(text)
                     if flag:
-                        t += for_which_day
-                        t += text
-        return t
+                        result0.append(for_which_day)
+                        result0.extend(result)
+        return result0
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
@@ -378,7 +376,16 @@ class LoadEditsTT:
                                       prepare_for_markdown(
                                       f'\nВ боте появились изменения на {context.user_data["changes_date"]}. '
                                       f'Пожалуйста, проверьте ваше расписание на эту дату.\n\n'))
-        await update.message.reply_text(f'*Все изменения \(просмотр для Вас\)\:*\n\n{edits_text}', parse_mode='MarkdownV2')
+        ind = 0
+        prev_ = 0
+        total_len = 0
+        while ind < len(edits_text):
+            while ind < len(edits_text) and total_len + len(edits_text[ind]) < 4000:
+                total_len += len(edits_text[ind])
+                ind += 1
+            total_len = 0
+            await update.message.reply_text(f'*Все изменения \(просмотр для Вас\)\:*\n\n{"".join(edits_text[prev_:ind])}', parse_mode='MarkdownV2')
+            prev_ = ind
         await update.message.reply_text(
             f'Файл загружен. Проведена рассылка ученикам и учителям, у которых есть изменения.\n{res}\nНачать сначала: /changes',
             reply_markup=await timetable_kbrd())
