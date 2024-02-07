@@ -1,9 +1,1 @@
-import asyncio
-
-import requests
-
-
-res = requests.get('https://engine.lifeis.porn/api/millionaire.php', params={
-            'qType': 1, 'count': 1
-        }).json()
-print(res)
+print('a'.split(' '))
