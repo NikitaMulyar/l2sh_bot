@@ -27,6 +27,9 @@ class GameMillioner:
             'qType': level, 'count': 1, 'apikey': game_api
         })
         res = await res.json(content_type=None)
+        if not res['ok']:
+            await update.message.reply_text('Сервис временно недоступен. Попробуйте позже.')
+            return
         ans = res['data'][0]['answers']
         correct = ans[0]
         shuffle(ans)

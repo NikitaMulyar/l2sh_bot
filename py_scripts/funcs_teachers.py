@@ -291,8 +291,9 @@ async def timetable_teacher_for_each_day(update: Update, context: ContextTypes.D
             ind += 1
         await context.bot.send_message(user.chat_id, t + "".join(edits_text[:ind]),
                                        parse_mode='MarkdownV2')
-        await context.bot.send_message(user.chat_id, "".join(edits_text[ind:]),
-                                       parse_mode='MarkdownV2')
+        scnd = "".join(edits_text[ind:])
+        if scnd:
+            await update.message.reply_text(scnd, parse_mode='MarkdownV2')
     elif not lessons.empty:
         t = title + '\n' + t
         await update.message.reply_text(t, parse_mode='MarkdownV2')

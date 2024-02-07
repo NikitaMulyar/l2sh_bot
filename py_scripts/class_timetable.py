@@ -70,8 +70,9 @@ class GetTimetable:
                         ind += 1
                     await update.message.reply_text(t[0] + "".join(t[1][:ind]),
                                                     parse_mode='MarkdownV2')
-                    await update.message.reply_text("".join(t[1][ind:]),
-                                                    parse_mode='MarkdownV2')
+                    scnd = "".join(t[1][ind:])
+                    if scnd:
+                        await update.message.reply_text(scnd, parse_mode='MarkdownV2')
                 await extra_send_day(update, flag=True, surname=user.surname, no_kbrd=True)
             elif context.user_data.get('EXTRA_CLICKED') and update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
                 context.user_data['EXTRA_CLICKED'] = False
@@ -175,7 +176,9 @@ class GetTimetable:
                         total_len += len(edits_text[ind])
                         ind += 1
                     await update.message.reply_text(t + "".join(edits_text[:ind]), parse_mode='MarkdownV2')
-                    await update.message.reply_text("".join(edits_text[ind:]), parse_mode='MarkdownV2')
+                    scnd = "".join(edits_text[ind:])
+                    if scnd:
+                        await update.message.reply_text(scnd, parse_mode='MarkdownV2')
                 else:
                     t = title + '\n' + t
                     await update.message.reply_text(t, parse_mode='MarkdownV2')
@@ -195,8 +198,9 @@ class GetTimetable:
                         ind += 1
                     await update.message.reply_text(t[0] + "".join(t[1][:ind]),
                                                     parse_mode='MarkdownV2')
-                    await update.message.reply_text("".join(t[1][ind:]),
-                                                    parse_mode='MarkdownV2')
+                    scnd = "".join(t[1][ind:])
+                    if scnd:
+                        await update.message.reply_text(scnd, parse_mode='MarkdownV2')
                 await extra_send_day(update, no_kbrd=True)
             elif context.user_data.get('EXTRA_CLICKED') and update.message.text in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']:
                 context.user_data['EXTRA_CLICKED'] = False

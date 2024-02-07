@@ -91,8 +91,9 @@ class CheckStudentTT:
                     ind += 1
                 await update.message.reply_text(send_text[0] + "".join(send_text[1][:ind]),
                                                 parse_mode='MarkdownV2')
-                await update.message.reply_text("".join(send_text[1][ind:]),
-                                                parse_mode='MarkdownV2')
+                scnd = "".join(send_text[1][ind:])
+                if scnd:
+                    await update.message.reply_text(scnd, parse_mode='MarkdownV2')
             await extra_send_day(update, surname=context.user_data['INFO']['Familia'], flag=True, no_kbrd=True)
         else:
             send_text = await get_standard_timetable_with_edits_for_student(context,
@@ -110,8 +111,9 @@ class CheckStudentTT:
                     ind += 1
                 await update.message.reply_text(send_text[0] + "".join(send_text[1][:ind]),
                                                 parse_mode='MarkdownV2')
-                await update.message.reply_text("".join(send_text[1][ind:]),
-                                                parse_mode='MarkdownV2')
+                scnd = "".join(send_text[1][ind:])
+                if scnd:
+                    await update.message.reply_text(scnd, parse_mode='MarkdownV2')
         await update.message.reply_text('Выберите день или закончите выбор командой: /end_check')
         return self.step_date
 

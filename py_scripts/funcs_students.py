@@ -106,7 +106,7 @@ async def create_list_of_edits_lessons_for_student(df: pd.DataFrame, student_cla
             class_copy += elem
         class_copy = class_copy.strip(' ').strip('\n').strip(' ').strip('\n').split('\n')
         flag = None
-        if isinstance(class_copy, list):
+        if len(class_copy) != 1:
             for elem in class_copy:
                 if student_class[:-1] in elem and student_class[-1] in elem:
                     flag = True
@@ -115,6 +115,7 @@ async def create_list_of_edits_lessons_for_student(df: pd.DataFrame, student_cla
                     flag = True
                     break
         else:
+            class_copy = class_copy[0]
             if student_class[:-1] in class_copy and student_class[-1] in class_copy:
                 flag = True
             if class_copy.isdigit() and student_class[:-1] in class_copy:

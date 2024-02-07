@@ -61,7 +61,9 @@ async def write_about_edits(context: ContextTypes.DEFAULT_TYPE, text):
                     total_len += len(edits_text[ind])
                     ind += 1
                 await context.bot.send_message(user.chat_id, text + "".join(edits_text[:ind]), parse_mode='MarkdownV2')
-                await context.bot.send_message(user.chat_id, "".join(edits_text[ind:]), parse_mode='MarkdownV2')
+                scnd = "".join(edits_text[ind:])
+                if scnd:
+                    await context.bot.send_message(user.chat_id, scnd, parse_mode='MarkdownV2')
         except Exception as e:
             if e.__str__() not in didnt_send:
                 didnt_send[e.__str__()] = 1
