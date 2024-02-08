@@ -18,10 +18,20 @@ class WolframClient:
         if not res.get('pod'):
             return []
         imgs = []
-        for el in res['pod']:
-            el = el.get('subpod')
-            if not el:
-                continue
+        if isinstance(res['pod'], list):
+            for el in res['pod']:
+                el = el['subpod']
+                if isinstance(el, list):
+                    for el2 in el:
+                        el2 = await session.get(el2['img']['@src'])
+                        el2 = await el2.content.read()
+                        imgs.append(el2)
+                else:
+                    el = await session.get(el['img']['@src'])
+                    el = await el.content.read()
+                    imgs.append(el)
+        else:
+            el = res['pod']['subpod']
             if isinstance(el, list):
                 for el2 in el:
                     el2 = await session.get(el2['img']['@src'])
