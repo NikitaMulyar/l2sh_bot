@@ -14,12 +14,14 @@ class WolframClient:
     async def get_response(self, req):
         session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
         res = await self.client.query(req)
+        await session.close()
         if not res.get('pod'):
-            await session.close()
             return []
         imgs = []
         for el in res['pod']:
-            el = el['subpod']
+            el = el.get('subpod')
+            if not el:
+                continue
             if isinstance(el, list):
                 for el2 in el:
                     el2 = await session.get(el2['img']['@src'])
@@ -29,7 +31,8 @@ class WolframClient:
                 el = await session.get(el['img']['@src'])
                 el = await el.content.read()
                 imgs.append(el)
-
+        if not imgs:
+            return []
         arr = []
         group = []
         i = 0
@@ -41,7 +44,6 @@ class WolframClient:
             i += 1
         if group:
             arr.append(group)
-        await session.close()
         return arr
 
     async def send_response_(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
