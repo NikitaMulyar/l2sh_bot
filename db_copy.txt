@@ -1,424 +1,466 @@
-1. @None Шишко Андрей (chat_id: 3229226, telegram_id: 3229226)
+1. @None Случ Михаил Ильич (chat_id: 359939090, tg_id: 359939090) admin None
 
-2. @Savelev_pa Савельев Павел Андреевич (chat_id: 59383993, telegram_id: 59383993)
+2. @Taran_Vera Таран Вера Владимировна (chat_id: 373205642, tg_id: 373205642) admin None
 
-3. @Ksenka_pechenka Дубовцев Арсений (chat_id: 139280409, telegram_id: 139280409)
+3. @KritchenkovaAM Критченкова Анна Михайловна (chat_id: 433412511, tg_id: 433412511) admin None
 
-4. @grohoret Седов Григорий Константинович (chat_id: 168466855, telegram_id: 168466855)
+4. @larisolnnce Ларичева Полина Денисовна (chat_id: 460523592, tg_id: 460523592) admin None
 
-5. @AngelaEmel Гилев Георгий Георгий (chat_id: 270696426, telegram_id: 270696426)
+5. @tngnch Пылева Татьяна Сергеевна (chat_id: 570144839, tg_id: 570144839) admin None
 
-6. @nadjagorjunowa Горюнова Надежда Владимировна (chat_id: 272728840, telegram_id: 272728840)
+6. @lala_kac Малахов Александр Игоревич (chat_id: 1461693159, tg_id: 1461693159) admin None
 
-7. @None Артимович Кирилл (chat_id: 291270177, telegram_id: 291270177)
+7. @it_s_not_tanya Путченко Татьяна Владимировна (chat_id: 5631637479, tg_id: 5631637479) admin None
 
-8. @None Иванова Светлана Эдуардовна (chat_id: 299290553, telegram_id: 299290553)
+8. @zhiig Жиглова Анастасия (chat_id: 849627863, tg_id: 849627863) student 10А
 
-9. @IGriB28I Бехтин Григорий (chat_id: 350531376, telegram_id: 350531376)
+9. @K1o0n Никитин Тимофей (chat_id: 1088065400, tg_id: 1088065400) student 10А
 
-10. @None Случ Михаил Ильич (chat_id: 359939090, telegram_id: 359939090)
+10. @Kuda_i_zachem Ражина Владислава (chat_id: 1301149824, tg_id: 1301149824) student 10А
 
-11. @None Мочалыгин Федор (chat_id: 368027883, telegram_id: 368027883)
+11. @roreedd Ратникова Ольга (chat_id: 1586011343, tg_id: 1586011343) student 10А
 
-12. @None Рукк Мария Ференцевна (chat_id: 370037891, telegram_id: 370037891)
+12. @None Зацепин Егор (chat_id: 1628316014, tg_id: 1628316014) student 10А
 
-13. @Taran_Vera Таран Вера Владимировна (chat_id: 373205642, telegram_id: 373205642)
+13. @RtemL Лобашков Артем (chat_id: 2114401539, tg_id: 2114401539) student 10А
 
-14. @None Шайхутдинов Эльдар (chat_id: 402790580, telegram_id: 402790580)
+14. @IGriB28I Бехтин Григорий (chat_id: 350531376, tg_id: 350531376) student 10Б
 
-15. @knelaev Нелаев Константин Анатольевич (chat_id: 426992255, telegram_id: 426992255)
+15. @delikatny_pon Муляр Никита (chat_id: 562532936, tg_id: 562532936) student 10Б
 
-16. @KritchenkovaAM Критченкова Анна Михайловна (chat_id: 433412511, telegram_id: 433412511)
+16. @GregorBag Багданов Григорий (chat_id: 731132759, tg_id: 731132759) student 10Б
 
-17. @arina007 Варенникова Арина (chat_id: 436454130, telegram_id: 436454130)
+17. @egromaster Катаев Егор (chat_id: 828273651, tg_id: 828273651) student 10Б
 
-18. @iraazal Цыс Ирина (chat_id: 437788094, telegram_id: 437788094)
+18. @ArSarapkin Сарапкин Артем (chat_id: 876966960, tg_id: 876966960) student 10Б
 
-19. @tatianapolya Полякова София (chat_id: 447300772, telegram_id: 447300772)
+19. @Kktoshka Колобова Екатерина (chat_id: 1050046334, tg_id: 1050046334) student 10Б
 
-20. @Capuzzolone Воронец Михаил (chat_id: 453113151, telegram_id: 453113151)
+20. @kuewa Манджиев Темир (chat_id: 1392872472, tg_id: 1392872472) student 10Б
 
-21. @larisolnnce Ларичева Полина Денисовна (chat_id: 460523592, telegram_id: 460523592)
+21. @jisyvoh Степанова Елена (chat_id: 1469165259, tg_id: 1469165259) student 10Б
 
-22. @Val6rie Вассунова Валерия (chat_id: 468592513, telegram_id: 468592513)
+22. @Eto_y_a Р О (chat_id: 1677964295, tg_id: 1677964295) student 10Б
 
-23. @alex_malakhov Малахов Александр Игоревич (chat_id: 494248851, telegram_id: 494248851)
+23. @solmorn Соломатин Матвей (chat_id: 1925866961, tg_id: 1925866961) student 10Б
 
-24. @Mezgul Артимович Кирилл (chat_id: 519867658, telegram_id: 519867658)
+24. @Anastasia_Tyurina Тюрина Анастасия (chat_id: 2091543646, tg_id: 2091543646) student 10Б
 
-25. @lev_bern Бернштейн Лев (chat_id: 554909243, telegram_id: 554909243)
+25. @rurar_r А О (chat_id: 622999235, tg_id: 622999235) student 10В
 
-26. @delikatny_pon Муляр Никита (chat_id: 562532936, telegram_id: 562532936)
+26. @wannasomewater Бойко Марина (chat_id: 874541940, tg_id: 874541940) student 10В
 
-27. @tngnch Пылева Татьяна Сергеевна (chat_id: 570144839, telegram_id: 570144839)
+27. @titanixis Малышева Юлия (chat_id: 1114691268, tg_id: 1114691268) student 10В
 
-28. @oleguzov Подгузов Олег (chat_id: 599738313, telegram_id: 599738313)
+28. @rabgaida Пронкин Дмитрий (chat_id: 1187021973, tg_id: 1187021973) student 10В
 
-29. @agolod Голод Артём (chat_id: 606332301, telegram_id: 606332301)
+29. @TimofeyMusikow Мусиков Тимофей (chat_id: 1570892596, tg_id: 1570892596) student 10В
 
-30. @rurar_r А О (chat_id: 622999235, telegram_id: 622999235)
+30. @semenovyh_am Семеновых Арсений (chat_id: 1608345892, tg_id: 1608345892) student 10В
 
-31. @None Беляев Даниил (chat_id: 638563639, telegram_id: 638563639)
+31. @rblxnoob Егоров Филипп (chat_id: 1702769189, tg_id: 1702769189) student 10В
 
-32. @arthurexqz Марданшин Артур (chat_id: 672496260, telegram_id: 672496260)
+32. @gaiercop Семеновых Арсений (chat_id: 5945920507, tg_id: 5945920507) student 10В
 
-33. @None Хлебников Андрей (chat_id: 686695743, telegram_id: 686695743)
+33. @arthurexqz Марданшин Артур (chat_id: 672496260, tg_id: 672496260) student 10Г
 
-34. @None Гоголь Николай (chat_id: 701308486, telegram_id: 701308486)
+34. @PlatoWwer Мигранов Булат (chat_id: 861028369, tg_id: 861028369) student 10Г
 
-35. @chipdalemunk Давидян Матвей (chat_id: 710101210, telegram_id: 710101210)
+35. @Basostus Андреев Глеб (chat_id: 863265155, tg_id: 863265155) student 10Г
 
-36. @bananalinux Р О (chat_id: 730933715, telegram_id: 730933715)
+36. @mottlar Маляр Матвей (chat_id: 914359103, tg_id: 914359103) student 10Г
 
-37. @GregorBag Багданов Григорий (chat_id: 731132759, telegram_id: 731132759)
+37. @lizzochhhhhhka Киселева Елизавета (chat_id: 1834107163, tg_id: 1834107163) student 10Г
 
-38. @eudaimony Некрасов Николай (chat_id: 769474573, telegram_id: 769474573)
+38. @emiliya_iz Сомова Мария (chat_id: 1992929528, tg_id: 1992929528) student 10Г
 
-39. @Ko3erog Шилак Владимир Николаевич (chat_id: 773772482, telegram_id: 773772482)
+39. @alisa_malykhina Малыхина Алиса (chat_id: 5132049212, tg_id: 5132049212) student 10Г
 
-40. @Uran_Chase Лобан Филипп (chat_id: 799796321, telegram_id: 799796321)
+40. @MilanaRyumina Рюмина Милана (chat_id: 5169477232, tg_id: 5169477232) student 10Г
 
-41. @None Сливко Арсений (chat_id: 823479176, telegram_id: 823479176)
+41. @chipdalemunk Давидян Матвей (chat_id: 710101210, tg_id: 710101210) student 10Д
 
-42. @egromaster Катаев Егор (chat_id: 828273651, telegram_id: 828273651)
+42. @lokisf8 Давидян Матвей (chat_id: 871689175, tg_id: 871689175) student 10Д
 
-43. @Hermium Щербаков Максим (chat_id: 842548115, telegram_id: 842548115)
+43. @None Резникова Алёна (chat_id: 1134845946, tg_id: 1134845946) student 10Д
 
-44. @PlatoWwer Мигранов Булат (chat_id: 861028369, telegram_id: 861028369)
+44. @mrkphys Московских Елена (chat_id: 1218528696, tg_id: 1218528696) student 10Д
 
-45. @Basostus Андреев Глеб (chat_id: 863265155, telegram_id: 863265155)
+45. @Filandern Филиппов Андрей (chat_id: 1325109035, tg_id: 1325109035) student 10Д
 
-46. @lokisf8 Давидян Матвей (chat_id: 871689175, telegram_id: 871689175)
+46. @ErnKor Коробейников Егор (chat_id: 1394944488, tg_id: 1394944488) student 10Д
 
-47. @wannasomewater Бойко Марина (chat_id: 874541940, telegram_id: 874541940)
+47. @qrivthv Петрова Софья (chat_id: 1844019523, tg_id: 1844019523) student 10Д
 
-48. @ArSarapkin Сарапкин Артем (chat_id: 876966960, telegram_id: 876966960)
+48. @None Беляев Даниил (chat_id: 638563639, tg_id: 638563639) student 11А
 
-49. @None Новиков Иван (chat_id: 877675323, telegram_id: 877675323)
+49. @tdjey33 Шафранов Артем (chat_id: 961006705, tg_id: 961006705) student 11А
 
-50. @SsK8q Белякова Екатерина (chat_id: 886246648, telegram_id: 886246648)
+50. @None Федорова Варвара (chat_id: 1132097791, tg_id: 1132097791) student 11А
 
-51. @GLUSUS Геродес Георгий (chat_id: 904668933, telegram_id: 904668933)
+51. @None Теренков Кирилл (chat_id: 2056435417, tg_id: 2056435417) student 11А
 
-52. @mottlar Маляр Матвей (chat_id: 914359103, telegram_id: 914359103)
+52. @oleguzov Подгузов Олег (chat_id: 599738313, tg_id: 599738313) student 11Б
 
-53. @sergrod Сергеев Родион (chat_id: 955806362, telegram_id: 955806362)
+53. @Swndnanx Слом Сергей (chat_id: 1084579223, tg_id: 1084579223) student 11Б
 
-54. @tdjey33 Шафранов Артем (chat_id: 961006705, telegram_id: 961006705)
+54. @Ilya_sch2 Мухамедзарифов Илья (chat_id: 1159001233, tg_id: 1159001233) student 11Б
 
-55. @tolyho Хо Данг (chat_id: 963834994, telegram_id: 963834994)
+55. @iAccelerator Суханов Илья (chat_id: 1303927764, tg_id: 1303927764) student 11Б
 
-56. @Worstery Краснобаев Владимир Дмитриевич (chat_id: 976287408, telegram_id: 976287408)
+56. @lumionix Сметанин Андрей (chat_id: 1942427386, tg_id: 1942427386) student 11Б
 
-57. @himanana Химич Анастасия (chat_id: 987805895, telegram_id: 987805895)
+57. @agolod Голод Артём (chat_id: 606332301, tg_id: 606332301) student 11В
 
-58. @Esdhju Кривошеева Лидия (chat_id: 992676395, telegram_id: 992676395)
+58. @Uran_Chase Лобан Филипп (chat_id: 799796321, tg_id: 799796321) student 11В
 
-59. @nastyuhar Харитонова Анастасия (chat_id: 1020127163, telegram_id: 1020127163)
+59. @SsK8q Белякова Екатерина (chat_id: 886246648, tg_id: 886246648) student 11В
 
-60. @Sugar_freeeeee Горбачев Игнат (chat_id: 1025394955, telegram_id: 1025394955)
+60. @GLUSUS Геродес Георгий (chat_id: 904668933, tg_id: 904668933) student 11В
 
-61. @Dinmiax Некрасов Николай (chat_id: 1032551771, telegram_id: 1032551771)
+61. @marina_otkazniki Назаров Александр (chat_id: 1055935381, tg_id: 1055935381) student 11В
 
-62. @Steuerverguenstigungsabbaugesetz Давыдов Дмитрий (chat_id: 1045289286, telegram_id: 1045289286)
+62. @georgygalyapin Галяпин Георгий (chat_id: 1307338042, tg_id: 1307338042) student 11В
 
-63. @Kktoshka Колобова Екатерина (chat_id: 1050046334, telegram_id: 1050046334)
+63. @vassire Васильева Ксения (chat_id: 1945408831, tg_id: 1945408831) student 11В
 
-64. @marina_otkazniki Назаров Александр (chat_id: 1055935381, telegram_id: 1055935381)
+64. @Val6rie Вассунова Валерия (chat_id: 468592513, tg_id: 468592513) student 11Г
 
-65. @VeseliyDoter Краснобаев Владимир Дмитриевич (chat_id: 1056717252, telegram_id: 1056717252)
+65. @himanana Химич Анастасия (chat_id: 987805895, tg_id: 987805895) student 11Г
 
-66. @Tatyana_Petkova Петков Александр (chat_id: 1073429357, telegram_id: 1073429357)
+66. @umbre11a24 Зотикова Екатерина (chat_id: 1725138294, tg_id: 1725138294) student 11Г
 
-67. @leonid_burlak Бурлак Леонид (chat_id: 1077476489, telegram_id: 1077476489)
+67. @Ogion_Silent Буслов Егор (chat_id: 2018294237, tg_id: 2018294237) student 11Г
 
-68. @Swndnanx Слом Сергей (chat_id: 1084579223, telegram_id: 1084579223)
+68. @Hermium Щербаков Максим (chat_id: 842548115, tg_id: 842548115) student 11Д
 
-69. @K1o0n Никитин Тимофей (chat_id: 1088065400, telegram_id: 1088065400)
+69. @sergrod Сергеев Родион (chat_id: 955806362, tg_id: 955806362) student 11Д
 
-70. @NBananov Баранов Никифоо (chat_id: 1107870504, telegram_id: 1107870504)
+70. @tolyho Хо Данг (chat_id: 963834994, tg_id: 963834994) student 11Д
 
-71. @titanixis Малышева Юлия (chat_id: 1114691268, telegram_id: 1114691268)
+71. @Dinmiax Некрасов Николай (chat_id: 1032551771, tg_id: 1032551771) student 11Д
 
-72. @MZalik --! Zalupka !-- huisgg (chat_id: 1121606045, telegram_id: 1121606045)
+72. @TagirNigma Нигматуллин Тагир (chat_id: 1373857939, tg_id: 1373857939) student 11Д
 
-73. @mfroga Фрог Марина Мобаркшаевна (chat_id: 1131368354, telegram_id: 1131368354)
+73. @staffL2SH Добрынина Станислава (chat_id: 5128936220, tg_id: 5128936220) student 11Д
 
-74. @None Савельева Арина (chat_id: 1132097791, telegram_id: 1132097791)
+74. @Alpha_Centauris Адигамова Лика (chat_id: 1914563737, tg_id: 1914563737) student 6А
 
-75. @None Резникова Алёна (chat_id: 1134845946, telegram_id: 1134845946)
+75. @Anna_132933 Новожилова Анна (chat_id: 2138713576, tg_id: 2138713576) student 6А
 
-76. @maiborodas Майборода Степан (chat_id: 1155256937, telegram_id: 1155256937)
+76. @BARSIKER_BRO Гвггв Ркок (chat_id: 5142825693, tg_id: 5142825693) student 6А
 
-77. @Ilya_sch2 Мухамедзарифов Илья (chat_id: 1159001233, telegram_id: 1159001233)
+77. @None Быков Владислав (chat_id: 5183941184, tg_id: 5183941184) student 6А
 
-78. @rabgaida Пронкин Дмитрий (chat_id: 1187021973, telegram_id: 1187021973)
+78. @tuy_lenn жвэухуж жцжцж (chat_id: 5372868418, tg_id: 5372868418) student 6А
 
-79. @Reshatych Вахитов Руслан Ришатович (chat_id: 1193227253, telegram_id: 1193227253)
+79. @shakurmi Шакурова Мира (chat_id: 6100029058, tg_id: 6100029058) student 6А
 
-80. @agatiknik Никитина Агата (chat_id: 1207344204, telegram_id: 1207344204)
+80. @None Адигамова Лика (chat_id: 6167625386, tg_id: 6167625386) student 6А
 
-81. @Oleg_Shcherbakov28 Щербаков Олег (chat_id: 1213876286, telegram_id: 1213876286)
+81. @None 1 1 (chat_id: 6675631944, tg_id: 6675631944) student 6А
 
-82. @mrkphys Московских Елена (chat_id: 1218528696, telegram_id: 1218528696)
+82. @mynameiscunt Иванов Степан (chat_id: 315551984, tg_id: 315551984) student 6Б
 
-83. @illinkclick Ложечко Мария (chat_id: 1227199842, telegram_id: 1227199842)
+83. @None Хлебников Андрей (chat_id: 686695743, tg_id: 686695743) student 6Б
 
-84. @ARAB12345678910 Пылев Иван Сегреевич (chat_id: 1264646808, telegram_id: 1264646808)
+84. @Zohir1707 Чайка Владимир (chat_id: 1037753393, tg_id: 1037753393) student 6Б
 
-85. @arisha_krasn Красносельская Арина (chat_id: 1265461879, telegram_id: 1265461879)
+85. @Marina25062012 Прутянова Марина (chat_id: 1268022507, tg_id: 1268022507) student 6Б
 
-86. @Marina25062012 Прутянова Марина (chat_id: 1268022507, telegram_id: 1268022507)
+86. @rarenamee Чамов Всеволод (chat_id: 1284267437, tg_id: 1284267437) student 6Б
 
-87. @rarenamee Чамов Всеволод (chat_id: 1284267437, telegram_id: 1284267437)
+87. @svintik Ларина Елена (chat_id: 1901874205, tg_id: 1901874205) student 6Б
 
-88. @sasha_petkov Петков Александр (chat_id: 1291862359, telegram_id: 1291862359)
+88. @MikhailK26 Каратун Михаил (chat_id: 1903629103, tg_id: 1903629103) student 6Б
 
-89. @Kuda_i_zachem Ражина Владислава (chat_id: 1301149824, telegram_id: 1301149824)
+89. @ProByrash Пронин Андрей (chat_id: 5136821839, tg_id: 5136821839) student 6Б
 
-90. @sham_anis Анисимов Михаил (chat_id: 1301390265, telegram_id: 1301390265)
+90. @alexeylob Лобанов Алексей (chat_id: 5205976501, tg_id: 5205976501) student 6Б
 
-91. @iAccelerator Суханов Илья (chat_id: 1303927764, telegram_id: 1303927764)
+91. @Lisa_Mozgo Мозго Елизавета (chat_id: 5284132670, tg_id: 5284132670) student 6Б
 
-92. @georgygalyapin Галяпин Георгий (chat_id: 1307338042, telegram_id: 1307338042)
+92. @Vika_Basharova Башарова Виктория (chat_id: 5364753214, tg_id: 5364753214) student 6Б
 
-93. @minikxxy Авдеева Майя (chat_id: 1320956696, telegram_id: 1320956696)
+93. @None Жихарева Юлия (chat_id: 5455518621, tg_id: 5455518621) student 6Б
 
-94. @ochabaeva Чабаева Ольга (chat_id: 1324954077, telegram_id: 1324954077)
+94. @e_Not_iky Гливенко Дмитрий (chat_id: 5469870315, tg_id: 5469870315) student 6Б
 
-95. @Filandern Филиппов Андрей (chat_id: 1325109035, telegram_id: 1325109035)
+95. @andruyhazabiv Хлебников Андрей (chat_id: 5514542023, tg_id: 5514542023) student 6Б
 
-96. @Arina871 Луговцова Арина (chat_id: 1327383535, telegram_id: 1327383535)
+96. @None Сметанин Василий (chat_id: 5761000321, tg_id: 5761000321) student 6Б
 
-97. @ruannaj Рыжова Анна (chat_id: 1353056677, telegram_id: 1353056677)
+97. @None Кривых Демид (chat_id: 5911395606, tg_id: 5911395606) student 6Б
 
-98. @pan_skz Баширова Эмилия (chat_id: 1353152567, telegram_id: 1353152567)
+98. @None Бранд Константин (chat_id: 6004260123, tg_id: 6004260123) student 6Б
 
-99. @dariz_23 Голубкова Дарья (chat_id: 1364558599, telegram_id: 1364558599)
+99. @None Кузьмин Севастьян (chat_id: 6311470903, tg_id: 6311470903) student 6Б
 
-100. @TagirNigma Нигматуллин Тагир (chat_id: 1373857939, telegram_id: 1373857939)
+100. @yakunin_sergey Богданова Ксения (chat_id: 6443448479, tg_id: 6443448479) student 6Б
 
-101. @Lev_g00 Гирин Лев (chat_id: 1378655162, telegram_id: 1378655162)
+101. @Ksenka_pechenka Дубовцев Арсений (chat_id: 139280409, tg_id: 139280409) student 6В
 
-102. @kuewa Манджиев Темир (chat_id: 1392872472, telegram_id: 1392872472)
+102. @None Грязнов Николай (chat_id: 1720690189, tg_id: 1720690189) student 6В
 
-103. @ErnKor Коробейников Егор (chat_id: 1394944488, telegram_id: 1394944488)
+103. @None Грязнов Дмитрий (chat_id: 1773921312, tg_id: 1773921312) student 6В
 
-104. @kate_krasn1 Красносельская Екатерина (chat_id: 1410094574, telegram_id: 1410094574)
+104. @danis_ueldanov Жуков Фёдор (chat_id: 1861734434, tg_id: 1861734434) student 6В
 
-105. @Makriii Макаров Макар (chat_id: 1427336899, telegram_id: 1427336899)
+105. @None Луценко Денис (chat_id: 5212971290, tg_id: 5212971290) student 6В
 
-106. @KaraiHatake Кобзева Анна (chat_id: 1444684675, telegram_id: 1444684675)
+106. @Klachk Денисова Нина (chat_id: 5542050806, tg_id: 5542050806) student 6В
 
-107. @lala_kac Малахов Александр Игоревич (chat_id: 1461693159, telegram_id: 1461693159)
+107. @None Панов Алексей (chat_id: 5759040007, tg_id: 5759040007) student 6В
 
-108. @UnaBellaBimba Лошадкина Полина (chat_id: 1479485988, telegram_id: 1479485988)
+108. @vanamedvedev Медведев Иван (chat_id: 5969973685, tg_id: 5969973685) student 6В
 
-109. @Pokidyshev_Luka Тюкачев Денис (chat_id: 1482848896, telegram_id: 1482848896)
+109. @None Алтунина Вера (chat_id: 6671924047, tg_id: 6671924047) student 6В
 
-110. @tatiana11121404 Обухов Михаил (chat_id: 1500521816, telegram_id: 1500521816)
+110. @None Углов Даниил (chat_id: 701308486, tg_id: 701308486) student 7А
 
-111. @TimofeyMusikow Мусиков Тимофей (chat_id: 1570892596, telegram_id: 1570892596)
+111. @eudaimony Некрасов Николай (chat_id: 769474573, tg_id: 769474573) student 7А
 
-112. @EgorSomov2011 Сомов Егор (chat_id: 1581429708, telegram_id: 1581429708)
+112. @Tatyana_Petkova Петков Александр (chat_id: 1073429357, tg_id: 1073429357) student 7А
 
-113. @roreedd Ратникова Ольга (chat_id: 1586011343, telegram_id: 1586011343)
+113. @sasha_petkov Петков Александр (chat_id: 1291862359, tg_id: 1291862359) student 7А
 
-114. @semenovyh_am Семеновых Арсений (chat_id: 1608345892, telegram_id: 1608345892)
+114. @Makriii Макаров Макар (chat_id: 1427336899, tg_id: 1427336899) student 7А
 
-115. @Liza_Glushkova Глушкова Елизавета (chat_id: 1615867464, telegram_id: 1615867464)
+115. @EgorSomov2011 Сомов Егор (chat_id: 1581429708, tg_id: 1581429708) student 7А
 
-116. @andrei060810 Семеновых Андрей (chat_id: 1623978518, telegram_id: 1623978518)
+116. @Nyanpuse лысев артем (chat_id: 1879460813, tg_id: 1879460813) student 7А
 
-117. @SviMar08 Свистельникова Мария (chat_id: 1657587958, telegram_id: 1657587958)
+117. @None Бардамов Матвей (chat_id: 1904675912, tg_id: 1904675912) student 7А
 
-118. @Eto_y_a Р О (chat_id: 1677964295, telegram_id: 1677964295)
+118. @None Глушков Егор (chat_id: 2133987273, tg_id: 2133987273) student 7А
 
-119. @PolinaM008 Магомедэминова Полина (chat_id: 1683034116, telegram_id: 1683034116)
+119. @VsevKomarov Кашс Всеволод (chat_id: 5190251868, tg_id: 5190251868) student 7А
 
-120. @Muurmurk Привет Привет (chat_id: 1688655761, telegram_id: 1688655761)
+120. @AVLIguana Лихошерстов Артем (chat_id: 5440717483, tg_id: 5440717483) student 7А
 
-121. @maria_bushina45 Бушина Мария (chat_id: 1697433026, telegram_id: 1697433026)
+121. @Mi_Alsushka Миграновп Алсу (chat_id: 6145078313, tg_id: 6145078313) student 7А
 
-122. @kolysheev Колышев Евгений (chat_id: 1699535350, telegram_id: 1699535350)
+122. @tatianapolya Полякова София (chat_id: 447300772, tg_id: 447300772) student 7Б
 
-123. @rblxnoob Егоров Филипп (chat_id: 1702769189, telegram_id: 1702769189)
+123. @tatiana11121404 Обухов Михаил (chat_id: 1500521816, tg_id: 1500521816) student 7Б
 
-124. @None Грязнов Николай (chat_id: 1720690189, telegram_id: 1720690189)
+124. @None Пржиялковский Владимир (chat_id: 1975626257, tg_id: 1975626257) student 7Б
 
-125. @umbre11a24 Зотикова Екатерина (chat_id: 1725138294, telegram_id: 1725138294)
+125. @alexey_vladimirov_777 Владимиров Алексе (chat_id: 5152842446, tg_id: 5152842446) student 7Б
 
-126. @Nyashist Поликуров Филипп (chat_id: 1753708703, telegram_id: 1753708703)
+126. @None Пашнюк Марк (chat_id: 5458812060, tg_id: 5458812060) student 7Б
 
-127. @kate_azar Василенко Георгий (chat_id: 1769831887, telegram_id: 1769831887)
+127. @alexeymorozov0508 Морозов Алексей (chat_id: 5729707592, tg_id: 5729707592) student 7Б
 
-128. @pavapepe_GYMabody Артимович Кирилл (chat_id: 1773843591, telegram_id: 1773843591)
+128. @msk54 Бурлаков Илья (chat_id: 6254250076, tg_id: 6254250076) student 7Б
 
-129. @None Грязнов Дмитрий (chat_id: 1773921312, telegram_id: 1773921312)
+129. @None Мочалыгин Федор (chat_id: 368027883, tg_id: 368027883) student 7В
 
-130. @Kiwitvu Иванова Анастасия (chat_id: 1801229853, telegram_id: 1801229853)
+130. @Liza_Glushkova Глушкова Елизавета (chat_id: 1615867464, tg_id: 1615867464) student 7В
 
-131. @Merlokus Капибара Капибара (chat_id: 1803177341, telegram_id: 1803177341)
+131. @maria_bushina45 Бушина Мария (chat_id: 1697433026, tg_id: 1697433026) student 7В
 
-132. @lizzochhhhhhka Киселева Елизавета (chat_id: 1834107163, telegram_id: 1834107163)
+132. @kate_azar Василенко Георгий (chat_id: 1769831887, tg_id: 1769831887) student 7В
 
-133. @qrivthv Петрова Софья (chat_id: 1844019523, telegram_id: 1844019523)
+133. @kak_b_pofig Бродская Ольга (chat_id: 1981404607, tg_id: 1981404607) student 7В
 
-134. @danis_ueldanov Жуков Фёдор (chat_id: 1861734434, telegram_id: 1861734434)
+134. @kofevarocka Мещерякова Екатерина (chat_id: 6654440703, tg_id: 6654440703) student 7В
 
-135. @mishkatram Калабашкин Михаил (chat_id: 1867982625, telegram_id: 1867982625)
+135. @AngelaEmel Гилев Георгий Георгий (chat_id: 270696426, tg_id: 270696426) student 7Г
 
-136. @Nyanpuse лысев артем (chat_id: 1879460813, telegram_id: 1879460813)
+136. @Capuzzolone Воронец Михаил (chat_id: 453113151, tg_id: 453113151) student 7Г
 
-137. @dsch_nayka007 Щербакова Дарья (chat_id: 1881908358, telegram_id: 1881908358)
+137. @None Сливко Арсений (chat_id: 823479176, tg_id: 823479176) student 7Г
 
-138. @svintik Ларина Елена (chat_id: 1901874205, telegram_id: 1901874205)
+138. @Oleg_Shcherbakov28 Щербаков Олег (chat_id: 1213876286, tg_id: 1213876286) student 7Г
 
-139. @anxious_toad Шилова Анна (chat_id: 1903957090, telegram_id: 1903957090)
+139. @Nyashist Поликуров Филипп (chat_id: 1753708703, tg_id: 1753708703) student 7Г
 
-140. @None Бардамов Матвей (chat_id: 1904675912, telegram_id: 1904675912)
+140. @None Провоторов Артемий (chat_id: 1853983464, tg_id: 1853983464) student 7Г
 
-141. @coriek Мельситдинова Александра (chat_id: 1919197388, telegram_id: 1919197388)
+141. @mishkatram Калабашкин Михаил (chat_id: 1867982625, tg_id: 1867982625) student 7Г
 
-142. @solmorn Соломатин Матвей (chat_id: 1925866961, telegram_id: 1925866961)
+142. @ImJustAPig Денисов Павел (chat_id: 1952120693, tg_id: 1952120693) student 7Г
 
-143. @ulupii_158 Волкова Аполлинария (chat_id: 1926059201, telegram_id: 1926059201)
+143. @Htototototo R Vika (chat_id: 5028841079, tg_id: 5028841079) student 7Г
 
-144. @alekseyepif Епифанов Алексей (chat_id: 1933227590, telegram_id: 1933227590)
+144. @Vormvud Провоторов Артемий (chat_id: 5442063746, tg_id: 5442063746) student 7Г
 
-145. @lumionix Сметанин Андрей (chat_id: 1942427386, telegram_id: 1942427386)
+145. @Joel_28_bro Мовсисян Никита (chat_id: 6020722324, tg_id: 6020722324) student 7Г
 
-146. @vassire Васильева Ксения (chat_id: 1945408831, telegram_id: 1945408831)
+146. @None Файзуллин Назар (chat_id: 6248785370, tg_id: 6248785370) student 7Г
 
-147. @AndrewShishko Шишко Андрей (chat_id: 1975347918, telegram_id: 1975347918)
+147. @None Новиков Иван (chat_id: 877675323, tg_id: 877675323) student 7Д
 
-148. @kak_b_pofig Бродская Ольга (chat_id: 1981404607, telegram_id: 1981404607)
+148. @leonid_burlak Бурлак Леонид (chat_id: 1077476489, tg_id: 1077476489) student 7Д
 
-149. @mpkopytov Копытов Марк (chat_id: 1983941402, telegram_id: 1983941402)
+149. @maiborodas Майборода Степан (chat_id: 1155256937, tg_id: 1155256937) student 7Д
 
-150. @emiliya_iz Сомова Мария (chat_id: 1992929528, telegram_id: 1992929528)
+150. @kate_krasn1 Красносельская Екатерина (chat_id: 1410094574, tg_id: 1410094574) student 7Д
 
-151. @Ogion_Silent Буслов Егор (chat_id: 2018294237, telegram_id: 2018294237)
+151. @andrei060810 Семеновых Андрей (chat_id: 1623978518, tg_id: 1623978518) student 7Д
 
-152. @MairichG Гиголаев Маир (chat_id: 2024414462, telegram_id: 2024414462)
+152. @alexdubrovin2011 Дубровин Александр (chat_id: 5127842037, tg_id: 5127842037) student 7Д
 
-153. @None Теренков Кирилл (chat_id: 2056435417, telegram_id: 2056435417)
+153. @None Золотарев Ермолай (chat_id: 5626996445, tg_id: 5626996445) student 7Д
 
-154. @Patrikpubg Орлова Ольга (chat_id: 2064477319, telegram_id: 2064477319)
+154. @Neverov_Aleksandr Неверов Александр (chat_id: 5710919288, tg_id: 5710919288) student 7Д
 
-155. @Anastasia_Tyurina Тюрина Анастасия (chat_id: 2091543646, telegram_id: 2091543646)
+155. @Kirill_Gosling Кабардин Кирилл (chat_id: 5815669255, tg_id: 5815669255) student 7Д
 
-156. @RtemL Лобашков Артем (chat_id: 2114401539, telegram_id: 2114401539)
+156. @None Артимович Кирилл (chat_id: 291270177, tg_id: 291270177) student 8А
 
-157. @None Глушков Егор (chat_id: 2133987273, telegram_id: 2133987273)
+157. @Mezgul Артимович Кирилл (chat_id: 519867658, tg_id: 519867658) student 8А
 
-158. @Anna_132933 Новожилова Анна (chat_id: 2138713576, telegram_id: 2138713576)
+158. @arisha_krasn Красносельская Арина (chat_id: 1265461879, tg_id: 1265461879) student 8А
 
-159. @kkchay Близнюк Анна (chat_id: 5079473063, telegram_id: 5079473063)
+159. @sham_anis Анисимов Михаил (chat_id: 1301390265, tg_id: 1301390265) student 8А
 
-160. @None Соколова Юлия Геннадьевна (chat_id: 5104117545, telegram_id: 5104117545)
+160. @Arina871 Луговцова Арина (chat_id: 1327383535, tg_id: 1327383535) student 8А
 
-161. @None Калабухова Эльвира Юрьевна (chat_id: 5110683683, telegram_id: 5110683683)
+161. @pavapepe_GYMabody Артимович Кирилл (chat_id: 1773843591, tg_id: 1773843591) student 8А
 
-162. @ivanBzz Беззубцев Иван (chat_id: 5115671998, telegram_id: 5115671998)
+162. @Merlokus Капибара Капибара (chat_id: 1803177341, tg_id: 1803177341) student 8А
 
-163. @alexdubrovin2011 Дубровин Александр (chat_id: 5127842037, telegram_id: 5127842037)
+163. @ulupii_158 Волкова Аполлинария (chat_id: 1926059201, tg_id: 1926059201) student 8А
 
-164. @staffL2SH Добрынина Станислава (chat_id: 5128936220, telegram_id: 5128936220)
+164. @ivanBzz Беззубцев Иван (chat_id: 5115671998, tg_id: 5115671998) student 8А
 
-165. @alisa_malykhina Малыхина Алиса (chat_id: 5132049212, telegram_id: 5132049212)
+165. @MariiaAkimova Акимова Мария (chat_id: 5416331901, tg_id: 5416331901) student 8А
 
-166. @ProByrash Пронин Андрей (chat_id: 5136821839, telegram_id: 5136821839)
+166. @minikxxy Авдеева Майя (chat_id: 1320956696, tg_id: 1320956696) student 8Б
 
-167. @BARSIKER_BRO Гвггв Ркок (chat_id: 5142825693, telegram_id: 5142825693)
+167. @ochabaeva Чабаева Ольга (chat_id: 1324954077, tg_id: 1324954077) student 8Б
 
-168. @alexey_vladimirov_777 Владимиров Алексе (chat_id: 5152842446, telegram_id: 5152842446)
+168. @ruannaj Рыжова Анна (chat_id: 1353056677, tg_id: 1353056677) student 8Б
 
-169. @gaifullin_andrey Гайфуллин Андрей (chat_id: 5156005706, telegram_id: 5156005706)
+169. @pan_skz Баширова Эмилия (chat_id: 1353152567, tg_id: 1353152567) student 8Б
 
-170. @MilanaRyumina Рюмина Милана (chat_id: 5169477232, telegram_id: 5169477232)
+170. @larrattfan Шагин Илья (chat_id: 1888823306, tg_id: 1888823306) student 8Б
 
-171. @None Быков Владислав (chat_id: 5183941184, telegram_id: 5183941184)
+171. @bananalinux Р О (chat_id: 730933715, tg_id: 730933715) student 8В
 
-172. @VsevKomarov Кашс Всеволод (chat_id: 5190251868, telegram_id: 5190251868)
+172. @zetrock1 Вердиян Лев (chat_id: 1816151067, tg_id: 1816151067) student 8В
 
-173. @alexeylob Лобанов Алексей (chat_id: 5205976501, telegram_id: 5205976501)
+173. @coriek Мельситдинова Александра (chat_id: 1919197388, tg_id: 1919197388) student 8В
 
-174. @None Луценко Денис (chat_id: 5212971290, telegram_id: 5212971290)
+174. @kkchay Близнюк Анна (chat_id: 5079473063, tg_id: 5079473063) student 8В
 
-175. @None Межевич Сергей Дмитриевич (chat_id: 5222689017, telegram_id: 5222689017)
+175. @Esdhju Кривошеева Лидия (chat_id: 992676395, tg_id: 992676395) student 8Г
 
-176. @Lisa_Mozgo Мозго Елизавета (chat_id: 5284132670, telegram_id: 5284132670)
+176. @Kiwitvu Иванова Анастасия (chat_id: 1801229853, tg_id: 1801229853) student 8Г
 
-177. @Vamatr Столповский Мирослав (chat_id: 5295435532, telegram_id: 5295435532)
+177. @MairichG Гиголаев Маир (chat_id: 2024414462, tg_id: 2024414462) student 8Г
 
-178. @lizarddasha Новикова Дарья (chat_id: 5311015412, telegram_id: 5311015412)
+178. @tupoi_avtobys Нестеров Михаил (chat_id: 5401989397, tg_id: 5401989397) student 8Г
 
-179. @Vika_Basharova Башарова Виктория (chat_id: 5364753214, telegram_id: 5364753214)
+179. @NBananov Баранов Никифоо (chat_id: 1107870504, tg_id: 1107870504) student 8Д
 
-180. @tuy_lenn жвэухуж жцжцж (chat_id: 5372868418, telegram_id: 5372868418)
+180. @MZalik --! Zalupka !-- huisgg (chat_id: 1121606045, tg_id: 1121606045) student 8Д
 
-181. @tupoi_avtobys Нестеров Михаил (chat_id: 5401989397, telegram_id: 5401989397)
+181. @dariz_23 Голубкова Дарья (chat_id: 1364558599, tg_id: 1364558599) student 8Д
 
-182. @MariiaAkimova Акимова Мария (chat_id: 5416331901, telegram_id: 5416331901)
+182. @Muurmurk Привет Привет (chat_id: 1688655761, tg_id: 1688655761) student 8Д
 
-183. @AVLIguana Лихошерстов Артем (chat_id: 5440717483, telegram_id: 5440717483)
+183. @aloevta Алоев Тимур (chat_id: 1956619289, tg_id: 1956619289) student 8Д
 
-184. @Vormvud Провоторов Артемий (chat_id: 5442063746, telegram_id: 5442063746)
+184. @mpkopytov Копытов Марк (chat_id: 1983941402, tg_id: 1983941402) student 8Д
 
-185. @None Пашнюк Марк (chat_id: 5458812060, telegram_id: 5458812060)
+185. @dimbel Белоусов Дмитрий (chat_id: 5152060245, tg_id: 5152060245) student 8Д
 
-186. @e_Not_iky Гливенко Дмитрий (chat_id: 5469870315, telegram_id: 5469870315)
+186. @Hot_tea1000 Наумкин Глеб (chat_id: 5474533708, tg_id: 5474533708) student 8Д
 
-187. @Hot_tea1000 Наумкин Глеб (chat_id: 5474533708, telegram_id: 5474533708)
+187. @None Шишко Андрей (chat_id: 3229226, tg_id: 3229226) student 9А
 
-188. @andruyhazabiv Хлебников Андрей (chat_id: 5514542023, telegram_id: 5514542023)
+188. @arina007 Варенникова Арина (chat_id: 436454130, tg_id: 436454130) student 9А
 
-189. @Klachk Денисова Нина (chat_id: 5542050806, telegram_id: 5542050806)
+189. @Sugar_freeeeee Горбачев Игнат (chat_id: 1025394955, tg_id: 1025394955) student 9А
 
-190. @None Золотарев Ермолай (chat_id: 5626996445, telegram_id: 5626996445)
+190. @Steuerverguenstigungsabbaugesetz Давыдов Дмитрий (chat_id: 1045289286, tg_id: 1045289286) student 9А
 
-191. @it_s_not_tanya Путченко Татьяна Владимировна (chat_id: 5631637479, telegram_id: 5631637479)
+191. @SviMar08 Свистельникова Мария (chat_id: 1657587958, tg_id: 1657587958) student 9А
 
-192. @Neverov_Aleksandr Неверов Александр (chat_id: 5710919288, telegram_id: 5710919288)
+192. @PolinaM008 Магомедэминова Полина (chat_id: 1683034116, tg_id: 1683034116) student 9А
 
-193. @alexeymorozov0508 Морозов Алексей (chat_id: 5729707592, telegram_id: 5729707592)
+193. @AndrewShishko Шишко Андрей (chat_id: 1975347918, tg_id: 1975347918) student 9А
 
-194. @None Панов Алексей (chat_id: 5759040007, telegram_id: 5759040007)
+194. @gaifullin_andrey Гайфуллин Андрей (chat_id: 5156005706, tg_id: 5156005706) student 9А
 
-195. @None Сметанин Василий (chat_id: 5761000321, telegram_id: 5761000321)
+195. @lizarddasha Новикова Дарья (chat_id: 5311015412, tg_id: 5311015412) student 9А
 
-196. @Kirill_Gosling Кабардин Кирилл (chat_id: 5815669255, telegram_id: 5815669255)
+196. @illinkclick Ложечко Мария (chat_id: 1227199842, tg_id: 1227199842) student 9Б
 
-197. @None Власов Алексей (chat_id: 5942525392, telegram_id: 5942525392)
+197. @Pokidyshev_Luka Тюкачев Денис (chat_id: 1482848896, tg_id: 1482848896) student 9Б
 
-198. @gaiercop Семеновых Арсений (chat_id: 5945920507, telegram_id: 5945920507)
+198. @zxclavushka Нифантов Вячеслав (chat_id: 6378032316, tg_id: 6378032316) student 9Б
 
-199. @vanamedvedev Медведев Иван (chat_id: 5969973685, telegram_id: 5969973685)
+199. @None Шайхутдинов Эльдар (chat_id: 402790580, tg_id: 402790580) student 9В
 
-200. @None Бранд Константин (chat_id: 6004260123, telegram_id: 6004260123)
+200. @iraazal Цыс Ирина (chat_id: 437788094, tg_id: 437788094) student 9В
 
-201. @Joel_28_bro Мовсисян Никита (chat_id: 6020722324, telegram_id: 6020722324)
+201. @lev_bern Бернштейн Лев (chat_id: 554909243, tg_id: 554909243) student 9В
 
-202. @Ladneva_Evgenia Феклистов Игорь Игоревич (chat_id: 6064716201, telegram_id: 6064716201)
+202. @agatiknik Никитина Агата (chat_id: 1207344204, tg_id: 1207344204) student 9В
 
-203. @shakurmi Шакурова Мира (chat_id: 6100029058, telegram_id: 6100029058)
+203. @UnaBellaBimba Лошадкина Полина (chat_id: 1479485988, tg_id: 1479485988) student 9В
 
-204. @Mi_Alsushka Миграновп Алсу (chat_id: 6145078313, telegram_id: 6145078313)
+204. @dsch_nayka007 Щербакова Дарья (chat_id: 1881908358, tg_id: 1881908358) student 9В
 
-205. @None Адигамова Лика (chat_id: 6167625386, telegram_id: 6167625386)
+205. @Vamatr Столповский Мирослав (chat_id: 5295435532, tg_id: 5295435532) student 9В
 
-206. @None Файзуллин Назар (chat_id: 6248785370, telegram_id: 6248785370)
+206. @nastyuhar Харитонова Анастасия (chat_id: 1020127163, tg_id: 1020127163) student 9Г
 
-207. @msk54 Бурлаков Илья (chat_id: 6254250076, telegram_id: 6254250076)
+207. @Lev_g00 Гирин Лев (chat_id: 1378655162, tg_id: 1378655162) student 9Г
 
-208. @None Кузьмин Севастьян (chat_id: 6311470903, telegram_id: 6311470903)
+208. @Soloviev_Maxim Соловьев Максим (chat_id: 2029279467, tg_id: 2029279467) student 9Г
 
-209. @zxclavushka Нифантов Вячеслав (chat_id: 6378032316, telegram_id: 6378032316)
+209. @None Власов Алексей (chat_id: 5942525392, tg_id: 5942525392) student 9Г
 
-210. @yakunin_sergey Богданова Ксения (chat_id: 6443448479, telegram_id: 6443448479)
+210. @mishapchits Шапчиц Михаил (chat_id: 1259929602, tg_id: 1259929602) student 9Д
 
-211. @None Алтунина Вера (chat_id: 6671924047, telegram_id: 6671924047)
+211. @KaraiHatake Кобзева Анна (chat_id: 1444684675, tg_id: 1444684675) student 9Д
 
-212. @None 1 1 (chat_id: 6675631944, telegram_id: 6675631944)
+212. @kolysheev Колышев Евгений (chat_id: 1699535350, tg_id: 1699535350) student 9Д
+
+213. @anxious_toad Шилова Анна (chat_id: 1903957090, tg_id: 1903957090) student 9Д
+
+214. @alekseyepif Епифанов Алексей (chat_id: 1933227590, tg_id: 1933227590) student 9Д
+
+215. @Patrikpubg Орлова Ольга (chat_id: 2064477319, tg_id: 2064477319) student 9Д
+
+216. @Savelev_pa Савельев Павел Андреевич (chat_id: 59383993, tg_id: 59383993) teacher None
+
+217. @grohoret Седов Григорий Константинович (chat_id: 168466855, tg_id: 168466855) teacher None
+
+218. @nadjagorjunowa Горюнова Надежда Владимировна (chat_id: 272728840, tg_id: 272728840) teacher None
+
+219. @None Иванова Светлана Эдуардовна (chat_id: 299290553, tg_id: 299290553) teacher None
+
+220. @None Рукк Мария Ференцевна (chat_id: 370037891, tg_id: 370037891) teacher None
+
+221. @knelaev Нелаев Константин Анатольевич (chat_id: 426992255, tg_id: 426992255) teacher None
+
+222. @alex_malakhov Малахов Александр Игоревич (chat_id: 494248851, tg_id: 494248851) teacher None
+
+223. @Ko3erog Шилак Владимир Николаевич (chat_id: 773772482, tg_id: 773772482) teacher None
+
+224. @Worstery Краснобаев Владимир Дмитриевич (chat_id: 976287408, tg_id: 976287408) teacher None
+
+225. @VeseliyDoter Краснобаев Владимир Дмитриевич (chat_id: 1056717252, tg_id: 1056717252) teacher None
+
+226. @mfroga Фрог Марина Мобаркшаевна (chat_id: 1131368354, tg_id: 1131368354) teacher None
+
+227. @Reshatych Вахитов Руслан Ришатович (chat_id: 1193227253, tg_id: 1193227253) teacher None
+
+228. @stupidlucy Клюева Марина Борисовна (chat_id: 1248004640, tg_id: 1248004640) teacher None
+
+229. @ARAB12345678910 Пылев Иван Сегреевич (chat_id: 1264646808, tg_id: 1264646808) teacher None
+
+230. @None Соколова Юлия Геннадьевна (chat_id: 5104117545, tg_id: 5104117545) teacher None
+
+231. @None Калабухова Эльвира Юрьевна (chat_id: 5110683683, tg_id: 5110683683) teacher None
+
+232. @None Межевич Сергей Дмитриевич (chat_id: 5222689017, tg_id: 5222689017) teacher None
+
+233. @Ladneva_Evgenia Феклистов Игорь Игоревич (chat_id: 6064716201, tg_id: 6064716201) teacher None
 
