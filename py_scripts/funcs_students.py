@@ -8,6 +8,7 @@ from py_scripts.consts import path_to_timetables_csv
 from sqlalchemy_scripts.user_to_extra import Extra, Extra_to_User
 from telegram.ext import ContextTypes
 from telegram import Update
+import re
 
 
 async def extract_timetable_for_day_6_9(day, class_):
@@ -97,29 +98,13 @@ async def create_list_of_edits_lessons_for_student(df: pd.DataFrame, student_cla
     res = []
     for j in df.index.values:
         number_of_lesson = " ".join(df.iloc[j]['Урок №'].split('\n'))
+        if not " ".join(df.iloc[j]['Класс'].split('\n')):
+            continue
 
-        class_copy = ''
-        allowed_symbols = 'АБВГД67891011\n'
-        for elem in df.iloc[j]['Класс'].upper():
-            if elem not in allowed_symbols:
-                continue
-            class_copy += elem
-        class_copy = class_copy.strip(' ').strip('\n').strip(' ').strip('\n').split('\n')
-        flag = None
-        if len(class_copy) != 1:
-            for elem in class_copy:
-                if student_class[:-1] in elem and student_class[-1] in elem:
-                    flag = True
-                    break
-                if elem.isdigit() and student_class[:-1] in elem:
-                    flag = True
-                    break
-        else:
-            class_copy = class_copy[0]
-            if student_class[:-1] in class_copy and student_class[-1] in class_copy:
-                flag = True
-            if class_copy.isdigit() and student_class[:-1] in class_copy:
-                flag = True
+        pattern = '[16789]+[01]*[а-дА-Д]*'
+        r_ = re.findall(pattern, " ".join(df.iloc[j]['Класс'].split('\n')))
+        print(r_)
+        flag = student_class in r_ or student_class[:-1] in r_
 
         if 'Замены' in df.columns.values:
             if df.iloc[j]['Урок №'] == '' and j == 0:
