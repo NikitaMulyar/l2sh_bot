@@ -309,7 +309,7 @@ async def save_edits_in_timetable_csv(date):
                 for k in range(len(table)):
                     if table[k].count(None) == 2:
                         table[k] = [table[k][0], '', '', table[k][1]]
-            indexes = df.index.values
+            """indexes = df.index.values
             if 'Замены' in df.columns.values:
                 curr_ind = indexes[-1] + 1
                 for line in indexes:
@@ -351,7 +351,7 @@ async def save_edits_in_timetable_csv(date):
                         df.at[line, 'Замены'] = zameny[0]
                         for i in range(1, len(urok_num)):
                             df.loc[curr_ind] = [classes[i], urok_num[i], urok_po_rasp[i], zameny[i]]
-                            curr_ind += 1
+                            curr_ind += 1"""
             dfs.append(df)
     pdf.close()
     try:
