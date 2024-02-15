@@ -103,7 +103,6 @@ async def create_list_of_edits_lessons_for_student(df: pd.DataFrame, student_cla
 
         pattern = '[16789]+[01]*[а-дА-Д]*'
         r_ = re.findall(pattern, " ".join(df.iloc[j]['Класс'].split('\n')))
-        print(r_)
         flag = student_class in r_ or student_class[:-1] in r_
 
         if 'Замены' in df.columns.values:
