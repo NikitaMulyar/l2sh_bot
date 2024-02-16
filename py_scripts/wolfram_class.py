@@ -8,12 +8,12 @@ from py_scripts.config import app_id
 
 
 class WolframClient:
-    client = wolframalpha.Client(app_id)
     step_request = 1
 
     async def get_response(self, req):
+        client = wolframalpha.Client(app_id)
         session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
-        res = await self.client.query(req)
+        res = await client.query(req)
         if not res.get('pod'):
             await session.close()
             return []
