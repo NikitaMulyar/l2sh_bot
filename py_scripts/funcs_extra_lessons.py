@@ -1,33 +1,37 @@
-from py_scripts.funcs_back import db_sess, prepare_for_markdown, timetable_kbrd
+from py_scripts.funcs_back import prepare_for_markdown, timetable_kbrd
 from datetime import datetime
 from sqlalchemy_scripts.user_to_extra import Extra_to_User, Extra
 from py_scripts.consts import days_from_short_text_to_num, days_from_num_to_full_text_formatted, \
     days_from_num_to_full_text, days_from_short_text_to_full
 from telegram import Update
 from telegram.ext import ContextTypes
+from sqlalchemy_scripts import db_session
 
 
 def extra_lessons_return(id, button_text):  # Кружки на день для ученика
     day = days_from_short_text_to_full[button_text]
+    db_sess = db_session.create_session()
     extra_lessons = db_sess.query(Extra_to_User).filter(Extra_to_User.user_id == id).all()
     full_text = []
     for extra_lesson in extra_lessons:
         extra = db_sess.query(Extra).filter(Extra.id == extra_lesson.extra_id, Extra.day == day).first()
         if extra:
             text = f"⤵️\n📚 {extra.title} 📚\n"
-            text += f"🕝 {extra.time} 🕝\n"
+            text = f"{text}🕝 {extra.time} 🕝\n"
             if extra.teacher.count(".") > 1:
-                text += f'Учитель: {extra.teacher}\n'
+                text = f'{text}Учитель: {extra.teacher}\n'
             place = f"{extra.place} кабинет"
             if "зал" in extra.place or "online" in extra.place:
                 place = extra.place
-            text += f'🏫 Место проведения: {place} 🏫\n'
+            text = f'{text}🏫 Место проведения: {place} 🏫\n'
             full_text.append(text)
+    db_sess.close()
     return "".join(full_text)
 
 
 def extra_lessons_teachers_return(button_text, surname):  # Кружки на день для учителя
     day = days_from_short_text_to_full[button_text]
+    db_sess = db_session.create_session()
     extra_lessons = db_sess.query(Extra).filter(Extra.teacher.like(f'{surname}%'), day == Extra.day).all()
     full_text = []
     extra_was = []
@@ -41,13 +45,13 @@ def extra_lessons_teachers_return(button_text, surname):  # Кружки на д
             if str(el.grade) not in classes:
                 classes.append(str(el.grade))
         extra_was.append(extra_lesson.title)
-        text = f"⤵️\n📚 {extra_lesson.title} ({'/'.join(classes)} класс)📚\n"
-        text += f"🕝 {extra_lesson.time} 🕝\n"
+        text = f"⤵️\n📚 {extra_lesson.title} ({'/'.join(classes)} класс)📚\n🕝 {extra_lesson.time} 🕝\n"
         place = f"{extra_lesson.place} кабинет"
         if "зал" in extra_lesson.place or "online" in extra_lesson.place:
             place = extra_lesson.place
-        text += f'🏫 Место проведения: {place} 🏫\n'
+        text = f'{text}🏫 Место проведения: {place} 🏫\n'
         full_text.append(text)
+    db_sess.close()
     return "".join(full_text)
 
 
@@ -61,13 +65,15 @@ async def extra_lessons_for_all_days(update: Update, id, teacher=False, surname=
             extra_text = extra_lessons_return(id, day)
         text = prepare_for_markdown(extra_text)
         if text != "":
-            text_res += f'_*{days_from_num_to_full_text[day_number]}*_\n{text}\n'
+            text_res = f'{text_res}_*{days_from_num_to_full_text[day_number]}*_\n{text}\n'
         if len(text_res) > 3000:
             list_text_res.append(text_res)
             text_res = ""
     list_text_res.append(text_res)
     if not list_text_res[0]:
-        dont_have_extra = "*Вы еще не записывались на кружки\.*"
+        dont_have_extra = "⚠️ *Вы еще не записывались на кружки*"
+        if teacher:
+            dont_have_extra = "⚠️ *Вы не проводите кружки*"
         await update.message.reply_text(dont_have_extra, reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
         return
     for el in list_text_res:

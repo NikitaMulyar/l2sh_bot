@@ -2,9 +2,10 @@ import random
 import hashlib
 from sqlalchemy_scripts.users import User
 import logging
-from py_scripts.funcs_back import timetable_kbrd, db_sess, prepare_for_markdown, check_busy
+from py_scripts.funcs_back import timetable_kbrd, prepare_for_markdown, check_busy
 from telegram.ext import ContextTypes
 from telegram import Update
+from sqlalchemy_scripts import db_session
 
 
 class Reset_Class:
@@ -13,13 +14,16 @@ class Reset_Class:
         if is_busy:
             return
         chat_id = update.message.chat.id
+        db_sess = db_session.create_session()
         author = db_sess.query(User).filter(User.chat_id == chat_id).first()
         if not author:
-            await update.message.reply_text(f'Нет доступа!')
+            db_sess.close()
+            await update.message.reply_text('⚠️ *Нет доступа\!*', parse_mode='MarkdownV2')
             return
         if author.telegram_id != 562532936 and author.telegram_id != 871689175:
             if not author.allow_changing:
-                await update.message.reply_text(f'Нет доступа!')
+                db_sess.close()
+                await update.message.reply_text('⚠️ *Нет доступа\!*', parse_mode='MarkdownV2')
                 return
         del_adm = db_sess.query(User).filter(User.allow_changing == 0, User.role == 'admin').all()
         for item in del_adm:
@@ -29,7 +33,7 @@ class Reset_Class:
         for user in del_adm:
             try:
                 await context.bot.send_message(user.chat_id,
-                                       "*Произошёл сброс пароля и очистка всех администраторов из базы данных\.\n"
+                                       "*Админский пароль был сброшен\. Все админы удалены из базы данных\.\n"
                                        "Обратитесь в поддержку за новым паролем*\: \/support",
                                        parse_mode='MarkdownV2')
             except Exception:
@@ -42,7 +46,7 @@ class Reset_Class:
             msg = await context.bot.send_message(user.chat_id, prepare_for_markdown(inform_about_changing + '\n') +
                                    f"Новый пароль\: `{passw}`",  parse_mode='MarkdownV2')
             await msg.pin()
-        t = f"Произошёл сброс пароля и очистка всех администраторов из базы данных\.\nНовый пароль\: `{passw}`"
+        t = f"Админский пароль был сброшен\. Все админы удалены из базы данных\.\nНовый пароль\: `{passw}`"
         logging.warning(inform_about_changing)
         await update.message.reply_text(t, reply_markup=await timetable_kbrd(), parse_mode='MarkdownV2')
         for user in db_sess.query(User).filter(User.allow_changing == 1).all():
@@ -51,21 +55,26 @@ class Reset_Class:
                 await msg.pin()
             except Exception:
                 continue
+        db_sess.close()
 
     async def get_info_about_bot(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
             return
         chat_id = update.message.chat.id
+        db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
         if not user:
-            await update.message.reply_text(f'Нет доступа!')
+            db_sess.close()
+            await update.message.reply_text('⚠️ *Нет доступа\!*', parse_mode='MarkdownV2')
             return
         if user.telegram_id != 562532936 and user.telegram_id != 871689175:
             if user.role != 'admin':
-                await update.message.reply_text(f'Нет доступа!')
+                db_sess.close()
+                await update.message.reply_text('⚠️ *Нет доступа\!*', parse_mode='MarkdownV2')
                 return
         all_users = db_sess.query(User).all()
+        db_sess.close()
         all_users = sorted(all_users, key=lambda t: (t.role, t.grade))
         with open('db_copy.txt', mode='w', encoding='utf-8') as f:
             i = 1

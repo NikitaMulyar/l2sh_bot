@@ -20,13 +20,15 @@ def global_init(db_file):
     conn_str = f'sqlite:///{db_file.strip()}?check_same_thread=False'
     print(f"Подключение к базе данных по адресу {conn_str}")
 
-    engine = sa.create_engine(conn_str, echo=False, pool_timeout=60)
-    __factory = orm.sessionmaker(bind=engine)()
+    engine = sa.create_engine(conn_str, echo=False, pool_timeout=60, pool_size=100,
+                              max_overflow=200)
+    __factory = orm.sessionmaker(bind=engine)
 
     from . import __all_models
 
     SqlAlchemyBase.metadata.create_all(engine)
 
+
 def create_session() -> Session:
     global __factory
-    return __factory
+    return __factory()

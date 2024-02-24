@@ -2,8 +2,9 @@ from telegram.ext import ConversationHandler, ContextTypes
 from telegram import ReplyKeyboardMarkup, Update
 from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
-from py_scripts.funcs_back import db_sess, timetable_kbrd, put_to_db, check_busy
+from py_scripts.funcs_back import timetable_kbrd, put_to_db, check_busy, prepare_for_markdown
 from py_scripts.consts import COMMANDS
+from sqlalchemy_scripts import db_session
 
 
 class SetTimetable:
@@ -26,8 +27,10 @@ class SetTimetable:
             return ConversationHandler.END
         context.user_data['in_conversation'] = True
         context.user_data['DIALOG_CMD'] = '/' + COMMANDS['start']
-        chat_id = update.message.chat.id
+        chat_id = update.message.chat_id
+        db_sess = db_session.create_session()
         if db_sess.query(User).filter(User.chat_id == chat_id).first():
+            db_sess.close()
             await update.message.reply_text(
                 'Здравствуйте! Я вижу, что Вы уже есть в системе.\n'
                 'Можете пользоваться ботом.\n'
@@ -36,6 +39,7 @@ class SetTimetable:
             context.user_data['DIALOG_CMD'] = None
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
+        db_sess.close()
         await update.message.reply_text(
             'Здравствуйте! В этом боте Вы можете узнавать расписание на день!\n'
             'Сначала выберите свою должность/класс.\n'
@@ -45,11 +49,14 @@ class SetTimetable:
 
     async def get_class(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text not in self.classes:
-            await update.message.reply_text(f'Указан неверный класс "{update.message.text}"',
-                                            reply_markup=await self.classes_buttons())
+            await update.message.reply_text(f'⚠️ *Указан неверный класс \"{prepare_for_markdown(update.message.text)}\"*',
+                                            reply_markup=await self.classes_buttons(),
+                                            parse_mode='MarkdownV2')
             return self.step_class
-        chat_id = update.message.chat.id
+        chat_id = update.message.chat_id
+        db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
+        db_sess.close()
         if user and update.message.text == 'Админ' and user.role != "admin":
             context.user_data['INFO']['Class'] = "admin"
             await update.message.reply_text('Введите пароль:')
@@ -64,34 +71,35 @@ class SetTimetable:
             context.user_data['INFO']['Class'] = "admin"
         else:
             context.user_data['INFO']['Class'] = update.message.text
-        await update.message.reply_text(f'Укажите свою фамилию (пример: Некрасов)')
+        await update.message.reply_text('Укажите свою фамилию (пример: Некрасов)')
         return self.step_familia
 
     async def get_psw(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not check_hash(update.message.text):
-            await update.message.reply_text('Неверный пароль. Настройка данных прервана. '
-                                            f'Начать сначала: {self.command}',
-                                            reply_markup=await timetable_kbrd())
+            await update.message.reply_text(f'⚠️ *Неверный пароль\. Настройка данных прервана\. '
+                                            f'Начать сначала\: {prepare_for_markdown(self.command)}*',
+                                            reply_markup=await timetable_kbrd(),
+                                            parse_mode='MarkdownV2')
             context.user_data['in_conversation'] = False
             context.user_data['INFO'] = dict()
             context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
-        await update.message.reply_text(f'Укажите свою фамилию (пример: Некрасов)')
+        await update.message.reply_text('Укажите свою фамилию (пример: Некрасов)')
         return self.step_familia
 
     async def get_familia(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Familia'] = update.message.text.replace("ё", "е")
-        await update.message.reply_text(f'Укажите свое ПОЛНОЕ имя (пример: Николай)')
+        await update.message.reply_text('Укажите свое ПОЛНОЕ имя (пример: Николай)')
         return self.step_name
 
     async def get_name(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Name'] = update.message.text.replace("ё", "е")
         if context.user_data['INFO']['Class'] == 'admin' or context.user_data['INFO']['Class'] == 'teacher':
-            await update.message.reply_text(f'Напишите, пожалуйста, свое отчество')
+            await update.message.reply_text('Напишите, пожалуйста, свое отчество')
             return self.step_third_name
         put_to_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
                   'student', update.message.from_user.username, grade=context.user_data['INFO']['Class'])
-        await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
+        await update.message.reply_text('Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
@@ -103,7 +111,7 @@ class SetTimetable:
         put_to_db(update, context.user_data['INFO']['Name'] + ' ' +
                   context.user_data['INFO']['Otchestvo'], context.user_data['INFO']['Familia'],
                   context.user_data['INFO']['Class'], update.message.from_user.username)
-        await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом',
+        await update.message.reply_text('Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None

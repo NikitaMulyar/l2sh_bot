@@ -28,7 +28,8 @@ class GameMillioner:
         })
         res = await res.json(content_type=None)
         if not res['ok']:
-            await update.message.reply_text('Сервис временно недоступен. Попробуйте позже.')
+            await update.message.reply_text('⚠️ *Сервис временно недоступен\. Попробуйте позже*',
+                                            parse_mode='MarkdownV2')
             return
         ans = res['data'][0]['answers']
         correct = ans[0]

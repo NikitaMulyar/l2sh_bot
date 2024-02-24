@@ -1,5 +1,5 @@
 from telegram import ReplyKeyboardMarkup, Update
-from py_scripts.funcs_back import timetable_kbrd, throttle2, check_busy
+from py_scripts.funcs_back import timetable_kbrd, throttle2, check_busy, prepare_for_markdown
 from py_scripts.consts import COMMANDS
 from telegram.ext import ConversationHandler, ContextTypes
 from py_scripts.funcs_students import get_standard_timetable_with_edits_for_student
@@ -29,7 +29,7 @@ class CheckStudentTT:
         if is_busy:
             return ConversationHandler.END
         context.user_data['in_conversation'] = True
-        context.user_data['DIALOG_CMD'] = '/' + COMMANDS['check']
+        context.user_data['DIALOG_CMD'] = "".join(['/', COMMANDS['check']])
         await update.message.reply_text('С помощью этой команды можно быстро посмотреть расписание '
                                         'какого-то класса, ученика или учителя. Выберите из списка интересуемый класс.\n'
                                         'Прерваться: /end_check',
@@ -39,8 +39,9 @@ class CheckStudentTT:
 
     async def get_class(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.text not in self.classes:
-            await update.message.reply_text(f'Указан неверный класс "{update.message.text}"',
-                                            reply_markup=await self.classes_buttons())
+            await update.message.reply_text(f'⚠️ *Указан неверный класс \"{prepare_for_markdown(update.message.text)}\"*',
+                                            reply_markup=await self.classes_buttons(),
+                                            parse_mode='MarkdownV2')
             return self.step_class
         context.user_data['INFO']['Class'] = update.message.text
         if "6" <= update.message.text[:-1] <= "9":
@@ -77,8 +78,7 @@ class CheckStudentTT:
             return self.step_date
         context.user_data['INFO']['Day'] = update.message.text
         if context.user_data['INFO']['Class'] == 'Учитель':
-            send_text = await get_standard_timetable_with_edits_for_teacher(context,
-                                                                            context.user_data['INFO']['Day'],
+            send_text = await get_standard_timetable_with_edits_for_teacher(context.user_data['INFO']['Day'],
                                                                             context.user_data['INFO']['Name'],
                                                                             context.user_data['INFO']['Familia'])
             if len(send_text) == 1:
@@ -96,8 +96,7 @@ class CheckStudentTT:
                     await update.message.reply_text(scnd, parse_mode='MarkdownV2')
             await extra_send_day(update, surname=context.user_data['INFO']['Familia'], flag=True, no_kbrd=True)
         else:
-            send_text = await get_standard_timetable_with_edits_for_student(context,
-                                            context.user_data['INFO']['Day'],
+            send_text = await get_standard_timetable_with_edits_for_student(context.user_data['INFO']['Day'],
                                             context.user_data['INFO']['Class'],
                                             context.user_data['INFO']['Name'],
                                             context.user_data['INFO']['Familia'])

@@ -59,7 +59,8 @@ class WolframClient:
         return arr
 
     async def send_response_(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
-        msg = await update.message.reply_text(f'⏳Запрос принят. Время ожидания 5-10 секунд...')
+        msg = await update.message.reply_text(f'⏳ *Запрос принят\. Время ожидания \- 5\-10 секунд*',
+                                              parse_mode='MarkdownV2')
         res = await self.get_response(text)
         await context.bot.delete_message(update.message.chat.id, msg.id)
         if not res:

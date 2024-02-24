@@ -14,15 +14,12 @@ from py_scripts.consts import path_to_changes
 import pdfplumber
 
 
-db_session.global_init("database/telegram_bot.db")
-db_sess = db_session.create_session()
-
-
 async def check_busy(update: Update, context: ContextTypes.DEFAULT_TYPE, flag=False):
     if context.user_data.get('in_conversation'):
         cmd = context.user_data.get("DIALOG_CMD")
         if cmd and not flag:
-            await update.message.reply_text(f'Сначала нужно завершить предыдущую цепочку команд: {cmd}')
+            await update.message.reply_text(f'⚠️ *Сначала нужно завершить предыдущую цепочку команд\: {prepare_for_markdown(cmd)}*',
+                                            parse_mode='MarkdownV2')
         return True
     return False
 
@@ -69,8 +66,8 @@ async def timetable_kbrd():
     btn = KeyboardButton('📚Ближайшее расписание📚')
     btn3 = KeyboardButton('🎨Мои кружки🎨')
     arr = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
-    inten = KeyboardButton('⚡️Интенсивы⚡️')
-    kbd = ReplyKeyboardMarkup([[btn], arr, [inten], [btn3]], resize_keyboard=True)
+    #inten = KeyboardButton('⚡️Интенсивы⚡️')
+    kbd = ReplyKeyboardMarkup([[btn], arr, [btn3]], resize_keyboard=True)
     return kbd
 
 
@@ -84,7 +81,7 @@ async def extra_school_timetable_kbrd():
 
 async def intensive_kbrd():
     with open('intensives.txt', mode='r', encoding='utf-8') as f:
-        subjects = list(set(f.read().split('\n')[:-1]))
+        subjects = set((f.read()).split('\n')[:-1])
     f.close()
     kbd = ReplyKeyboardMarkup([[i] for i in subjects], resize_keyboard=True)
     return kbd
@@ -101,8 +98,9 @@ def prepare_for_markdown(text):
 
 
 def put_to_db(update: Update, name, surname, role, username, grade=None):
+    db_sess = db_session.create_session()
     user__id = update.message.from_user.id
-    chat_id = update.message.chat.id
+    chat_id = update.message.chat_id
     num = grade
     if role != 'admin' and role != 'teacher':
         num = num[:-1]
@@ -111,10 +109,12 @@ def put_to_db(update: Update, name, surname, role, username, grade=None):
                     grade=grade, number=num, telegram_tag=username)
         db_sess.add(user)
         db_sess.commit()
+    db_sess.close()
 
 
 def update_db(update: Update, name, surname, role, username, grade=None):
-    chat_id = update.message.chat.id
+    db_sess = db_session.create_session()
+    chat_id = update.message.chat_id
     user = db_sess.query(User).filter(User.chat_id == chat_id).first()
     user.surname = surname
     user.name = name
@@ -126,6 +126,7 @@ def update_db(update: Update, name, surname, role, username, grade=None):
     else:
         user.number = grade
     db_sess.commit()
+    db_sess.close()
 
 
 async def save_edits_in_timetable_csv(date):
@@ -309,49 +310,6 @@ async def save_edits_in_timetable_csv(date):
                 for k in range(len(table)):
                     if table[k].count(None) == 2:
                         table[k] = [table[k][0], '', '', table[k][1]]
-            """indexes = df.index.values
-            if 'Замены' in df.columns.values:
-                curr_ind = indexes[-1] + 1
-                for line in indexes:
-                    if line == 0:
-                        continue
-                    classes = df.loc[line]['Класс'].split('\n')
-                    urok_num = df.loc[line]['Урок №'].split('\n')
-                    urok_po_rasp = df.loc[line]['Урок по расписанию'].split('\n')
-                    zameny = df.loc[line]['Замены'].split('\n')
-                    summ = 0
-                    for i in ['6', '7', '8', '9', '10', '11']:
-                        for cl in classes:
-                            summ += cl.count(i)
-                    if summ > 1:
-                        urok_num = urok_num * summ
-                        zameny = zameny * summ
-                        df.at[line, 'Класс'] = classes[0]
-                        df.at[line, 'Урок по расписанию'] = urok_po_rasp[0]
-                        df.at[line, 'Урок №'] = urok_num[0]
-                        df.at[line, 'Замены'] = zameny[0]
-                        for i in range(1, summ):
-                            df.loc[curr_ind] = [classes[i], urok_num[i], urok_po_rasp[i], zameny[i]]
-                            curr_ind += 1
-                    elif len(urok_num) != 1:
-                        classes = classes * len(urok_num)
-                        zameny_ = "\n".join(zameny)
-                        lesson, teacher_ = zameny_.split('//')
-                        lesson = lesson.split('\n')
-                        teacher_ = teacher_.split('\n')
-                        teacher = []
-                        zameny = []
-                        for i in range(0, len(teacher_), 2):
-                            teacher.append(f"{teacher_[i]}\n{teacher_[i + 1]}")
-                        for i in range(len(urok_num)):
-                            zameny.append(f"{lesson[i]}//{teacher[i]}")
-                        df.at[line, 'Класс'] = classes[0]
-                        df.at[line, 'Урок по расписанию'] = urok_po_rasp[0]
-                        df.at[line, 'Урок №'] = urok_num[0]
-                        df.at[line, 'Замены'] = zameny[0]
-                        for i in range(1, len(urok_num)):
-                            df.loc[curr_ind] = [classes[i], urok_num[i], urok_po_rasp[i], zameny[i]]
-                            curr_ind += 1"""
             dfs.append(df)
     pdf.close()
     try:
@@ -394,7 +352,7 @@ async def get_intensive(subject, teacher=False, parallel=10, surname='Бибик
     month_ = str(time_2.month).rjust(2, '0')
     tomorrow_file = f'changes_tt/intensive_{subject}_{day_}.{month_}.{time_2.year}.csv'
     if not (os.path.exists(today_file) or os.path.exists(tomorrow_file)):
-        return f'В ближайшее время у Вас нет интенсивов по предмету {prepare_for_markdown(subject)}\.'
+        return f'*В ближайшее время у Вас нет интенсивов по предмету {prepare_for_markdown(subject)}\.*'
     today_text = ''
     tomorrow_text = ''
     if os.path.exists(today_file):
@@ -435,48 +393,24 @@ async def get_intensive(subject, teacher=False, parallel=10, surname='Бибик
                           f'*{prepare_for_markdown(subject)}*\n\n') + tomorrow_text + '\n\n'
     res = today_text + tomorrow_text
     if not res:
-        return f'В ближайшее время у Вас нет интенсивов по предмету {prepare_for_markdown(subject)}\.'
+        return f'*В ближайшее время у Вас нет интенсивов по предмету {prepare_for_markdown(subject)}\.*'
     return res
 
 
-async def get_edits_in_timetable(next_day_tt):
+async def get_edits_in_timetable(date):
     # filename format: DD.MM.YYYY
-    time_ = datetime.now()
-    if next_day_tt and time_.weekday() == 5:
-        time_ = time_ + timedelta(days=1)
-        next_day_tt = '2DAYS'
-    day_ = str(time_.day).rjust(2, '0')
-    month_ = str(time_.month).rjust(2, '0')
-    today_file1 = f'{day_}.{month_}.{time_.year}_lessons.csv'
-    today_file2 = f'{day_}.{month_}.{time_.year}_cabinets.csv'
-    time_2 = time_ + timedelta(days=1)
-    day_ = str(time_2.day).rjust(2, '0')
-    month_ = str(time_2.month).rjust(2, '0')
-    tomorrow_file1 = f'{day_}.{month_}.{time_2.year}_lessons.csv'
-    tomorrow_file2 = f'{day_}.{month_}.{time_2.year}_cabinets.csv'
+    file1 = f'{date}_lessons.csv'
+    file2 = f'{date}_cabinets.csv'
 
-    if next_day_tt:
-        if not (os.path.exists(path_to_changes + tomorrow_file1) or
-                os.path.exists(path_to_changes + tomorrow_file2)):
-            # Файла с изменениями нет
-            return [], ''
-    else:
-        if not (os.path.exists(path_to_changes + today_file1) or
-                os.path.exists(path_to_changes + today_file2)):
-            # Файла с изменениями нет
-            return [], ''
+    if not (os.path.exists(path_to_changes + file1) or
+            os.path.exists(path_to_changes + file2)):
+        # Файла с изменениями нет
+        return [], ''
 
-    if not next_day_tt:
-        day = "*Изменения на сегодня*"
-        path_1 = path_to_changes + today_file1
-        path_2 = path_to_changes + today_file2
-    else:
-        if next_day_tt == '2DAYS':
-            day = "*Изменения на послезавтра*"
-        else:
-            day = "*Изменения на завтра*"
-        path_1 = path_to_changes + tomorrow_file1
-        path_2 = path_to_changes + tomorrow_file2
+    day = f"*Изменения на {prepare_for_markdown(date)}*"
+    path_1 = path_to_changes + file1
+    path_2 = path_to_changes + file2
+
     day = prepare_for_markdown('🔔') + day + prepare_for_markdown('🔔\n')
     dfs = []
     if os.path.exists(path_1):
