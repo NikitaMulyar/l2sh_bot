@@ -268,22 +268,22 @@ async def extract_timetable_for_teachers(updating=False):
 
     pdf = pdfplumber.open(path_to_timetables + 'teachers.pdf')
     TOTAL_PAGES = len(pdf.pages)
-    PARTS = 4
+    PARTS = 3
     k = TOTAL_PAGES // PARTS
     intervals = [(k * i, k * (i + 1)) for i in range(PARTS)]
     intervals[-1] = (k * (PARTS - 1), TOTAL_PAGES)
     p1 = Process(target=partition_teachers_data, args=(*intervals[0],), daemon=True)
     p2 = Process(target=partition_teachers_data, args=(*intervals[1],), daemon=True)
     p3 = Process(target=partition_teachers_data, args=(*intervals[2],), daemon=True)
-    p4 = Process(target=partition_teachers_data, args=(*intervals[3],), daemon=True)
+    #p4 = Process(target=partition_teachers_data, args=(*intervals[3],), daemon=True)
     p1.start()
     p2.start()
     p3.start()
-    p4.start()
+    #p4.start()
     p1.join()
     p2.join()
     p3.join()
-    p4.join()
+    #p4.join()
 
     time_end = datetime.now()
 

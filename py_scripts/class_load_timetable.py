@@ -151,7 +151,7 @@ class LoadTimetables:
             context.user_data['filename'] = 'teachers'
         await file_info.download_to_drive(f"{path_to_timetables}{context.user_data['filename']}.pdf")
         msg_ = await update.message.reply_text('⏳ *Идет формирование расписаний в боте\. '
-                                               'Время ожидания \- 10\-20 секунд*', parse_mode='MarkdownV2')
+                                               'Время ожидания \- до 1 минуты*', parse_mode='MarkdownV2')
         try:
             if context.user_data['filename'] == '6-9':
                 await asyncio.gather(extract_timetable_for_students_6_9())
@@ -329,7 +329,7 @@ class LoadEditsTT:
         await file_info.download_to_drive(
             path_to_changes + f"{context.user_data['changes_date']}.pdf")
         msg_ = await update.message.reply_text('⏳ *Идет формирование изменений в боте\. '
-                                               'Время ожидания \- до 5 секунд*',
+                                               'Время ожидания \- до 10 секунд*',
                                                parse_mode='MarkdownV2')
         try:
             await save_edits_in_timetable_csv(context.user_data['changes_date'])
@@ -354,11 +354,14 @@ class LoadEditsTT:
             context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         await context.bot.delete_message(update.message.chat_id, msg_.id)
-
+        msg = await update.message.reply_text(
+            '⏳ *Бот уведомляет пользователей о новых изменениях\. Время ожидания \- до 1 минуты*',
+            parse_mode='MarkdownV2')
         notif_text = (f'❗️_*Уважаемые учителя и лицеисты\!*_\nВ боте появились изменения на '
                       f'{prepare_for_markdown(context.user_data["changes_date"])}\. Пожалуйста\, '
                       f'проверьте ваше расписание на эту дату\n\n')
         res = await write_about_edits(context, notif_text)
+        await context.bot.delete_message(msg.id)
         ind = 0
         prev_ = 0
         total_len = 0
