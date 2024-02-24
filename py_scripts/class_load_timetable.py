@@ -361,7 +361,7 @@ class LoadEditsTT:
                       f'{prepare_for_markdown(context.user_data["changes_date"])}\. Пожалуйста\, '
                       f'проверьте ваше расписание на эту дату\n\n')
         res = await write_about_edits(context, notif_text)
-        await context.bot.delete_message(msg.id)
+        await msg.delete()
         ind = 0
         prev_ = 0
         total_len = 0
