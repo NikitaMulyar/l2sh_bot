@@ -222,7 +222,7 @@ async def timetable_teacher_for_each_day(update: Update, context: ContextTypes.D
         t = "".join([title, '\n\n', t])
         await update.message.reply_text(t, parse_mode='MarkdownV2')
     else:
-        t = f'На {days_from_num_to_full_text_formatted[day]} у Вас нет уроков\.'
+        t = 'В ближайшие дни у Вас нет уроков\.'
         await update.message.reply_text(t, parse_mode='MarkdownV2')
 
 
