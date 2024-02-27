@@ -143,6 +143,7 @@ async def create_list_of_edits_lessons_for_student(df: pd.DataFrame, student_cla
 async def get_edits_for_student(student_class, date):
     result0 = []
     edits_in_tt, for_which_day = await get_edits_in_timetable(date)
+    title_added = False
     if len(edits_in_tt) != 0:
         for df in edits_in_tt:
             sorted_res = await create_list_of_edits_lessons_for_student(df, student_class)
@@ -165,7 +166,9 @@ async def get_edits_for_student(student_class, date):
                         f'{line[0]}{line[1]} урок(и): {line[2]} (учитель: {line[3]})'
                         f'\n(Урок по расписанию: {urok_po_rasp})\n\n'))
             if flag:
-                result0.append(for_which_day)
+                if not title_added:
+                    result0.append(for_which_day)
+                    title_added = True
                 result0.extend(result)
     return result0
 
@@ -181,7 +184,7 @@ async def get_standard_timetable_with_edits_for_student(day_name, student_class,
                                .strip(" "))
     if lessons.empty:
         return (f'⚠️ *Ученика \"{txt}\" не найдено или отсутствует расписание для '
-                f'{prepare_for_markdown(student_class)} класса*')
+                f'{prepare_for_markdown(student_class)} класса*',)
     app = f' для ученика {txt}'
     if not flag:
         app = ''
@@ -229,7 +232,8 @@ async def get_nearest_timetable_with_edits_for_student(update: Update, context: 
         class_txt = user.grade
 
         await update.message.reply_text(f'⚠️ *Ученика \"{txt}\" не найдено или отсутствует '
-                                        f'расписание для {prepare_for_markdown(class_txt)} класса*')
+                                        f'расписание для {prepare_for_markdown(class_txt)} класса*',
+                                        parse_mode='MarkdownV2')
         return
     title = f'*Расписание на _{days_from_num_to_full_text_formatted[day]}_*'
     t = ""

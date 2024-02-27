@@ -254,6 +254,7 @@ class LoadEditsTT:
     async def get_edits(self, date):
         result0 = []
         edits_in_tt, for_which_day = await get_edits_in_timetable(date)
+        title_added = False
         if len(edits_in_tt) != 0:
             for df in edits_in_tt:
                 sorted_res = await self.create_list_of_edits_lessons(df)
@@ -275,7 +276,9 @@ class LoadEditsTT:
                             f'{line[0]}{line[1]} урок(и): {line[2]} (учитель: {line[3]})'
                             f'\n(Урок по расписанию: {urok_po_rasp})\n\n')
                     result.append(curr.replace('ё', 'е'))
-                result0.append(for_which_day)
+                if not title_added:
+                    result0.append(for_which_day)
+                    title_added = True
                 result0.extend(result)
         return result0
 
