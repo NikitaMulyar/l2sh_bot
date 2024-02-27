@@ -51,6 +51,7 @@ async def create_list_of_edits_lessons_for_teacher(df: pd.DataFrame):
 async def get_edits_for_teacher(surname, name, date):
     result0 = []
     edits_in_tt, for_which_day = await get_edits_in_timetable(date)
+    title_added = False
     if len(edits_in_tt) != 0:
         for df in edits_in_tt:
             sorted_res = await create_list_of_edits_lessons_for_teacher(df)
@@ -77,7 +78,9 @@ async def get_edits_for_teacher(surname, name, date):
                     result.append(curr)
                     flag = True
             if flag:
-                result0.append(for_which_day)
+                if not title_added:
+                    result0.append(for_which_day)
+                    title_added = True
                 result0.extend(result)
     return result0
 
