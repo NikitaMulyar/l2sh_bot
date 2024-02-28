@@ -281,6 +281,7 @@ async def save_edits_in_timetable_csv(date):
             df = pd.DataFrame(table[1:], columns=table[0])
             df.dropna(how='all', axis=1, inplace=True)
             df = df.fillna('')
+            df.columns = [el.capitalize() if el else el for el in df.columns.values]
             df = df.rename(columns={None: 'Замена2', 'Замена': 'Замены',
                                     'Замена кабинета': 'Замены кабинетов',
                                     "№\nурока": "Урок №",
@@ -289,6 +290,7 @@ async def save_edits_in_timetable_csv(date):
                                     "№": "Урок №",
                                     "Урок": "Урок №",
                                     'Замена\nкабинета': 'Замены кабинетов',
+                                    'Кабинет': 'Замены кабинетов',
                                     'Заменакабинета': 'Замены кабинетов',
                                     'Урок по\nрасписанию': 'Урок по расписанию',
                                     'Урок и кабинет по\nрасписанию': 'Урок по расписанию',

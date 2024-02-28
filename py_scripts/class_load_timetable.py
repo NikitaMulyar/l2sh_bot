@@ -198,22 +198,30 @@ class LoadEditsTT:
     step_file = 3
 
     async def dates_buttons(self):
-        day1 = datetime.now()
-        if day1.weekday() == 6:
-            day1 = day1 + timedelta(days=1)
-            day2 = day1
-        elif day1.weekday() == 5:
-            day2 = day1 + timedelta(days=2)
+        today = datetime.now()
+        if today.weekday() == 6:
+            day1 = today + timedelta(days=1)
+            day2 = today + timedelta(days=2)
+            day3 = today + timedelta(days=3)
+        elif today.weekday() == 5:
+            day1 = today
+            day2 = today + timedelta(days=2)
+            day3 = today + timedelta(days=3)
+        elif today.weekday() == 4:
+            day1 = today
+            day2 = today + timedelta(days=1)
+            day3 = today + timedelta(days=3)
         else:
-            day2 = day1 + timedelta(days=1)
+            day1 = today
+            day2 = today + timedelta(days=1)
+            day3 = today + timedelta(days=2)
         day_1 = day1.isoformat().split('T')[0].split('-')
         day_2 = day2.isoformat().split('T')[0].split('-')
+        day_3 = day3.isoformat().split('T')[0].split('-')
         day1 = f"{day_1[2]}.{day_1[1]}.{day_1[0]}"
         day2 = f"{day_2[2]}.{day_2[1]}.{day_2[0]}"
-        if day1 == day2:
-            arr = [[day1]]
-        else:
-            arr = [[day1], [day2]]
+        day3 = f"{day_3[2]}.{day_3[1]}.{day_3[0]}"
+        arr = [[day1], [day2], [day3]]
         kbd = ReplyKeyboardMarkup(arr, resize_keyboard=True)
         return kbd
 
