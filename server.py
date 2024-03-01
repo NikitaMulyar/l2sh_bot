@@ -40,6 +40,27 @@ try:
         os.mkdir("timetables/")
     if not os.path.exists('timetables_csv/'):
         os.mkdir("timetables_csv/")
+
+    if not os.path.exists('bot_files/db_copy.txt'):
+        f = open('bot_files/db_copy.txt', mode='w', encoding='utf-8')
+        f.write('')
+        f.close()
+    if not os.path.exists('bot_files/intensives.txt'):
+        f = open('bot_files/intensives.txt', mode='w', encoding='utf-8')
+        f.write('')
+        f.close()
+    if not os.path.exists('bot_files/list_mailing.txt'):
+        f = open('bot_files/list_mailing.txt', mode='w', encoding='utf-8')
+        f.write('')
+        f.close()
+    if not os.path.exists('bot_files/list_new_timetable.txt'):
+        f = open('bot_files/list_new_timetable.txt', mode='w', encoding='utf-8')
+        f.write('')
+        f.close()
+    if not os.path.exists('bot_files/logs_copy.txt'):
+        f = open('bot_files/logs_copy.txt', mode='w', encoding='utf-8')
+        f.write('')
+        f.close()
 except Exception:
     pass
 

@@ -80,7 +80,7 @@ async def extra_school_timetable_kbrd():
 
 
 async def intensive_kbrd():
-    with open('intensives.txt', mode='r', encoding='utf-8') as f:
+    with open('bot_files/intensives.txt', mode='r', encoding='utf-8') as f:
         subjects = set((f.read()).split('\n')[:-1])
     f.close()
     kbd = ReplyKeyboardMarkup([[i] for i in subjects], resize_keyboard=True)
@@ -323,11 +323,7 @@ async def save_edits_in_timetable_csv(date):
         os.remove(path_to_changes + f'{date}_cabinets.csv')
     except Exception:
         pass
-    if not os.path.exists('intensives.txt'):
-        with open('intensives.txt', mode='w', encoding='utf-8') as f:
-            f.write('')
-        f.close()
-    with open('intensives.txt', mode='a', encoding='utf-8') as f:
+    with open('bot_files/intensives.txt', mode='a', encoding='utf-8') as f:
         for key, value in intensive_subjects_arr.items():
             df = pd.DataFrame(value[1:], columns=value[0])
             df.to_csv(path_to_changes + f'intensive_{key}_{date}.csv')

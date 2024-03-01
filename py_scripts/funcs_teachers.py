@@ -251,7 +251,7 @@ def partition_teachers_data(st, end):
         all_ = []
         for name, i in res:
             all_.append("".join([name, '\n']))
-        with open('list_new_timetable.txt', mode='a', encoding='utf-8') as f:
+        with open('bot_files/list_new_timetable.txt', mode='a', encoding='utf-8') as f:
             f.writelines(all_)
         f.close()
 

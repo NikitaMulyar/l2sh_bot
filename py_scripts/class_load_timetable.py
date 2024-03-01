@@ -29,10 +29,10 @@ async def write_about_new_timetable(context: ContextTypes.DEFAULT_TYPE):
             else:
                 didnt_send[e.__str__()] += 1
 
-    with open('list_new_timetable.txt', mode='r', encoding='utf-8') as f:
+    with open('bot_files/list_new_timetable.txt', mode='r', encoding='utf-8') as f:
         arr_to_write = set(f.read().split('\n'))
     f.close()
-    with open('list_new_timetable.txt', mode='w', encoding='utf-8') as f:
+    with open('bot_files/list_new_timetable.txt', mode='w', encoding='utf-8') as f:
         f.write('')
     f.close()
     db_sess = db_session.create_session()
@@ -119,7 +119,7 @@ class LoadTimetables:
         await update.message.reply_text('Прервать загрузку расписаний: /end_load')
         if user and user.role == "admin":
             await update.message.reply_text('Выберите нужный класс', reply_markup=await self.classes_buttons())
-            with open('list_new_timetable.txt', mode='w', encoding='utf-8') as f:
+            with open('bot_files/list_new_timetable.txt', mode='w', encoding='utf-8') as f:
                 f.write('')
             f.close()
             return self.step_class
@@ -134,7 +134,7 @@ class LoadTimetables:
             context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
         await update.message.reply_text('Выберите нужный класс', reply_markup=await self.classes_buttons())
-        with open('list_new_timetable.txt', mode='w', encoding='utf-8') as f:
+        with open('bot_files/list_new_timetable.txt', mode='w', encoding='utf-8') as f:
             f.write('')
         f.close()
         return self.step_class
@@ -176,6 +176,14 @@ class LoadTimetables:
         return self.step_class
 
     async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if not context.user_data.get('FILE_UPLOADED2') and not context.user_data.get('FILE_UPLOADED'):
+            await update.message.reply_text('⚠️ *Загрузка расписаний прервана\. Начать сначала\: \/load*',
+                parse_mode='MarkdownV2')
+            context.user_data['in_conversation'] = False
+            context.user_data['FILE_UPLOADED'] = False
+            context.user_data['FILE_UPLOADED2'] = False
+            context.user_data['DIALOG_CMD'] = None
+            return ConversationHandler.END
         msg = await update.message.reply_text('⏳ *Бот уведомляет пользователей о новом расписании\. Время ожидания \- до 1 минуты*',
                                               parse_mode='MarkdownV2')
         res = await write_about_new_timetable(context)

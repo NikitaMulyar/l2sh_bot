@@ -76,7 +76,7 @@ class Reset_Class:
         all_users = db_sess.query(User).all()
         db_sess.close()
         all_users = sorted(all_users, key=lambda t: (t.role, t.grade))
-        with open('db_copy.txt', mode='w', encoding='utf-8') as f:
+        with open('bot_files/db_copy.txt', mode='w', encoding='utf-8') as f:
             i = 1
             for user_ in all_users:
                 s = (f'{i}. @{user_.telegram_tag} {user_.surname} {user_.name} ' +
@@ -85,7 +85,7 @@ class Reset_Class:
                 i += 1
         f.close()
         await context.bot.send_document(chat_id, 'out/logs.log')
-        await context.bot.send_document(chat_id, 'db_copy.txt')
+        await context.bot.send_document(chat_id, 'bot_files/db_copy.txt')
         await context.bot.send_document(chat_id, 'database/telegram_bot.db')
 
 
