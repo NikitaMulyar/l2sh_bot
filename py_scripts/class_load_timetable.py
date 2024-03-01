@@ -32,6 +32,9 @@ async def write_about_new_timetable(context: ContextTypes.DEFAULT_TYPE):
     with open('list_new_timetable.txt', mode='r', encoding='utf-8') as f:
         arr_to_write = set(f.read().split('\n'))
     f.close()
+    with open('list_new_timetable.txt', mode='w', encoding='utf-8') as f:
+        f.write('')
+    f.close()
     db_sess = db_session.create_session()
     all_users = db_sess.query(User).all()
     db_sess.close()
