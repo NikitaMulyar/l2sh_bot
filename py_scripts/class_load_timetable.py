@@ -170,7 +170,7 @@ class LoadTimetables:
         except Exception as e:
             await context.bot.delete_message(update.message.chat_id, msg_.id)
             await update.message.reply_text(f'⚠️ *При попытке сформировать расписание произошла '
-                                            f'ошибка\: {prepare_for_markdown(e)}\. Проверьте формат файла*',
+                                            f'ошибка\: {prepare_for_markdown(e.__str__())}\. Проверьте формат файла*',
                                             parse_mode='MarkdownV2')
         await update.message.reply_text(f'Выберите нужный класс', reply_markup=await self.classes_buttons())
         return self.step_class
@@ -339,7 +339,7 @@ class LoadEditsTT:
         except Exception as e:
             await update.message.reply_text(f'⚠️ *Указана неверная дата '
                                             f'\"{prepare_for_markdown(update.message.text)}\"\. '
-                                            f'Ошибка\: {prepare_for_markdown(e)}*',
+                                            f'Ошибка\: {prepare_for_markdown(e.__str__())}*',
                                             parse_mode='MarkdownV2')
             return self.step_date
         context.user_data['changes_date'] = update.message.text
@@ -358,7 +358,7 @@ class LoadEditsTT:
         except Exception as e:
             await context.bot.delete_message(update.message.chat_id, msg_.id)
             await update.message.reply_text(f'⚠️ *При попытке сохранить файл с изменениями '
-                                            f'произошла ошибка\: {prepare_for_markdown(e)}\. '
+                                            f'произошла ошибка\: {prepare_for_markdown(e.__str__())}\. '
                                             f'Проверьте формат таблицы\. Начать сначала\: \/changes*',
                                             reply_markup=await timetable_kbrd(),
                                             parse_mode='MarkdownV2')
@@ -370,7 +370,7 @@ class LoadEditsTT:
         except Exception as e:
             await context.bot.delete_message(update.message.chat_id, msg_.id)
             await update.message.reply_text(
-                f'При попытке сформировать изменения произошла ошибка: {e}. Проверьте формат таблицы. Начать сначала: /changes',
+                f'При попытке сформировать изменения произошла ошибка: {e.__str__()}. Проверьте формат таблицы. Начать сначала: /changes',
                 reply_markup=await timetable_kbrd())
             context.user_data['in_conversation'] = False
             context.user_data['DIALOG_CMD'] = None

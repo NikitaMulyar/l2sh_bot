@@ -186,13 +186,12 @@ async def timetable_teacher_for_each_day(update: Update, context: ContextTypes.D
             if start <= (time_now.hour, time_now.minute) < end and not context.user_data['NEXT_DAY_TT']:
                 t = "".join([t, '_*', prepare_for_markdown(f'➡️ {txt_info}')])
             else:
-                t = "".join([t, prepare_for_markdown({txt_info})])
+                t = "".join([t, prepare_for_markdown(txt_info)])
             lesson_info = lesson_info.split('\n')
             lesson_name = lesson_info[1]
             classes = lesson_info[0]
             cabinet = lesson_info[2]
-            t = "".join([t, prepare_for_markdown(
-                f'{lesson_name} - каб. {cabinet}\n(классы: {classes})\n')])
+            t = "".join([t, prepare_for_markdown(f'{lesson_name} - каб. {cabinet}\n(классы: {classes})\n')])
             if start <= (time_now.hour, time_now.minute) < end and not context.user_data['NEXT_DAY_TT']:
                 t = f'{t}*_'
             t = f'{t}\n'

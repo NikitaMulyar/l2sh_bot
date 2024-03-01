@@ -96,7 +96,7 @@ async def make_mailing(update: Update, context: ContextTypes.DEFAULT_TYPE, step_
         return ConversationHandler.END
     except Exception as e:
         await update.message.reply_text(
-            f'⚠️ *Ошибка при форматировании текста \(ошибка\: {prepare_for_markdown(e)}\)\. Попробуйте исправить текст и '
+            f'⚠️ *Ошибка при форматировании текста \(ошибка\: {prepare_for_markdown(e.__str__())}\)\. Попробуйте исправить текст и '
             f'отправьте его заново\. ❗️НЕЛЬЗЯ использовать нижнее подчеркивание и зачеркивание\!*',
             parse_mode='MarkdownV2')
         await msg__.delete()
