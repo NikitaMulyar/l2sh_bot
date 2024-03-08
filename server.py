@@ -24,8 +24,9 @@ import argparse
 import asyncio
 from py_scripts.timetables_csv import extract_timetable_for_students_6_9, extract_timetable_for_students_10_11
 from py_scripts.funcs_teachers import extract_timetable_for_teachers
-from py_scripts.wolfram_class import WolframClient
-from py_scripts.game_class import GameMillioner
+# from py_scripts.wolfram_class import WolframClient
+# from py_scripts.game_class import GameMillioner
+from py_scripts.class_load_extratable import Load_Extra_Table
 
 
 gc.enable()
@@ -192,16 +193,24 @@ def main(do_update=False):
 
     get_info_handler = CommandHandler('info', reset_cl.get_info_about_bot)
 
-    game__ = GameMillioner()
-    game_handler = CommandHandler('game', game__.send_poll)
+    # game__ = GameMillioner()
+    # game_handler = CommandHandler('game', game__.send_poll)
 
-    wolfram_ex = WolframClient()
-    wolfram_handler = ConversationHandler(
-        entry_points=[CommandHandler('wolfram', wolfram_ex.start)],
-        states={
-            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, wolfram_ex.send_response)]
-        },
-        fallbacks=[CommandHandler('end_wolfram', wolfram_ex.end)]
+    # wolfram_ex = WolframClient()
+    # wolfram_handler = ConversationHandler(
+    #     entry_points=[CommandHandler('wolfram', wolfram_ex.start)],
+    #     states={
+    #         1: [MessageHandler(filters.TEXT & ~filters.COMMAND, wolfram_ex.send_response)]
+    #     },
+    #     fallbacks=[CommandHandler('end_wolfram', wolfram_ex.end)]
+    # )
+
+    load_extra = Load_Extra_Table()
+    load_extra_handler = ConversationHandler(
+        entry_points=[CommandHandler('extra_load', load_extra.start)],
+        states={1: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_extra.get_pswrd)],
+                2: [MessageHandler(filters.Document.FileExtension('xlsx'), load_extra.load_pdf)]},
+        fallbacks=[CommandHandler('end_extra_load', load_extra.end_setting)]
     )
 
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
@@ -211,8 +220,7 @@ def main(do_update=False):
                                        12: [MessageHandler(filters.Sticker.ALL, sticker_upload.send_random_sticker)],
                                        13: [CommandHandler('erase_all', sticker_upload.erase_all)],
                                        14: [reset_handler], 15: [giving_conver], 16: [get_info_handler],
-                                       17: [taking_conver], 18: [wolfram_handler],
-                                       19: [game_handler], 20: [PollAnswerHandler(game__.get_answer)]})
+                                       17: [taking_conver], 18: [load_extra_handler]})
     asyncio.gather(application.bot.set_webhook('', max_connections=100))
     # drop_pending_updates=True
     application.run_polling()

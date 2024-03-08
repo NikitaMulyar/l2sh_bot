@@ -52,4 +52,5 @@ COMMANDS = {'start': 'end',
             'take': 'end_take',
             'check': 'end_check',
             'sticker': 'end_sticker',
-            'wolfram': 'end_wolfram'}
+            'wolfram': 'end_wolfram',
+            'extra_load': 'end_extra_load'}

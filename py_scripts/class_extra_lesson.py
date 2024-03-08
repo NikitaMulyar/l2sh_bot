@@ -11,45 +11,8 @@ from sqlalchemy_scripts import db_session
 
 class Extra_Lessons:
     def __init__(self):
-        self.count = {}
-        db_sess = db_session.create_session()
-        for i in range(6):
-            counter = 0
-            extra_lessons = pd.read_excel('data/extra.xlsx', sheet_name=i, usecols=[2, 4, 6, 8, 10, 12]).values
-            length = len(extra_lessons)
-            for j in range(6):
-                k = 1
-                while k <= length:
-                    if not pd.isnull(extra_lessons[k][j]):
-                        title = extra_lessons[k][j]
-                        place = extra_lessons[k + 4][j]
-                        for l in range(1, 4):
-                            if not pd.isnull(extra_lessons[k + l][j]):
-                                if ("-" in extra_lessons[k + l][j] and (
-                                        "." in extra_lessons[k + l][j] or ":" in extra_lessons[k + l][j])) or (
-                                        "переменах" in extra_lessons[k + l][j]):
-                                    time = extra_lessons[k + l][j]
-                                elif "Код" not in extra_lessons[k + l][j] and all(
-                                        el.isalpha() for el in
-                                        "".join(extra_lessons[k + l][j].replace(".", "").replace(",", "").split())):
-                                    teacher = extra_lessons[k + l][j]
-                                    break
-                        day = days_from_num_to_full_text[j]
-                        teacher = teacher.replace('ё', 'е')
-                        extra = Extra(title=title, time=time, day=day, teacher=teacher, place=place, grade=i + 6)
-                        if not bool(db_sess.query(Extra).filter(Extra.title == title, Extra.grade == i + 6,
-                                                                Extra.day == day).first()):
-                            db_sess.add(extra)
-                        else:
-                            extra = db_sess.query(Extra).filter(Extra.title == title, Extra.grade == i + 6,
-                                                                Extra.day == day).first()
-                            extra.teacher = teacher
-                            extra.time = time
-                        counter += 1
-                    k += 6
-            self.count[i + 6] = counter
-        db_sess.commit()
-        db_sess.close()
+        self.cnt = None
+        self.lessons = None
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
@@ -67,6 +30,10 @@ class Extra_Lessons:
             await update.message.reply_text('⚠️ *Вы не можете записываться на кружки*',
                                             parse_mode='MarkdownV2')
             return ConversationHandler.END
+        if not list(db_sess.query(Extra).filter(Extra.grade == user.number).all()):
+            await update.message.reply_text('⚠️ *Для вашего класса отсутствуют возможные для записи кружки*',
+                                            parse_mode='MarkdownV2')
+            return ConversationHandler.END
         await update.message.reply_text('🌟 Здесь Вы можете добавить кружки, которые хотели бы увидеть в '
                                         'своем расписании.\n'
                                         'Если захотите закончить, напишите: "/end_extra".\n'
@@ -74,6 +41,8 @@ class Extra_Lessons:
         context.user_data['in_conversation'] = True
         context.user_data['DIALOG_CMD'] = "".join(['/', COMMANDS['extra']])
         context.user_data['choose_count'] = 0
+        self.cnt = len(list(db_sess.query(Extra).filter(Extra.grade == user.number).all()))
+        self.lessons = list(db_sess.query(Extra).filter(Extra.grade == user.number).all())
         return await self.choose_extra(update, context)
 
     async def choose_extra(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -85,19 +54,16 @@ class Extra_Lessons:
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
         grade = user.number
 
-        if context.user_data['choose_count'] == self.count[int(grade)]:
+        if context.user_data['choose_count'] == self.cnt:
             db_sess.close()
-            await update.callback_query.edit_message_text('🌟 Загрузка кружков завершена! Большое спасибо за Ваш '
-                                                          'выбор! 🙌🏻 Теперь Вы можете посмотреть своё расписание с кружками.',
-                                                          reply_markup="")
+            await update.callback_query.edit_message_text(
+                '🌟 Загрузка кружков завершена! Теперь Вы можете посмотреть своё расписание с кружками.',
+                reply_markup="")
             context.user_data['in_conversation'] = False
             context.user_data['DIALOG_CMD'] = None
             return ConversationHandler.END
-        lesson = list(db_sess.query(Extra).filter(Extra.grade == grade).all())[context.user_data['choose_count']]
+        lesson = self.lessons[context.user_data['choose_count']]
         context.user_data['choose_count'] += 1
-        while lesson.teacher.count(".") <= 1 and user.grade not in lesson.teacher:
-            lesson = list(db_sess.query(Extra).filter(Extra.grade == grade).all())[context.user_data['choose_count']]
-            context.user_data['choose_count'] += 1
         db_sess.close()
         context.user_data['lesson'] = lesson
         if "зал" in lesson.place or "онлайн" in lesson.place:
@@ -135,9 +101,9 @@ class Extra_Lessons:
         return await self.choose_extra(update, context)
 
     async def get_out(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        await update.message.reply_text('🌟 Загрузка кружков завершена! Большое спасибо за Ваш '
-                                        'выбор! 🙌🏻 Теперь Вы можете посмотреть своё расписание с кружками.',
-                                        reply_markup=await timetable_kbrd())
+        await update.message.reply_text(
+            '🌟 Загрузка кружков завершена! Теперь Вы можете посмотреть своё расписание с кружками.',
+            reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END

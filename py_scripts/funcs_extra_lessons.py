@@ -1,6 +1,9 @@
+import pandas as pd
+
 from py_scripts.funcs_back import prepare_for_markdown, timetable_kbrd
 from datetime import datetime
 from sqlalchemy_scripts.user_to_extra import Extra_to_User, Extra
+from sqlalchemy_scripts.users import User
 from py_scripts.consts import days_from_short_text_to_num, days_from_num_to_full_text_formatted, \
     days_from_num_to_full_text, days_from_short_text_to_full
 from telegram import Update
@@ -11,7 +14,8 @@ from sqlalchemy_scripts import db_session
 def extra_lessons_return(id, button_text):  # Кружки на день для ученика
     day = days_from_short_text_to_full[button_text]
     db_sess = db_session.create_session()
-    extra_lessons = db_sess.query(Extra_to_User).filter(Extra_to_User.user_id == id).all()
+    # extra_lessons = db_sess.query(User).filter(Extra_to_User.user_id == id).all()
+    extra_lessons = db_sess.query(User).filter(User.telegram_id == id).first().extra_lessons
     full_text = []
     for extra_lesson in extra_lessons:
         extra = db_sess.query(Extra).filter(Extra.id == extra_lesson.extra_id, Extra.day == day).first()
@@ -53,6 +57,33 @@ def extra_lessons_teachers_return(button_text, surname):  # Кружки на д
         full_text.append(text)
     db_sess.close()
     return "".join(full_text)
+
+
+async def extra_lessons_student_by_name(update, button_text, surname, name):  # Кружки на день для ученика по имени
+    day = days_from_short_text_to_full[button_text]
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.surname == surname,
+                                      User.name == name).first()
+    if user:
+        extra_lessons = db_sess.query(User).filter(User.surname == surname,
+                                                   User.name == name).first().extra_lessons
+        full_text = []
+        for extra_lesson in extra_lessons:
+            extra = db_sess.query(Extra).filter(Extra.id == extra_lesson.extra_id, Extra.day == day).first()
+            if extra:
+                text = f"⤵️\n📚 {extra.title} 📚\n"
+                text = f"{text}🕝 {extra.time} 🕝\n"
+                if extra.teacher.count(".") > 1:
+                    text = f'{text}Учитель: {extra.teacher}\n'
+                place = f"{extra.place} кабинет"
+                if "зал" in extra.place or "online" in extra.place:
+                    place = extra.place
+                text = f'{text}🏫 Место проведения: {place} 🏫\n'
+                full_text.append(text)
+        text = "".join(full_text)
+        if text:
+            await update.message.reply_text(text)
+    db_sess.close()
 
 
 async def extra_lessons_for_all_days(update: Update, id, teacher=False, surname=''):
@@ -118,3 +149,51 @@ async def extra_send_day(update: Update, text__=None, surname=None, flag=False, 
                              f'нет*')
     await update.message.reply_text(have_extra_or_not, reply_markup=kbrd, parse_mode='MarkdownV2')
     return
+
+
+async def extract_extra_lessons_from_new_table():
+    id_save = []
+    db_sess = db_session.create_session()
+    for i in range(6):
+        extra_lessons = pd.read_excel('data/extra.xlsx', sheet_name=i, usecols=[2, 4, 6, 8, 10, 12]).values
+        length = len(extra_lessons)
+        for j in range(6):
+            k = 1
+            while k <= length:
+                if not pd.isnull(extra_lessons[k][j]):
+                    title = extra_lessons[k][j]
+                    time = extra_lessons[k + 1][j]
+                    place = extra_lessons[k + 4][j]
+                    if "Код" not in extra_lessons[k + 2][j]:
+                        teacher = extra_lessons[k + 2][j]
+                    else:
+                        teacher = extra_lessons[k + 3][j]
+                    day = days_from_num_to_full_text[j]
+                    teacher = teacher.replace('ё', 'е')
+                    extra = Extra(title=title, time=time, day=day, teacher=teacher, place=place, grade=i + 6)
+                    try_to_find = db_sess.query(Extra).filter(Extra.title == title, Extra.grade == i + 6,
+                                                              Extra.day == day, Extra.time == time).first()
+                    if not bool(try_to_find):
+                        db_sess.add(extra)
+                    else:
+                        extra = db_sess.query(Extra).filter(Extra.title == title, Extra.grade == i + 6,
+                                                            Extra.day == day).first()
+                        extra.teacher = teacher
+                        extra.time = time
+                        id_save.append(extra.id)
+                k += 6
+    db_sess.commit()
+    await delete_old_extra_lessons(id_save)
+    db_sess.close()
+
+
+async def delete_old_extra_lessons(id_now: list):
+    db_sess = db_session.create_session()
+    old_extra = db_sess.query(Extra).filter(Extra.id.notin_(id_now)).all()
+    for el in old_extra:
+        db_sess.delete(el)
+    old_extra = db_sess.query(Extra_to_User).filter(Extra_to_User.extra_id.notin_(id_now)).all()
+    for el in old_extra:
+        db_sess.delete(el)
+    db_sess.commit()
+    db_sess.close()
