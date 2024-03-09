@@ -183,8 +183,8 @@ async def extract_extra_lessons_from_new_table():
                         id_save.append(extra.id)
                 k += 6
     db_sess.commit()
-    await delete_old_extra_lessons(id_save)
     db_sess.close()
+    await delete_old_extra_lessons(id_save)
 
 
 async def delete_old_extra_lessons(id_now: list):

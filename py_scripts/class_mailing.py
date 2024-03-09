@@ -24,7 +24,7 @@ async def make_mailing(update: Update, context: ContextTypes.DEFAULT_TYPE, step_
                                                          parse_mode='MarkdownV2')
                 msg = msg[0]
             elif len(arr) == 1:
-                msg = await context.bot.send_document(user.chat_id, arr[0], caption=mail_text,
+                msg = await context.bot.send_document(user.chat_id, arr[0].media, caption=mail_text,
                                                       parse_mode='MarkdownV2')
             else:
                 msg = await context.bot.send_message(user.chat_id, mail_text, parse_mode='MarkdownV2')
@@ -83,7 +83,7 @@ async def make_mailing(update: Update, context: ContextTypes.DEFAULT_TYPE, step_
             await context.bot.send_media_group(update.message.chat_id, arr, caption=text_,
                                                parse_mode='MarkdownV2')
         elif len(arr) == 1:
-            await context.bot.send_document(update.message.chat_id, arr[0], caption=text_,
+            await context.bot.send_document(update.message.chat_id, arr[0].media, caption=text_,
                                             parse_mode='MarkdownV2')
         else:
             await context.bot.send_message(update.message.chat_id, text_, parse_mode='MarkdownV2')
@@ -112,7 +112,7 @@ class MailTo:
     step_class = 3
     step_text = 4
     step_attachments = 5
-    size_limit = 50
+    size_limit = 100
 
     async def mailing_parallels_kbrd(self):
         btns = []
@@ -241,11 +241,11 @@ class MailTo:
             else:
                 file_info = await context.bot.get_file(update.message.audio.file_id)
                 file_id = update.message.audio.file_id
-            if file_info.file_size / 1024 / 1024 > self.size_limit:
+            if file_info.file_size / 1024 / 1024 > 50:
                 raise Exception
         except Exception as e:
-            await update.message.reply_text(f'⚠️ *Файл не загружен\, так как он весит более 20МБ или не '
-                                            f'умещается в лимит {self.size_limit}МБ\.* '
+            await update.message.reply_text(f'⚠️ *Файл не загружен\, так как он весит более 50МБ или не '
+                                            f'умещается в суммарный лимит {self.size_limit}МБ\.* '
                                             f'Загрузка файлов продолжается\. '
                                             f'Если вы хотите завершить прикрепление файлов\, '
                                             f'нажмите на кнопку \"Готово\"',
