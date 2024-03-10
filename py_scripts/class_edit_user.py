@@ -1,7 +1,7 @@
-from telegram.ext import ConversationHandler, ContextTypes
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from sqlalchemy_scripts.users import User
 from py_scripts.class_start import SetTimetable
-from py_scripts.funcs_back import update_db, timetable_kbrd, check_busy
+from py_scripts.funcs_back import update_db, timetable_kbrd, check_busy, prepare_for_markdown
 from sqlalchemy_scripts.user_to_extra import Extra_to_User
 from py_scripts.consts import COMMANDS
 from telegram import Update
@@ -61,6 +61,15 @@ class Edit_User(SetTimetable):
         context.user_data['DIALOG_CMD'] = None
         context.user_data['INFO'] = dict()
         return ConversationHandler.END
+
+    async def timeout_func(update: Update, context: CallbackContext):
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(context.user_data["DIALOG_CMD"])}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data["DIALOG_CMD"] = None
+        context.user_data['in_conversation'] = False
+        context.user_data['INFO'] = dict()
 
     async def get_third_name(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Otchestvo'] = update.message.text.replace("ё", "е")

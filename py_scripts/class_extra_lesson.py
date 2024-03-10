@@ -1,6 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import ConversationHandler, ContextTypes
-from py_scripts.funcs_back import timetable_kbrd, check_busy
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
+from py_scripts.funcs_back import timetable_kbrd, check_busy, prepare_for_markdown
 from sqlalchemy_scripts.extra_lessons import Extra
 from sqlalchemy_scripts.user_to_extra import Extra_to_User
 from sqlalchemy_scripts.users import User
@@ -99,6 +99,14 @@ class Extra_Lessons:
         db_sess.commit()
         db_sess.close()
         return await self.choose_extra(update, context)
+
+    async def timeout_func(update: Update, context: CallbackContext):
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(context.user_data["DIALOG_CMD"])}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data["DIALOG_CMD"] = None
+        context.user_data['in_conversation'] = False
 
     async def get_out(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(

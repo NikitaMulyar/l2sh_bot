@@ -1,7 +1,7 @@
 from telegram import ReplyKeyboardMarkup, Update
 from py_scripts.funcs_back import timetable_kbrd, throttle2, check_busy, prepare_for_markdown
 from py_scripts.consts import COMMANDS
-from telegram.ext import ConversationHandler, ContextTypes
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from py_scripts.funcs_students import get_standard_timetable_with_edits_for_student
 from py_scripts.funcs_teachers import get_standard_timetable_with_edits_for_teacher
 from py_scripts.funcs_extra_lessons import extra_send_day, extra_lessons_student_by_name
@@ -119,6 +119,15 @@ class CheckStudentTT:
                                                 surname=context.user_data['INFO']['Familia'])
         await update.message.reply_text('Выберите день или закончите выбор командой: /end_check')
         return self.step_date
+
+    async def timeout_func(update: Update, context: CallbackContext):
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(context.user_data["DIALOG_CMD"])}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data["DIALOG_CMD"] = None
+        context.user_data['in_conversation'] = False
+        context.user_data['INFO'] = dict()
 
     async def end_checking(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['in_conversation'] = False

@@ -2,6 +2,7 @@ import logging
 import os
 
 import aiohttp
+import telegram.ext
 from telegram.ext import (Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler,
                           ConversationHandler, PollHandler, PollAnswerHandler)
 from telegram import Update
@@ -27,6 +28,7 @@ from py_scripts.funcs_teachers import extract_timetable_for_teachers
 from py_scripts.wolfram_class import WolframClient
 from py_scripts.game_class import GameMillioner
 from py_scripts.class_load_extratable import Load_Extra_Table
+from py_scripts.funcs_back import timeout_func
 
 
 gc.enable()
@@ -95,9 +97,12 @@ def main(do_update=False):
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_familia)],
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_name)],
             4: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_psw)],
-            5: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_third_name)]
+            5: [MessageHandler(filters.TEXT & ~filters.COMMAND, start_dialog.get_third_name)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]
         },
-        fallbacks=[CommandHandler('end', start_dialog.end_setting)]
+        fallbacks=[CommandHandler('end', start_dialog.end_setting)],
+        conversation_timeout=30
     )
     edit_user_handler = ConversationHandler(
         entry_points=[CommandHandler('edit', edit_user_class.start)],
@@ -106,9 +111,12 @@ def main(do_update=False):
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_familia)],
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_name)],
             4: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_psw)],
-            5: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_third_name)]
+            5: [MessageHandler(filters.TEXT & ~filters.COMMAND, edit_user_class.get_third_name)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]
         },
-        fallbacks=[CommandHandler('end_edit', edit_user_class.end_setting)]
+        fallbacks=[CommandHandler('end_edit', edit_user_class.end_setting)],
+        conversation_timeout=30
     )
     mailto_handler = ConversationHandler(
         entry_points=[CommandHandler('mail', mail_dialog.start)],
@@ -119,29 +127,45 @@ def main(do_update=False):
             4: [MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_text)],
             5: [MessageHandler(filters.Document.ALL, mail_dialog.get_attachments),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, mail_dialog.get_ready),
-                MessageHandler(filters.AUDIO, mail_dialog.get_attachments)]
+                MessageHandler(filters.AUDIO, mail_dialog.get_attachments)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]
         },
-        fallbacks=[CommandHandler('end_mail', mail_dialog.end_mailing)]
+        fallbacks=[CommandHandler('end_mail', mail_dialog.end_mailing)],
+        conversation_timeout=120
     )
     load_tt_handler = ConversationHandler(
         entry_points=[CommandHandler('load', load_tt.start)],
-        states={1: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_tt.get_pswrd)],
-                2: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_tt.get_class)],
-                3: [MessageHandler(filters.Document.FileExtension('pdf'), load_tt.load_pdf)]},
-        fallbacks=[CommandHandler('end_load', load_tt.end_setting)]
+        states={
+            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_tt.get_pswrd)],
+            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_tt.get_class)],
+            3: [MessageHandler(filters.Document.FileExtension('pdf'), load_tt.load_pdf)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]
+        },
+        fallbacks=[CommandHandler('end_load', load_tt.end_setting)],
+        conversation_timeout=120
     )
     load_changes_in_tt_handler = ConversationHandler(
         entry_points=[CommandHandler('changes', load_changes_in_tt.start)],
-        states={1: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_changes_in_tt.get_pswrd)],
-                2: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_changes_in_tt.get_date)],
-                3: [MessageHandler(filters.Document.FileExtension('pdf'), load_changes_in_tt.load_pdf)]},
-        fallbacks=[CommandHandler('end_changes', load_changes_in_tt.end_setting)]
+        states={
+            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_changes_in_tt.get_pswrd)],
+            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_changes_in_tt.get_date)],
+            3: [MessageHandler(filters.Document.FileExtension('pdf'), load_changes_in_tt.load_pdf)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]
+        },
+        fallbacks=[CommandHandler('end_changes', load_changes_in_tt.end_setting)],
+        conversation_timeout=120
     )
     config_extra = ConversationHandler(
         entry_points=[CommandHandler("extra", extra_lesson_dialog.start)],
         states={
-            1: [CallbackQueryHandler(extra_lesson_dialog.yes_no)]},
-        fallbacks=[CommandHandler('end_extra', extra_lesson_dialog.get_out)], )
+            1: [CallbackQueryHandler(extra_lesson_dialog.yes_no)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]},
+        fallbacks=[CommandHandler('end_extra', extra_lesson_dialog.get_out)],
+    conversation_timeout=30)
 
     sup = Support()
     prof = Profile()
@@ -155,9 +179,12 @@ def main(do_update=False):
         entry_points=[CommandHandler('give', giving_cl.start)],
         states={
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, giving_cl.get_username)],
-            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, giving_cl.get_confirmed)]
+            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, giving_cl.get_confirmed)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]
         },
-        fallbacks=[CommandHandler('end_give', giving_cl.end_give)]
+        fallbacks=[CommandHandler('end_give', giving_cl.end_give)],
+        conversation_timeout=120
     )
 
     taking_cl = TakePermissionToChangePsw()
@@ -165,9 +192,12 @@ def main(do_update=False):
         entry_points=[CommandHandler('take', taking_cl.start)],
         states={
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, taking_cl.get_username)],
-            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, taking_cl.get_confirmed)]
+            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, taking_cl.get_confirmed)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]
         },
-        fallbacks=[CommandHandler('end_take', taking_cl.end_give)]
+        fallbacks=[CommandHandler('end_take', taking_cl.end_give)],
+        conversation_timeout=120
     )
 
     timetable_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, timetable__.get_timetable)
@@ -178,17 +208,23 @@ def main(do_update=False):
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_class)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_familia)],
             3: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_name)],
-            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_day)]
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_.get_day)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]
         },
-        fallbacks=[CommandHandler('end_check', check_.end_checking)]
+        fallbacks=[CommandHandler('end_check', check_.end_checking)],
+        conversation_timeout=30
     )
     sticker_upload = GetSticker()
     stircker_conv = ConversationHandler(
         entry_points=[CommandHandler('sticker', sticker_upload.start)],
         states={
-            1: [MessageHandler(filters.Sticker.ALL, sticker_upload.get_sticker)]
+            1: [MessageHandler(filters.Sticker.ALL, sticker_upload.get_sticker)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]
         },
-        fallbacks=[CommandHandler('end_sticker', sticker_upload.end_uploading)]
+        fallbacks=[CommandHandler('end_sticker', sticker_upload.end_uploading)],
+        conversation_timeout=30
     )
 
     get_info_handler = CommandHandler('info', reset_cl.get_info_about_bot)
@@ -200,17 +236,23 @@ def main(do_update=False):
     wolfram_handler = ConversationHandler(
         entry_points=[CommandHandler('wolfram', wolfram_ex.start)],
         states={
-            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, wolfram_ex.send_response)]
+            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, wolfram_ex.send_response)],
+            ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)],
+            ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)]
         },
-        fallbacks=[CommandHandler('end_wolfram', wolfram_ex.end)]
+        fallbacks=[CommandHandler('end_wolfram', wolfram_ex.end)],
+        conversation_timeout=90
     )
-
+    # !!!!
     load_extra = Load_Extra_Table()
     load_extra_handler = ConversationHandler(
         entry_points=[CommandHandler('extra_load', load_extra.start)],
         states={1: [MessageHandler(filters.TEXT & ~filters.COMMAND, load_extra.get_pswrd)],
-                2: [MessageHandler(filters.Document.FileExtension('xlsx'), load_extra.load_pdf)]},
-        fallbacks=[CommandHandler('end_extra_load', load_extra.end_setting)]
+                2: [MessageHandler(filters.Document.FileExtension('xlsx'), load_extra.load_pdf)],
+                ConversationHandler.TIMEOUT: [MessageHandler(filters.ALL, timeout_func)],
+                ConversationHandler.END: [MessageHandler(filters.ALL, timeout_func)]},
+        fallbacks=[CommandHandler('end_extra_load', load_extra.end_setting)],
+        conversation_timeout=120
     )
 
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],

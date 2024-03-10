@@ -4,7 +4,7 @@ import functools
 import pandas as pd
 import telegram
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Bot, Update
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, CallbackContext
 from sqlalchemy_scripts import db_session
 from sqlalchemy_scripts.users import User
 from datetime import datetime, timedelta
@@ -421,3 +421,12 @@ async def get_edits_in_timetable(date):
         df.fillna('', inplace=True)
         dfs.append(df)
     return dfs, day
+
+
+async def timeout_func(update: Update, context: CallbackContext):
+    await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                             'Чтобы начать заново\, введите команду\: '
+                                                             f'{prepare_for_markdown(context.user_data["DIALOG_CMD"])}*',
+                                   parse_mode='MarkdownV2')
+    context.user_data["DIALOG_CMD"] = None
+    context.user_data['in_conversation'] = False

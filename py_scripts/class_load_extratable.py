@@ -1,6 +1,6 @@
 import asyncio
 from telegram import Update
-from telegram.ext import ConversationHandler, ContextTypes
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from py_scripts.consts import COMMANDS
 from py_scripts.funcs_back import prepare_for_markdown, timetable_kbrd, check_busy
 from py_scripts.security import check_hash
@@ -61,10 +61,17 @@ class Load_Extra_Table:
         context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END
 
+    async def timeout_func(update: Update, context: CallbackContext):
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(context.user_data["DIALOG_CMD"])}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data["DIALOG_CMD"] = None
+        context.user_data['in_conversation'] = False
+
     async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('⚠️ *Загрузка кружков прервана\. Начать сначала\: \/extra\_load*',
                                         parse_mode='MarkdownV2')
         context.user_data['in_conversation'] = False
-        context.user_data['FILE_UPLOADED'] = False
         context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END
