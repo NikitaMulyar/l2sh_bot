@@ -15,10 +15,12 @@ class Profile:
         chat_id = update.message.chat.id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
+        user.telegram_tag = update.message.from_user.username
+        db_sess.commit()
         if not user:
             await update.message.reply_text('⚠️ *Для начала заполните свои данные\: \/start*',
                                             parse_mode='MarkdownV2')
+            db_sess.close()
             return
         grade = user.grade
         role = "Ученик"
@@ -33,7 +35,8 @@ class Profile:
         t = (f'📠*Ваш профиль*📠\n\n' +
              prepare_for_markdown(f'Класс: {grade}\nИмя: {user.name}\nФамилия: {user.surname}\n'
                                   f'Роль: {role}'))
-        await update.message.reply_text(t, parse_mode='MarkdownV2')
+        await update.message.reply_text(t + f'\nUID\: `{user.uid}`', parse_mode='MarkdownV2')
+        db_sess.close()
 
 
 class Support:

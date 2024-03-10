@@ -2,8 +2,8 @@ import asyncio
 
 import telegram
 from py_scripts.funcs_back import prepare_for_markdown, timetable_kbrd, check_busy
-from py_scripts.consts import COMMANDS
-from telegram.ext import ConversationHandler, ContextTypes
+from py_scripts.consts import COMMANDS, BACKREF_CMDS
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 
 from py_scripts.security import check_hash
@@ -24,7 +24,7 @@ async def make_mailing(update: Update, context: ContextTypes.DEFAULT_TYPE, step_
                                                          parse_mode='MarkdownV2')
                 msg = msg[0]
             elif len(arr) == 1:
-                msg = await context.bot.send_document(user.chat_id, arr[0], caption=mail_text,
+                msg = await context.bot.send_document(user.chat_id, arr[0].media, caption=mail_text,
                                                       parse_mode='MarkdownV2')
             else:
                 msg = await context.bot.send_message(user.chat_id, mail_text, parse_mode='MarkdownV2')
@@ -55,7 +55,6 @@ async def make_mailing(update: Update, context: ContextTypes.DEFAULT_TYPE, step_
         else:
             all_users = db_sess.query(User).filter((User.number == context.user_data['CLASS']) |
                                                    (User.role == 'admin')).all()
-    db_sess.close()
     if author.grade is None and author.role == 'teacher':
         user_grade = 'Учитель'
     elif author.grade is None and author.role == 'admin':
@@ -67,6 +66,7 @@ async def make_mailing(update: Update, context: ContextTypes.DEFAULT_TYPE, step_
                           prepare_for_markdown(f'От {author.surname} {author.name}, {user_grade}')]))
 
     tasks = [send_msg(user) for user in all_users]
+    db_sess.close()
     await asyncio.gather(*tasks)
 
     context.user_data['ATTACHMENTS'].clear()
@@ -83,7 +83,7 @@ async def make_mailing(update: Update, context: ContextTypes.DEFAULT_TYPE, step_
             await context.bot.send_media_group(update.message.chat_id, arr, caption=text_,
                                                parse_mode='MarkdownV2')
         elif len(arr) == 1:
-            await context.bot.send_document(update.message.chat_id, arr[0], caption=text_,
+            await context.bot.send_document(update.message.chat_id, arr[0].media, caption=text_,
                                             parse_mode='MarkdownV2')
         else:
             await context.bot.send_message(update.message.chat_id, text_, parse_mode='MarkdownV2')
@@ -112,7 +112,7 @@ class MailTo:
     step_class = 3
     step_text = 4
     step_attachments = 5
-    size_limit = 50
+    size_limit = 100
 
     async def mailing_parallels_kbrd(self):
         btns = []
@@ -144,8 +144,8 @@ class MailTo:
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         if not user:
+            db_sess.close()
             await update.message.reply_text('⚠️ *Вы не заполнили свои данные\. Напишите \/start и заполните свои данные*',
                                             parse_mode='MarkdownV2')
             return ConversationHandler.END
@@ -157,7 +157,9 @@ class MailTo:
                             f'{prepare_for_markdown(user.name)}\, Админ*\nВыберите параллель\, к которой будет обращена рассылка\:')
             await update.message.reply_text(text_to_send, reply_markup=await self.mailing_parallels_kbrd(),
                                             parse_mode='MarkdownV2')
+            db_sess.close()
             return self.step_parallel
+        db_sess.close()
         await update.message.reply_text('Введите пароль:')
         return self.step_pswrd
 
@@ -171,7 +173,6 @@ class MailTo:
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         grade = user.grade
         if grade is None:
             grade = 'Учитель'
@@ -179,6 +180,7 @@ class MailTo:
                         f'{prepare_for_markdown(user.name)}\, {prepare_for_markdown(grade)}*\nВыберите параллель\, к которой будет обращена рассылка\:')
         await update.message.reply_text(text_to_send, reply_markup=await self.mailing_parallels_kbrd(),
                                         parse_mode='MarkdownV2')
+        db_sess.close()
         return self.step_parallel
 
     async def get_parallel(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -241,11 +243,11 @@ class MailTo:
             else:
                 file_info = await context.bot.get_file(update.message.audio.file_id)
                 file_id = update.message.audio.file_id
-            if file_info.file_size / 1024 / 1024 > self.size_limit:
+            if file_info.file_size / 1024 / 1024 > 50:
                 raise Exception
         except Exception as e:
-            await update.message.reply_text(f'⚠️ *Файл не загружен\, так как он весит более 20МБ или не '
-                                            f'умещается в лимит {self.size_limit}МБ\.* '
+            await update.message.reply_text(f'⚠️ *Файл не загружен\, так как он весит более 50МБ или не '
+                                            f'умещается в суммарный лимит {self.size_limit}МБ\.* '
                                             f'Загрузка файлов продолжается\. '
                                             f'Если вы хотите завершить прикрепление файлов\, '
                                             f'нажмите на кнопку \"Готово\"',
@@ -279,6 +281,17 @@ class MailTo:
 
     async def send_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         return await make_mailing(update, context, self.step_text)
+
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(cmd)}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data['in_conversation'] = False
+        context.user_data['ATTACHMENTS'] = []
+        context.user_data['FILES_SIZE'] = 0
+        context.user_data['DIALOG_CMD'] = None
 
     async def end_mailing(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Настройка рассылки прервана. Начать сначала: /mail',

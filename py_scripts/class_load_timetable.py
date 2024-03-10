@@ -3,8 +3,8 @@ from datetime import timedelta
 
 import pandas as pd
 from telegram import ReplyKeyboardMarkup, Update
-from telegram.ext import ConversationHandler, ContextTypes
-from py_scripts.consts import path_to_changes, path_to_timetables, COMMANDS
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
+from py_scripts.consts import path_to_changes, path_to_timetables, COMMANDS, BACKREF_CMDS
 from py_scripts.funcs_back import get_edits_in_timetable, save_edits_in_timetable_csv, \
     prepare_for_markdown, timetable_kbrd, check_busy
 from py_scripts.funcs_teachers import extract_timetable_for_teachers, get_edits_for_teacher
@@ -37,7 +37,6 @@ async def write_about_new_timetable(context: ContextTypes.DEFAULT_TYPE):
     f.close()
     db_sess = db_session.create_session()
     all_users = db_sess.query(User).all()
-    db_sess.close()
     users_to_send = []
     for user in all_users:
         var1 = f'{user.grade}'
@@ -47,6 +46,7 @@ async def write_about_new_timetable(context: ContextTypes.DEFAULT_TYPE):
             users_to_send.append(user)
 
     tasks = [send_notif(user) for user in users_to_send]
+    db_sess.close()
     await asyncio.gather(*tasks)
 
     t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])
@@ -84,9 +84,9 @@ async def write_about_edits(context: ContextTypes.DEFAULT_TYPE, text):
 
     db_sess = db_session.create_session()
     all_users = db_sess.query(User).all()
-    db_sess.close()
 
     tasks = [send_notif(user) for user in all_users]
+    db_sess.close()
     await asyncio.gather(*tasks)
 
     t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])
@@ -115,14 +115,15 @@ class LoadTimetables:
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         await update.message.reply_text('Прервать загрузку расписаний: /end_load')
         if user and user.role == "admin":
+            db_sess.close()
             await update.message.reply_text('Выберите нужный класс', reply_markup=await self.classes_buttons())
             with open('bot_files/list_new_timetable.txt', mode='w', encoding='utf-8') as f:
                 f.write('')
             f.close()
             return self.step_class
+        db_sess.close()
         await update.message.reply_text('Введите пароль админа:')
         return self.step_pswrd
 
@@ -174,6 +175,17 @@ class LoadTimetables:
                                             parse_mode='MarkdownV2')
         await update.message.reply_text(f'Выберите нужный класс', reply_markup=await self.classes_buttons())
         return self.step_class
+
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(cmd)}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data['in_conversation'] = False
+        context.user_data['FILE_UPLOADED'] = False
+        context.user_data['FILE_UPLOADED2'] = False
+        context.user_data['DIALOG_CMD'] = None
 
     async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not context.user_data.get('FILE_UPLOADED2') and not context.user_data.get('FILE_UPLOADED'):
@@ -310,12 +322,13 @@ class LoadEditsTT:
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         await update.message.reply_text('Прервать загрузку изменений: /end_changes')
         if user and user.role == 'admin':
+            db_sess.close()
             await update.message.reply_text('Выберите дату изменений в расписании или напишите свою (формат: ДД.ММ.ГГГГ):',
                                             reply_markup=await self.dates_buttons())
             return self.step_date
+        db_sess.close()
         await update.message.reply_text('Введите пароль админа:')
         return self.step_pswrd
 
@@ -400,6 +413,15 @@ class LoadEditsTT:
         context.user_data['DIALOG_CMD'] = None
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
+
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(cmd)}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data["DIALOG_CMD"] = None
+        context.user_data['in_conversation'] = False
 
     async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Загрузка изменений прервана',

@@ -16,6 +16,8 @@ class User(SqlAlchemyBase):
     grade = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     number = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     choose_extra = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=0)
+    extra_lessons = orm.relationship("Extra_to_User", backref="users")
+    uid = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     def __repr__(self):
         return f'<User> {self.chat_id} {self.telegram_id}'

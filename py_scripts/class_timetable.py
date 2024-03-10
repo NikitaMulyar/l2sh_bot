@@ -22,8 +22,8 @@ class GetTimetable:
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         if not user:
+            db_sess.close()
             await update.message.reply_text('⚠️ *Для начала заполните свои данные\: \/start*',
                                             parse_mode='MarkdownV2')
             return
@@ -121,3 +121,4 @@ class GetTimetable:
             elif update.message.text == '🎭Все кружки🎭':
                 context.user_data['EXTRA_CLICKED'] = False
                 await extra_lessons_for_all_days(update, update.message.from_user.id)
+        db_sess.close()
