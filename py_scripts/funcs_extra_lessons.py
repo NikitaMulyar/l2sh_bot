@@ -180,7 +180,7 @@ async def extract_extra_lessons_from_new_table():
                                                             Extra.day == day).first()
                         extra.teacher = teacher
                         extra.time = time
-                        id_save.append(extra.id)
+                    id_save.append(extra.id)
                 k += 6
     db_sess.commit()
     db_sess.close()
