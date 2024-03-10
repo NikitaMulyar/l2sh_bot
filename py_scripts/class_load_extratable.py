@@ -20,11 +20,12 @@ class Load_Extra_Table:
         context.user_data['DIALOG_CMD'] = "".join(['/', COMMANDS['extra_load']])
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == update.message.chat_id).first()
-        db_sess.close()
         await update.message.reply_text('Прервать загрузку кружков: /end_extra_load')
         if user and user.role == "admin":
+            db_sess.close()
             await update.message.reply_text('Загрузите файл .xlsx')
             return self.step_file
+        db_sess.close()
         await update.message.reply_text('Введите пароль админа:')
         return self.step_pswrd
 

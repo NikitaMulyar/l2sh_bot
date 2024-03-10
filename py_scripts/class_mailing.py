@@ -55,7 +55,6 @@ async def make_mailing(update: Update, context: ContextTypes.DEFAULT_TYPE, step_
         else:
             all_users = db_sess.query(User).filter((User.number == context.user_data['CLASS']) |
                                                    (User.role == 'admin')).all()
-    db_sess.close()
     if author.grade is None and author.role == 'teacher':
         user_grade = 'Учитель'
     elif author.grade is None and author.role == 'admin':
@@ -67,6 +66,7 @@ async def make_mailing(update: Update, context: ContextTypes.DEFAULT_TYPE, step_
                           prepare_for_markdown(f'От {author.surname} {author.name}, {user_grade}')]))
 
     tasks = [send_msg(user) for user in all_users]
+    db_sess.close()
     await asyncio.gather(*tasks)
 
     context.user_data['ATTACHMENTS'].clear()
@@ -144,8 +144,8 @@ class MailTo:
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         if not user:
+            db_sess.close()
             await update.message.reply_text('⚠️ *Вы не заполнили свои данные\. Напишите \/start и заполните свои данные*',
                                             parse_mode='MarkdownV2')
             return ConversationHandler.END
@@ -157,7 +157,9 @@ class MailTo:
                             f'{prepare_for_markdown(user.name)}\, Админ*\nВыберите параллель\, к которой будет обращена рассылка\:')
             await update.message.reply_text(text_to_send, reply_markup=await self.mailing_parallels_kbrd(),
                                             parse_mode='MarkdownV2')
+            db_sess.close()
             return self.step_parallel
+        db_sess.close()
         await update.message.reply_text('Введите пароль:')
         return self.step_pswrd
 
@@ -171,7 +173,6 @@ class MailTo:
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         grade = user.grade
         if grade is None:
             grade = 'Учитель'
@@ -179,6 +180,7 @@ class MailTo:
                         f'{prepare_for_markdown(user.name)}\, {prepare_for_markdown(grade)}*\nВыберите параллель\, к которой будет обращена рассылка\:')
         await update.message.reply_text(text_to_send, reply_markup=await self.mailing_parallels_kbrd(),
                                         parse_mode='MarkdownV2')
+        db_sess.close()
         return self.step_parallel
 
     async def get_parallel(self, update: Update, context: ContextTypes.DEFAULT_TYPE):

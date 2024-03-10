@@ -97,7 +97,7 @@ def prepare_for_markdown(text):
     return res
 
 
-def put_to_db(update: Update, name, surname, role, username, grade=None):
+def put_to_db(update: Update, name, surname, role, username, grade=None, uid='000'):
     db_sess = db_session.create_session()
     user__id = update.message.from_user.id
     chat_id = update.message.chat_id
@@ -106,7 +106,7 @@ def put_to_db(update: Update, name, surname, role, username, grade=None):
         num = num[:-1]
     if not db_sess.query(User).filter(User.chat_id == chat_id).first():
         user = User(telegram_id=user__id, chat_id=chat_id, surname=surname, name=name, role=role,
-                    grade=grade, number=num, telegram_tag=username)
+                    grade=grade, number=num, telegram_tag=username, uid=uid)
         db_sess.add(user)
         db_sess.commit()
     db_sess.close()

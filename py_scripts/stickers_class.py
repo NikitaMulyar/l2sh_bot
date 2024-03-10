@@ -18,13 +18,15 @@ class GetSticker:
         chat_id = update.message.chat.id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         if not user:
+            db_sess.close()
             await update.message.reply_text('⚠️ *Нет доступа\!*', parse_mode='MarkdownV2')
             return ConversationHandler.END
         if user.telegram_id != 562532936 and user.telegram_id != 871689175:
+            db_sess.close()
             await update.message.reply_text('⚠️ *Нет доступа\!*', parse_mode='MarkdownV2')
             return ConversationHandler.END
+        db_sess.close()
         context.user_data['in_conversation'] = True
         context.user_data['DIALOG_CMD'] = "".join(['/', COMMANDS['sticker']])
         await update.message.reply_text(f'Жду стикер! Закончить: /')
@@ -66,10 +68,10 @@ class GetSticker:
             return
         db_sess = db_session.create_session()
         list_ = db_sess.query(Sticker).all()
-        db_sess.close()
         if list_:
             sticker = choice(list_)
             await context.bot.send_sticker(update.message.chat.id, sticker.file_id)
+        db_sess.close()
 
     async def erase_all(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)

@@ -1,3 +1,6 @@
+import random
+import string
+
 from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from telegram import ReplyKeyboardMarkup, Update
 from py_scripts.security import check_hash
@@ -20,6 +23,17 @@ class SetTimetable:
         classes = [['Админ', 'Учитель']] + [['6А', '6Б', '6В']] + [[f'{i}{j}' for j in 'АБВГД'] for i in range(7, 12)]
         kbd = ReplyKeyboardMarkup(classes, resize_keyboard=True, one_time_keyboard=True)
         return kbd
+
+    async def create_uid(self):
+        s = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+        uid = "".join([random.choice(s) for i in range(4)])
+        db_sess = db_session.create_session()
+        res = db_sess.query(User).filter(User.uid == uid).first()
+        while res:
+            uid = "".join([random.choice(s) for i in range(4)])
+            res = db_sess.query(User).filter(User.uid == uid).first()
+        db_sess.close()
+        return uid
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
@@ -47,7 +61,8 @@ class SetTimetable:
             'Сначала выберите свою должность/класс.\n'
             'Для остановки регистрации напишите: /end\n'
             '⚠️ Продолжая регистрацию, вы соглашаетесь с Пользовательским Соглашением: '
-            'https://telegra.ph/Polzovatelskoe-soglashenie-po-ispolzovaniyu-Telegram-bota-Raspisanie-L2SH-03-08', reply_markup=await self.classes_buttons())
+            'https://telegra.ph/Polzovatelskoe-soglashenie-po-ispolzovaniyu-Telegram-bota-Raspisanie-L2SH-03-08',
+            reply_markup=await self.classes_buttons())
         context.user_data['INFO'] = dict()
         return self.step_class
 
@@ -60,12 +75,13 @@ class SetTimetable:
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         if user and update.message.text == 'Админ' and user.role != "admin":
+            db_sess.close()
             context.user_data['INFO']['Class'] = "admin"
             await update.message.reply_text('Введите пароль:')
             return self.step_pswrd
         elif update.message.text == 'Админ':
+            db_sess.close()
             context.user_data['INFO']['Class'] = "admin"
             await update.message.reply_text('Введите пароль:')
             return self.step_pswrd
@@ -76,6 +92,7 @@ class SetTimetable:
         else:
             context.user_data['INFO']['Class'] = update.message.text
         await update.message.reply_text('Укажите свою фамилию (пример: Некрасов)')
+        db_sess.close()
         return self.step_familia
 
     async def get_psw(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -101,9 +118,12 @@ class SetTimetable:
         if context.user_data['INFO']['Class'] == 'admin' or context.user_data['INFO']['Class'] == 'teacher':
             await update.message.reply_text('Напишите, пожалуйста, свое отчество')
             return self.step_third_name
+        uid = await self.create_uid()
         put_to_db(update, context.user_data['INFO']['Name'], context.user_data['INFO']['Familia'],
-                  'student', update.message.from_user.username, grade=context.user_data['INFO']['Class'])
-        await update.message.reply_text('Спасибо! Теперь Вы можете пользоваться ботом',
+                  'student', update.message.from_user.username, grade=context.user_data['INFO']['Class'],
+                  uid=uid)
+        await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом.\n'
+                                        f'Ваш UID (доступен в Профиле по команде /profile): {uid}',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
@@ -112,10 +132,13 @@ class SetTimetable:
 
     async def get_third_name(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['INFO']['Otchestvo'] = update.message.text.replace("ё", "е")
+        uid = await self.create_uid()
         put_to_db(update, context.user_data['INFO']['Name'] + ' ' +
                   context.user_data['INFO']['Otchestvo'], context.user_data['INFO']['Familia'],
-                  context.user_data['INFO']['Class'], update.message.from_user.username)
-        await update.message.reply_text('Спасибо! Теперь Вы можете пользоваться ботом',
+                  context.user_data['INFO']['Class'], update.message.from_user.username,
+                  uid=uid)
+        await update.message.reply_text('Спасибо! Теперь Вы можете пользоваться ботом.\n'
+                                        f'Ваш UID (доступен в Профиле по команде /profile): {uid}',
                                         reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None

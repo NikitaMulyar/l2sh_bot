@@ -37,7 +37,6 @@ async def write_about_new_timetable(context: ContextTypes.DEFAULT_TYPE):
     f.close()
     db_sess = db_session.create_session()
     all_users = db_sess.query(User).all()
-    db_sess.close()
     users_to_send = []
     for user in all_users:
         var1 = f'{user.grade}'
@@ -47,6 +46,7 @@ async def write_about_new_timetable(context: ContextTypes.DEFAULT_TYPE):
             users_to_send.append(user)
 
     tasks = [send_notif(user) for user in users_to_send]
+    db_sess.close()
     await asyncio.gather(*tasks)
 
     t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])
@@ -84,9 +84,9 @@ async def write_about_edits(context: ContextTypes.DEFAULT_TYPE, text):
 
     db_sess = db_session.create_session()
     all_users = db_sess.query(User).all()
-    db_sess.close()
 
     tasks = [send_notif(user) for user in all_users]
+    db_sess.close()
     await asyncio.gather(*tasks)
 
     t = "\n".join([f'Тип ошибки "{k}": {v} человек' for k, v in didnt_send.items()])
@@ -115,14 +115,15 @@ class LoadTimetables:
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         await update.message.reply_text('Прервать загрузку расписаний: /end_load')
         if user and user.role == "admin":
+            db_sess.close()
             await update.message.reply_text('Выберите нужный класс', reply_markup=await self.classes_buttons())
             with open('bot_files/list_new_timetable.txt', mode='w', encoding='utf-8') as f:
                 f.write('')
             f.close()
             return self.step_class
+        db_sess.close()
         await update.message.reply_text('Введите пароль админа:')
         return self.step_pswrd
 
@@ -321,12 +322,13 @@ class LoadEditsTT:
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.chat_id == chat_id).first()
-        db_sess.close()
         await update.message.reply_text('Прервать загрузку изменений: /end_changes')
         if user and user.role == 'admin':
+            db_sess.close()
             await update.message.reply_text('Выберите дату изменений в расписании или напишите свою (формат: ДД.ММ.ГГГГ):',
                                             reply_markup=await self.dates_buttons())
             return self.step_date
+        db_sess.close()
         await update.message.reply_text('Введите пароль админа:')
         return self.step_pswrd
 

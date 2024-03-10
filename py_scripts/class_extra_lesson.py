@@ -21,18 +21,20 @@ class Extra_Lessons:
         user__id = update.message.from_user.id
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.telegram_id == user__id).first()
-        db_sess.close()
         if not user:
             await update.message.reply_text('⚠️ *Для начала заполните свои данные\: \/start*',
                                             parse_mode='MarkdownV2')
+            db_sess.close()
             return ConversationHandler.END
         if user.role == 'admin' or user.role == 'teacher':
             await update.message.reply_text('⚠️ *Вы не можете записываться на кружки*',
                                             parse_mode='MarkdownV2')
+            db_sess.close()
             return ConversationHandler.END
         if not list(db_sess.query(Extra).filter(Extra.grade == user.number).all()):
             await update.message.reply_text('⚠️ *Для вашего класса отсутствуют возможные для записи кружки*',
                                             parse_mode='MarkdownV2')
+            db_sess.close()
             return ConversationHandler.END
         await update.message.reply_text('🌟 Здесь Вы можете добавить кружки, которые хотели бы увидеть в '
                                         'своем расписании.\n'
@@ -43,19 +45,11 @@ class Extra_Lessons:
         context.user_data['choose_count'] = 0
         self.cnt = len(list(db_sess.query(Extra).filter(Extra.grade == user.number).all()))
         self.lessons = list(db_sess.query(Extra).filter(Extra.grade == user.number).all())
+        db_sess.close()
         return await self.choose_extra(update, context)
 
     async def choose_extra(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        if update.message:
-            user__id = update.message.from_user.id
-        else:
-            user__id = update.callback_query.from_user.id
-        db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.telegram_id == user__id).first()
-        grade = user.number
-
         if context.user_data['choose_count'] == self.cnt:
-            db_sess.close()
             await update.callback_query.edit_message_text(
                 '🌟 Загрузка кружков завершена! Теперь Вы можете посмотреть своё расписание с кружками.',
                 reply_markup="")
@@ -64,7 +58,6 @@ class Extra_Lessons:
             return ConversationHandler.END
         lesson = self.lessons[context.user_data['choose_count']]
         context.user_data['choose_count'] += 1
-        db_sess.close()
         context.user_data['lesson'] = lesson
         if "зал" in lesson.place or "онлайн" in lesson.place:
             place = lesson.place
