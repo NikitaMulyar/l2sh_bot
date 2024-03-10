@@ -2,8 +2,8 @@ import asyncio
 
 import telegram
 from py_scripts.funcs_back import prepare_for_markdown, timetable_kbrd, check_busy
-from py_scripts.consts import COMMANDS
-from telegram.ext import ConversationHandler, ContextTypes
+from py_scripts.consts import COMMANDS, BACKREF_CMDS
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 
 from py_scripts.security import check_hash
@@ -279,6 +279,17 @@ class MailTo:
 
     async def send_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         return await make_mailing(update, context, self.step_text)
+
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(cmd)}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data['in_conversation'] = False
+        context.user_data['ATTACHMENTS'] = []
+        context.user_data['FILES_SIZE'] = 0
+        context.user_data['DIALOG_CMD'] = None
 
     async def end_mailing(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Настройка рассылки прервана. Начать сначала: /mail',

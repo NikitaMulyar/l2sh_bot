@@ -5,7 +5,7 @@ from sqlalchemy_scripts.extra_lessons import Extra
 from sqlalchemy_scripts.user_to_extra import Extra_to_User
 from sqlalchemy_scripts.users import User
 import pandas as pd
-from py_scripts.consts import days_from_num_to_full_text, COMMANDS
+from py_scripts.consts import days_from_num_to_full_text, COMMANDS, BACKREF_CMDS
 from sqlalchemy_scripts import db_session
 
 
@@ -100,10 +100,11 @@ class Extra_Lessons:
         db_sess.close()
         return await self.choose_extra(update, context)
 
-    async def timeout_func(update: Update, context: CallbackContext):
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
         await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
                                                                  'Чтобы начать заново\, введите команду\: '
-                                                                 f'{prepare_for_markdown(context.user_data["DIALOG_CMD"])}*',
+                                                                 f'{prepare_for_markdown(cmd)}*',
                                        parse_mode='MarkdownV2')
         context.user_data["DIALOG_CMD"] = None
         context.user_data['in_conversation'] = False

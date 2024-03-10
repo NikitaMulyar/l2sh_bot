@@ -421,12 +421,3 @@ async def get_edits_in_timetable(date):
         df.fillna('', inplace=True)
         dfs.append(df)
     return dfs, day
-
-
-async def timeout_func(update: Update, context: CallbackContext):
-    await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
-                                                             'Чтобы начать заново\, введите команду\: '
-                                                             f'{prepare_for_markdown(context.user_data["DIALOG_CMD"])}*',
-                                   parse_mode='MarkdownV2')
-    context.user_data["DIALOG_CMD"] = None
-    context.user_data['in_conversation'] = False

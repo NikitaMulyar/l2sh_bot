@@ -3,8 +3,8 @@ from datetime import timedelta
 
 import pandas as pd
 from telegram import ReplyKeyboardMarkup, Update
-from telegram.ext import ConversationHandler, ContextTypes
-from py_scripts.consts import path_to_changes, path_to_timetables, COMMANDS
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
+from py_scripts.consts import path_to_changes, path_to_timetables, COMMANDS, BACKREF_CMDS
 from py_scripts.funcs_back import get_edits_in_timetable, save_edits_in_timetable_csv, \
     prepare_for_markdown, timetable_kbrd, check_busy
 from py_scripts.funcs_teachers import extract_timetable_for_teachers, get_edits_for_teacher
@@ -174,6 +174,17 @@ class LoadTimetables:
                                             parse_mode='MarkdownV2')
         await update.message.reply_text(f'Выберите нужный класс', reply_markup=await self.classes_buttons())
         return self.step_class
+
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(cmd)}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data['in_conversation'] = False
+        context.user_data['FILE_UPLOADED'] = False
+        context.user_data['FILE_UPLOADED2'] = False
+        context.user_data['DIALOG_CMD'] = None
 
     async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not context.user_data.get('FILE_UPLOADED2') and not context.user_data.get('FILE_UPLOADED'):
@@ -400,6 +411,15 @@ class LoadEditsTT:
         context.user_data['DIALOG_CMD'] = None
         context.user_data['in_conversation'] = False
         return ConversationHandler.END
+
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(cmd)}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data["DIALOG_CMD"] = None
+        context.user_data['in_conversation'] = False
 
     async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Загрузка изменений прервана',

@@ -1,9 +1,9 @@
-from telegram.ext import ConversationHandler, ContextTypes
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from telegram import ReplyKeyboardMarkup, Update
 from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
 from py_scripts.funcs_back import timetable_kbrd, put_to_db, check_busy, prepare_for_markdown
-from py_scripts.consts import COMMANDS
+from py_scripts.consts import COMMANDS, BACKREF_CMDS
 from sqlalchemy_scripts import db_session
 
 
@@ -34,7 +34,9 @@ class SetTimetable:
             await update.message.reply_text(
                 'Здравствуйте! Я вижу, что Вы уже есть в системе.\n'
                 'Можете пользоваться ботом.\n'
-                'Все команды бота доступны в кнопке "Меню"',
+                'Все команды бота доступны в кнопке "Меню".\n⚠️ Обращаем внимание, что с 10 марта 2024 '
+                'года вступает в силу Пользовательское Соглашение. Подробнее: '
+                'https://telegra.ph/Polzovatelskoe-soglashenie-po-ispolzovaniyu-Telegram-bota-Raspisanie-L2SH-03-08',
                 reply_markup=await timetable_kbrd())
             context.user_data['DIALOG_CMD'] = None
             context.user_data['in_conversation'] = False
@@ -43,7 +45,9 @@ class SetTimetable:
         await update.message.reply_text(
             'Здравствуйте! В этом боте Вы можете узнавать расписание на день!\n'
             'Сначала выберите свою должность/класс.\n'
-            'Для остановки регистрации напишите: /end', reply_markup=await self.classes_buttons())
+            'Для остановки регистрации напишите: /end\n'
+            '⚠️ Продолжая регистрацию, вы соглашаетесь с Пользовательским Соглашением: '
+            'https://telegra.ph/Polzovatelskoe-soglashenie-po-ispolzovaniyu-Telegram-bota-Raspisanie-L2SH-03-08', reply_markup=await self.classes_buttons())
         context.user_data['INFO'] = dict()
         return self.step_class
 
@@ -117,6 +121,16 @@ class SetTimetable:
         context.user_data['DIALOG_CMD'] = None
         context.user_data['INFO'] = dict()
         return ConversationHandler.END
+
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(cmd)}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data['in_conversation'] = False
+        context.user_data['DIALOG_CMD'] = None
+        context.user_data['INFO'] = dict()
 
     async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['in_conversation'] = False

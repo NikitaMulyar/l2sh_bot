@@ -1,10 +1,10 @@
-from py_scripts.funcs_back import throttle, check_busy
-from telegram.ext import ConversationHandler, ContextTypes
+from py_scripts.funcs_back import throttle, check_busy, prepare_for_markdown
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from telegram import Update
 from sqlalchemy_scripts.stickers_table import Sticker
 from random import choice
 from sqlalchemy_scripts.users import User
-from py_scripts.consts import COMMANDS
+from py_scripts.consts import COMMANDS, BACKREF_CMDS
 from sqlalchemy_scripts import db_session
 
 
@@ -44,6 +44,15 @@ class GetSticker:
             await update.message.reply_text(f'Такой стикер уже есть, давай другой! Закончить: /end_sticker')
         db_sess.close()
         return self.step_upload
+
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(cmd)}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data['in_conversation'] = False
+        context.user_data['DIALOG_CMD'] = None
 
     async def end_uploading(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Ура! Готово!')

@@ -54,3 +54,4 @@ COMMANDS = {'start': 'end',
             'sticker': 'end_sticker',
             'wolfram': 'end_wolfram',
             'extra_load': 'end_extra_load'}
+BACKREF_CMDS = {'/' + val: '/' + key for key, val in COMMANDS.items()}

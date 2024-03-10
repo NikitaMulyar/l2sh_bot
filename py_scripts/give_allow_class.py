@@ -1,9 +1,9 @@
 from py_scripts.funcs_back import prepare_for_markdown, timetable_kbrd, check_busy
-from telegram.ext import ConversationHandler, ContextTypes
+from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from telegram import ReplyKeyboardMarkup, Update
 from sqlalchemy_scripts.users import User
 import logging
-from py_scripts.consts import COMMANDS
+from py_scripts.consts import COMMANDS, BACKREF_CMDS
 from sqlalchemy_scripts import db_session
 
 
@@ -101,6 +101,16 @@ class GivePermissionToChangePsw:
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END
+
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
+        await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
+                                                                 'Чтобы начать заново\, введите команду\: '
+                                                                 f'{prepare_for_markdown(cmd)}*',
+                                       parse_mode='MarkdownV2')
+        context.user_data['in_conversation'] = False
+        context.user_data['DIALOG_CMD'] = None
+        context.user_data['INFO'] = dict()
 
     async def end_give(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Выдача прав прервана. Начать сначала: /give', reply_markup=await timetable_kbrd())

@@ -1,7 +1,7 @@
 import asyncio
 from telegram import Update
 from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
-from py_scripts.consts import COMMANDS
+from py_scripts.consts import COMMANDS, BACKREF_CMDS
 from py_scripts.funcs_back import prepare_for_markdown, timetable_kbrd, check_busy
 from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
@@ -61,10 +61,11 @@ class Load_Extra_Table:
         context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END
 
-    async def timeout_func(update: Update, context: CallbackContext):
+    async def timeout_func(self, update: Update, context: CallbackContext):
+        cmd = BACKREF_CMDS[context.user_data["DIALOG_CMD"]]
         await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
                                                                  'Чтобы начать заново\, введите команду\: '
-                                                                 f'{prepare_for_markdown(context.user_data["DIALOG_CMD"])}*',
+                                                                 f'{prepare_for_markdown(cmd)}*',
                                        parse_mode='MarkdownV2')
         context.user_data["DIALOG_CMD"] = None
         context.user_data['in_conversation'] = False
