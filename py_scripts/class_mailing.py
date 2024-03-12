@@ -243,10 +243,8 @@ class MailTo:
             else:
                 file_info = await context.bot.get_file(update.message.audio.file_id)
                 file_id = update.message.audio.file_id
-            if file_info.file_size / 1024 / 1024 > 50:
-                raise Exception
         except Exception as e:
-            await update.message.reply_text(f'⚠️ *Файл не загружен\, так как он весит более 50МБ или не '
+            await update.message.reply_text(f'⚠️ *Файл не загружен\, так как он весит более 20МБ или не '
                                             f'умещается в суммарный лимит {self.size_limit}МБ\.* '
                                             f'Загрузка файлов продолжается\. '
                                             f'Если вы хотите завершить прикрепление файлов\, '
@@ -287,7 +285,7 @@ class MailTo:
         await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
                                                                  'Чтобы начать заново\, введите команду\: '
                                                                  f'{prepare_for_markdown(cmd)}*',
-                                       parse_mode='MarkdownV2')
+                                       parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['ATTACHMENTS'] = []
         context.user_data['FILES_SIZE'] = 0

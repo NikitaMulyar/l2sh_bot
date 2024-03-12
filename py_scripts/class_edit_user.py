@@ -67,7 +67,7 @@ class Edit_User(SetTimetable):
         await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
                                                                  'Чтобы начать заново\, введите команду\: '
                                                                  f'{prepare_for_markdown(cmd)}*',
-                                       parse_mode='MarkdownV2')
+                                       parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         context.user_data["DIALOG_CMD"] = None
         context.user_data['in_conversation'] = False
         context.user_data['INFO'] = dict()

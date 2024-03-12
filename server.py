@@ -15,6 +15,7 @@ from py_scripts.classes_support_profile import Support, Profile
 from py_scripts.class_extra_lesson import Extra_Lessons
 from py_scripts.class_get_diff_timetable import CheckStudentTT
 from py_scripts.config import BOT_TOKEN
+from py_scripts.event_class import EventsClass
 from py_scripts.stickers_class import GetSticker
 from py_scripts.security import Reset_Class
 from py_scripts.give_allow_class import GivePermissionToChangePsw
@@ -42,6 +43,8 @@ try:
         os.mkdir("timetables/")
     if not os.path.exists('timetables_csv/'):
         os.mkdir("timetables_csv/")
+    if not os.path.exists('event_files/'):
+        os.mkdir("event_files/")
 
     if not os.path.exists('bot_files/db_copy.txt'):
         f = open('bot_files/db_copy.txt', mode='w', encoding='utf-8')
@@ -254,6 +257,25 @@ def main(do_update=False):
         conversation_timeout=120
     )
 
+    event_create_class = EventsClass()
+    event_create_handler = ConversationHandler(
+        entry_points=[CommandHandler('new_event', event_create_class.start)],
+        states={
+            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, event_create_class.get_psw)],
+            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, event_create_class.get_title)],
+            3: [MessageHandler(filters.TEXT & ~filters.COMMAND, event_create_class.get_theme)],
+            4: [MessageHandler(filters.TEXT & ~filters.COMMAND, event_create_class.get_start_date)],
+            5: [MessageHandler(filters.TEXT & ~filters.COMMAND, event_create_class.get_end_date)],
+            6: [MessageHandler(filters.TEXT & ~filters.COMMAND, event_create_class.get_description)],
+            7: [MessageHandler(filters.TEXT & ~filters.COMMAND, event_create_class.get_place)],
+            8: [MessageHandler(filters.TEXT & ~filters.COMMAND, event_create_class.get_author)],
+            9: [MessageHandler(filters.Document.ALL, event_create_class.get_file)],
+            ConversationHandler.TIMEOUT: [TypeHandler(Update, event_create_class.timeout_func)],
+            ConversationHandler.END: [TypeHandler(Update, event_create_class.timeout_func)]
+        },
+        fallbacks=[CommandHandler('end_new_event', event_create_class.end_event)],
+        conversation_timeout=120
+    )
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
                                        4: [mailto_handler], 5: [load_tt_handler], 6: [prof_handler],
                                        7: [sup_hadler], 8: [load_changes_in_tt_handler], 9: [config_extra],
@@ -263,14 +285,15 @@ def main(do_update=False):
                                        14: [reset_handler], 15: [giving_conver], 16: [get_info_handler],
                                        17: [taking_conver], 18: [load_extra_handler],
                                        19: [wolfram_handler], 20: [game_handler],
-                                       21: [PollAnswerHandler(game__.get_answer)]})
+                                       21: [PollAnswerHandler(game__.get_answer)],
+                                       22: [event_create_handler]})
     asyncio.gather(application.bot.set_webhook('', max_connections=100))
     # drop_pending_updates=True
     application.run_polling()
 
 
 if __name__ == '__main__':
-    db_session.global_init("database/telegram_bot.db")
+    db_session.global_init("database/telegram_bot3.db")
     parser = argparse.ArgumentParser()
     parser.add_argument('--update', action="store_true", help="The flag which says to update timetables or not.")
     args = parser.parse_args()
