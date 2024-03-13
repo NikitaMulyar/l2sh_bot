@@ -57,6 +57,15 @@ class Edit_User(SetTimetable):
                   update.message.from_user.username, grade=context.user_data['INFO']['Class'])
         await update.message.reply_text('Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.chat_id == update.message.chat_id).first()
+        try:
+            await update.message.reply_document(f'bot_files/{user.role}.pdf',
+                                                caption='Рекомендуем ознакомиться с '
+                                                        'руководством пользователя!')
+        except Exception:
+            pass
+        db_sess.close()
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
         context.user_data['INFO'] = dict()
@@ -80,6 +89,15 @@ class Edit_User(SetTimetable):
                   context.user_data['INFO']['Class'], update.message.from_user.username)
         await update.message.reply_text('Спасибо! Теперь Вы можете пользоваться ботом',
                                         reply_markup=await timetable_kbrd())
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.chat_id == update.message.chat_id).first()
+        try:
+            await update.message.reply_document(f'bot_files/{user.role}.pdf',
+                                                caption='Рекомендуем ознакомиться с '
+                                                        'руководством пользователя!')
+        except Exception:
+            pass
+        db_sess.close()
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
         context.user_data['INFO'] = dict()
