@@ -24,7 +24,7 @@ async def check_busy(update: Update, context: ContextTypes.DEFAULT_TYPE, flag=Fa
     return False
 
 
-def throttle():
+def throttle(seconds=0.5):
     def wrapper(func):
         @functools.wraps(func)
         async def wrapped(*args, **kwargs):
@@ -33,7 +33,7 @@ def throttle():
             if not last_time:
                 args[2].user_data['last_time'] = now_
                 return await func(*args, **kwargs)
-            elif last_time + timedelta(seconds=0.5) <= now_:
+            elif last_time + timedelta(seconds=seconds) <= now_:
                 args[2].user_data['last_time'] = now_
                 return await func(*args, **kwargs)
             else:
@@ -42,7 +42,7 @@ def throttle():
     return wrapper
 
 
-def throttle2():
+def throttle2(seconds=0.5):
     def wrapper(func):
         @functools.wraps(func)
         async def wrapped(*args, **kwargs):
@@ -51,7 +51,7 @@ def throttle2():
             if not last_time:
                 args[2].user_data['last_time2'] = now_
                 return await func(*args, **kwargs)
-            elif last_time + timedelta(seconds=0.5) <= now_:
+            elif last_time + timedelta(seconds=seconds) <= now_:
                 args[2].user_data['last_time2'] = now_
                 return await func(*args, **kwargs)
         return wrapped
@@ -281,10 +281,12 @@ async def save_edits_in_timetable_csv(date):
             df = pd.DataFrame(table[1:], columns=table[0])
             df.dropna(how='all', axis=1, inplace=True)
             df = df.fillna('')
-            df.columns = [el.capitalize() if el else el for el in df.columns.values]
+            df.columns = [el.lower().capitalize() if el else el for el in df.columns.values]
             df = df.rename(columns={None: 'Замена2', 'Замена': 'Замены',
                                     'Замена кабинета': 'Замены кабинетов',
                                     "№\nурока": "Урок №",
+                                    "№\nУрока": "Урок №",
+                                    "№ Урока": "Урок №",
                                     "№ урока": "Урок №",
                                     "№урока": "Урок №",
                                     "№": "Урок №",

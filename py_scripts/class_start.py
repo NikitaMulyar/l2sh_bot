@@ -5,7 +5,7 @@ from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from telegram import ReplyKeyboardMarkup, Update
 from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
-from py_scripts.funcs_back import timetable_kbrd, put_to_db, check_busy, prepare_for_markdown
+from py_scripts.funcs_back import timetable_kbrd, put_to_db, check_busy, prepare_for_markdown, throttle
 from py_scripts.consts import COMMANDS, BACKREF_CMDS
 from sqlalchemy_scripts import db_session
 
@@ -35,6 +35,7 @@ class SetTimetable:
         db_sess.close()
         return uid
 
+    @throttle(seconds=3)
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
@@ -43,8 +44,8 @@ class SetTimetable:
         context.user_data['DIALOG_CMD'] = '/' + COMMANDS['start']
         chat_id = update.message.chat_id
         db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.chat_id == chat_id).first():
-            db_sess.close()
+        user = db_sess.query(User).filter(User.chat_id == chat_id).first()
+        if user:
             await update.message.reply_text(
                 'Здравствуйте! Я вижу, что Вы уже есть в системе.\n'
                 'Можете пользоваться ботом.\n'
@@ -52,6 +53,13 @@ class SetTimetable:
                 'года вступает в силу Пользовательское Соглашение. Подробнее: '
                 'https://telegra.ph/Polzovatelskoe-soglashenie-po-ispolzovaniyu-Telegram-bota-Raspisanie-L2SH-03-08',
                 reply_markup=await timetable_kbrd())
+            try:
+                await update.message.reply_document(f'bot_files/{user.role}.pdf',
+                                                    caption='Рекомендуем ознакомиться с '
+                                                            'руководством пользователя!')
+            except Exception:
+                pass
+            db_sess.close()
             context.user_data['DIALOG_CMD'] = None
             context.user_data['in_conversation'] = False
             return ConversationHandler.END
@@ -125,6 +133,15 @@ class SetTimetable:
         await update.message.reply_text(f'Спасибо! Теперь Вы можете пользоваться ботом.\n'
                                         f'Ваш UID (доступен в Профиле по команде /profile): {uid}',
                                         reply_markup=await timetable_kbrd())
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.chat_id == update.message.chat_id).first()
+        try:
+            await update.message.reply_document(f'bot_files/{user.role}.pdf',
+                                                caption='Рекомендуем ознакомиться с '
+                                                        'руководством пользователя!')
+        except Exception:
+            pass
+        db_sess.close()
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
         context.user_data['INFO'] = dict()
@@ -140,6 +157,15 @@ class SetTimetable:
         await update.message.reply_text('Спасибо! Теперь Вы можете пользоваться ботом.\n'
                                         f'Ваш UID (доступен в Профиле по команде /profile): {uid}',
                                         reply_markup=await timetable_kbrd())
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.chat_id == update.message.chat_id).first()
+        try:
+            await update.message.reply_document(f'bot_files/{user.role}.pdf',
+                                                caption='Рекомендуем ознакомиться с '
+                                                        'руководством пользователя!')
+        except Exception:
+            pass
+        db_sess.close()
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
         context.user_data['INFO'] = dict()

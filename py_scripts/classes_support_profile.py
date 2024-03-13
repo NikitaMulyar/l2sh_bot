@@ -7,7 +7,7 @@ from sqlalchemy_scripts import db_session
 
 
 class Profile:
-    @throttle()
+    @throttle(seconds=3)
     async def get_profile(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:
@@ -40,7 +40,19 @@ class Profile:
 
 
 class Support:
-    @throttle()
+    @throttle(seconds=3)
     async def get_supp(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Чат тех-поддержки: @help_group_l2sh\n'
                                         'Админы: @delikatny_pon (Никита), @lokisf8 (Матвей)')
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.chat_id == update.message.chat_id).first()
+        if user is None:
+            db_sess.close()
+            return
+        try:
+            await update.message.reply_document(f'bot_files/{user.role}.pdf',
+                                                caption='Рекомендуем ознакомиться с '
+                                                        'руководством пользователя!')
+        except Exception:
+            pass
+        db_sess.close()

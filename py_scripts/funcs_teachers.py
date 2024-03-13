@@ -231,7 +231,7 @@ async def timetable_teacher_for_each_day(update: Update, context: ContextTypes.D
 def partition_teachers_data(st, end):
     async def put_teacher_data(page: pdfplumber.pdf.Page, i):
         info = page.extract_text().split('\n')[1].split()
-        return "".join([info[1], ' ', info[2][0]]).replace('ё', 'e'), i
+        return "".join([info[1], ' ', info[2][0]]).replace('ё', 'е'), i
 
     async def save_timetable_csv(full_name, page: pdfplumber.pdf.Page):
         table = page.extract_table()[1:]

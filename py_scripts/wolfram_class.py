@@ -2,7 +2,7 @@ import aiohttp
 import wolframalpha
 from telegram import Update, InputMediaDocument
 from telegram.ext import ContextTypes, ConversationHandler, CallbackContext
-from py_scripts.funcs_back import check_busy, prepare_for_markdown
+from py_scripts.funcs_back import check_busy, prepare_for_markdown, throttle
 from py_scripts.consts import COMMANDS, BACKREF_CMDS
 from py_scripts.config import app_id
 
@@ -88,6 +88,7 @@ class WolframClient:
                                         f'Введите запрос:')
         return self.step_request
 
+    @throttle(seconds=5)
     async def send_response(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         return await self.send_response_(update, context, update.message.text)
 
