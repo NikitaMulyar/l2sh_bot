@@ -28,6 +28,7 @@ from py_scripts.funcs_teachers import extract_timetable_for_teachers
 from py_scripts.wolfram_class import WolframClient
 from py_scripts.game_class import GameMillioner
 from py_scripts.class_load_extratable import Load_Extra_Table
+from sqlalchemy import orm
 
 
 gc.enable()
@@ -276,3 +277,4 @@ if __name__ == '__main__':
     parser.add_argument('--update', action="store_true", help="The flag which says to update timetables or not.")
     args = parser.parse_args()
     main(do_update=args.update)
+    orm.close_all_sessions()
