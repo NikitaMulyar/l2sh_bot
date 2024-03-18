@@ -6,6 +6,7 @@ from py_scripts.funcs_back import timetable_kbrd, prepare_for_markdown, check_bu
 from telegram.ext import ContextTypes
 from telegram import Update
 from sqlalchemy_scripts import db_session
+from sqlalchemy import func
 
 
 class Reset_Class:
@@ -88,6 +89,34 @@ class Reset_Class:
         await context.bot.send_document(chat_id, 'out/logs.log')
         await context.bot.send_document(chat_id, 'bot_files/db_copy.txt')
         await context.bot.send_document(chat_id, 'database/telegram_bot.db')
+
+    async def get_statistics(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        is_busy = await check_busy(update, context)
+        if is_busy:
+            return
+        db_sess = db_session.create_session()
+        classes = db_sess.query(User.grade, func.count(User.grade)).group_by(User.grade).all()
+        i = 0
+        while classes[i][0] is not None:
+            i += 1
+        classes.pop(i)
+        classes = {f'{i}': sorted([j for j in classes if str(i) in j[0]]) for i in range(6, 12)}
+        adm_teach = db_sess.query(User.role, func.count(User.role)).group_by(User.role).all()
+        stats = {i[0]: i[1] for i in adm_teach}
+        t = f"""
+📊 *Статистика пользователей бота*\n
+*Учителей\:* {stats['teacher']} человек
+*Администрации\:* {stats['admin']} человек
+*Лицеистов\:* {stats['student']} человек
+"""
+        for k in sorted(classes.keys()):
+            s = f"""
+*{k}\-я параллель*"""
+            for i in classes[k]:
+                s += f"""
+    *{i[0]}\:* {i[1]} человек"""
+            t += s + '\n'
+        await update.message.reply_text(t, parse_mode='MarkdownV2')
 
 
 def check_hash(password):
