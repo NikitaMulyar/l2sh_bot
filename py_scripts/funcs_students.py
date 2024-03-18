@@ -106,7 +106,15 @@ async def create_list_of_edits_lessons_for_student(df: pd.DataFrame, student_cla
 
         pattern = '[16789]+[01]*[а-дА-Д]*'
         r_ = re.findall(pattern, " ".join(df.iloc[j]['Класс'].split('\n')))
-        flag = student_class in r_ or student_class[:-1] in r_ or student_class.lower() in r_
+        flag = False
+        for el in r_:
+            el = el.upper()
+            if student_class[:-1] in el and student_class[-1] in el:
+                flag = True
+                break
+            if el.isdigit() and student_class[:-1] in el:
+                flag = True
+                break
         if not flag:
             continue
 

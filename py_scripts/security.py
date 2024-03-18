@@ -2,7 +2,7 @@ import random
 import hashlib
 from sqlalchemy_scripts.users import User
 import logging
-from py_scripts.funcs_back import timetable_kbrd, prepare_for_markdown, check_busy
+from py_scripts.funcs_back import timetable_kbrd, prepare_for_markdown, check_busy, throttle
 from telegram.ext import ContextTypes
 from telegram import Update
 from sqlalchemy_scripts import db_session
@@ -90,6 +90,7 @@ class Reset_Class:
         await context.bot.send_document(chat_id, 'bot_files/db_copy.txt')
         await context.bot.send_document(chat_id, 'database/telegram_bot.db')
 
+    @throttle(seconds=1)
     async def get_statistics(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:

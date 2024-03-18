@@ -264,7 +264,7 @@ def main(do_update=False):
                                        17: [taking_conver], 18: [load_extra_handler],
                                        19: [wolfram_handler], 20: [game_handler],
                                        21: [PollAnswerHandler(game__.get_answer)],
-                                       22: [CommandHandler('statistics', reset_cl.get_statistics)]})
+                                       22: [CommandHandler('stats', reset_cl.get_statistics)]})
     asyncio.gather(application.bot.set_webhook('', max_connections=100))
     # drop_pending_updates=True
     application.run_polling()
