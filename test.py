@@ -1,10 +1,7 @@
-a = 'Пылева Т.csv'
-b = 'Пылeва Т.csv'
-for i in range(len('Пылeва Т.csv')):
-    if a[i] != b[i]:
-        print(ord(a[i]), ord(b[i]))
+import pandas as pd
 
-s = 'ёйцукенгшщзхъфывапролджэячсмитьбю'
-for i in range(len('Пылeва Т.csv')):
-    print(i, ord(a[i]), ord(b[i]))
-print(ord('e'))
+
+df = pd.read_excel('exams.xlsx', engine='openpyxl')
+print(df.to_string())
+df2 = pd.read_csv('График контрольных работ 23-24 - Лист1.csv')
+print(df.to_string())
