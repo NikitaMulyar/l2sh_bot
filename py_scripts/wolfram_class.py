@@ -1,8 +1,10 @@
+import asyncio
+
 import aiohttp
 import wolframalpha
 from telegram import Update, InputMediaDocument
 from telegram.ext import ContextTypes, ConversationHandler, CallbackContext
-from py_scripts.funcs_back import check_busy, prepare_for_markdown, throttle
+from py_scripts.funcs_back import check_busy, prepare_for_markdown, throttle, throttle_doc
 from py_scripts.consts import COMMANDS, BACKREF_CMDS
 from py_scripts.config import app_id
 
@@ -67,8 +69,8 @@ class WolframClient:
             await update.message.reply_text(f'Некорректный запрос. Попробуйте снова.\n'
                                             f'Завершить wolfram: /end_wolfram')
             return self.step_request
-        for group in res:
-            await context.bot.send_media_group(update.message.chat.id, group)
+        tasks = [context.bot.send_media_group(update.message.chat.id, group) for group in res]
+        await asyncio.gather(*tasks)
         await update.message.reply_text('А вот и ответ! Жду новый запрос! (Без префикса /wolfram)')
         await update.message.reply_text(f'Завершить wolfram: /end_wolfram')
         return self.step_request
@@ -88,7 +90,7 @@ class WolframClient:
                                         f'Введите запрос:')
         return self.step_request
 
-    @throttle(seconds=5)
+    @throttle_doc(seconds=15)
     async def send_response(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         return await self.send_response_(update, context, update.message.text)
 

@@ -58,8 +58,31 @@ def throttle2(seconds=0.5):
     return wrapper
 
 
+def throttle_doc(seconds=5):
+    def wrapper(func):
+        @functools.wraps(func)
+        async def wrapped(*args, **kwargs):
+            now_ = datetime.now()
+            last_time = args[2].user_data.get('doc_func')
+            if not last_time:
+                args[2].user_data['doc_func'] = now_
+                return await func(*args, **kwargs)
+            elif last_time + timedelta(seconds=seconds) <= now_:
+                args[2].user_data['doc_func'] = now_
+                return await func(*args, **kwargs)
+            else:
+                kwargs["ost"] = (last_time - now_ + timedelta(seconds=seconds)).seconds
+                return await trottle_ans2(*args, **kwargs)
+        return wrapped
+    return wrapper
+
+
 async def trottle_ans(*args, **kwargs):
-    await args[1].message.reply_text('🧨 Пожалуйста, пишите помедленнее!')
+    await args[1].message.reply_text(f'🧨 Пожалуйста, пишите помедленнее!')
+
+
+async def trottle_ans2(*args, **kwargs):
+    await args[1].message.reply_text(f'🧨 Пожалуйста, подождите. Осталось подождать {kwargs["ost"]} сек')
 
 
 async def timetable_kbrd():

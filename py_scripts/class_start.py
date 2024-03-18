@@ -5,7 +5,7 @@ from telegram.ext import ConversationHandler, ContextTypes, CallbackContext
 from telegram import ReplyKeyboardMarkup, Update
 from py_scripts.security import check_hash
 from sqlalchemy_scripts.users import User
-from py_scripts.funcs_back import timetable_kbrd, put_to_db, check_busy, prepare_for_markdown, throttle
+from py_scripts.funcs_back import timetable_kbrd, put_to_db, check_busy, prepare_for_markdown, throttle, throttle_doc
 from py_scripts.consts import COMMANDS, BACKREF_CMDS
 from sqlalchemy_scripts import db_session
 
@@ -35,7 +35,7 @@ class SetTimetable:
         db_sess.close()
         return uid
 
-    @throttle(seconds=3)
+    @throttle_doc()
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         is_busy = await check_busy(update, context)
         if is_busy:

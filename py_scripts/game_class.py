@@ -5,7 +5,7 @@ from telegram import Update
 import telegram
 from telegram.ext import ContextTypes
 from random import shuffle
-from py_scripts.funcs_back import check_busy, throttle
+from py_scripts.funcs_back import check_busy, throttle, throttle_doc
 from py_scripts.config import game_api
 import pandas as pd
 import numpy as np
@@ -16,7 +16,7 @@ class GameMillioner:
     url = 'https://engine.lifeis.porn/api/millionaire.php'
     path = 'data/game.csv'
 
-    @throttle(seconds=3)
+    @throttle_doc()
     async def send_poll(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Called by the command /game"""
         is_busy = await check_busy(update, context)
