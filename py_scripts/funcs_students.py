@@ -104,7 +104,7 @@ async def create_list_of_edits_lessons_for_student(df: pd.DataFrame, student_cla
         if not " ".join(df.iloc[j]['Класс'].split('\n')):
             continue
 
-        pattern = '[16789]+[01]*[а-дА-Д]*'
+        pattern = '[16789]+[01\s]*[а-дА-Д\s]*'
         r_ = re.findall(pattern, " ".join(df.iloc[j]['Класс'].split('\n')))
         flag = False
         for el in r_:
