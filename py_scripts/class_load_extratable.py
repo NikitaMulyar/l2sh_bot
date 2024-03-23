@@ -67,13 +67,13 @@ class Load_Extra_Table:
         await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
                                                                  'Чтобы начать заново\, введите команду\: '
                                                                  f'{prepare_for_markdown(cmd)}*',
-                                       parse_mode='MarkdownV2')
+                                       parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         context.user_data["DIALOG_CMD"] = None
         context.user_data['in_conversation'] = False
 
     async def end_setting(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('⚠️ *Загрузка кружков прервана\. Начать сначала\: \/extra\_load*',
-                                        parse_mode='MarkdownV2')
+                                        parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
         return ConversationHandler.END

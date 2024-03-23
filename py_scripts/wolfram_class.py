@@ -4,7 +4,7 @@ import aiohttp
 import wolframalpha
 from telegram import Update, InputMediaDocument
 from telegram.ext import ContextTypes, ConversationHandler, CallbackContext
-from py_scripts.funcs_back import check_busy, prepare_for_markdown, throttle, throttle_doc
+from py_scripts.funcs_back import check_busy, prepare_for_markdown, throttle, throttle_doc, timetable_kbrd
 from py_scripts.consts import COMMANDS, BACKREF_CMDS
 from py_scripts.config import app_id
 
@@ -99,7 +99,7 @@ class WolframClient:
         await context.bot.send_message(update.effective_chat.id, '⚠️ *Время ожидания вышло\. '
                                                                  'Чтобы начать заново\, введите команду\: '
                                                                  f'{prepare_for_markdown(cmd)}*',
-                                       parse_mode='MarkdownV2')
+                                       parse_mode='MarkdownV2', reply_markup=await timetable_kbrd())
         context.user_data['in_conversation'] = False
         context.user_data['DIALOG_CMD'] = None
 
