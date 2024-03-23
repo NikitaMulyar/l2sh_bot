@@ -28,7 +28,7 @@ from py_scripts.funcs_teachers import extract_timetable_for_teachers
 from py_scripts.wolfram_class import WolframClient
 from py_scripts.game_class import GameMillioner
 from py_scripts.class_load_extratable import Load_Extra_Table
-
+from py_scripts.class_exams_checker import CheckClassExam, LoadHTMLExams
 
 gc.enable()
 
@@ -254,6 +254,28 @@ def main(do_update=False):
         conversation_timeout=120
     )
 
+    exams_loader = LoadHTMLExams()
+    exams_loader_handler = ConversationHandler(
+        entry_points=[CommandHandler('exams_load', exams_loader.start)],
+        states={1: [MessageHandler(filters.TEXT & ~filters.COMMAND, exams_loader.get_pswrd)],
+                2: [MessageHandler(filters.Document.FileExtension('html'), exams_loader.load_html)],
+                ConversationHandler.TIMEOUT: [TypeHandler(Update, exams_loader.timeout_func)],
+                ConversationHandler.END: [TypeHandler(Update, exams_loader.timeout_func)]},
+        fallbacks=[CommandHandler('end_exams_load', exams_loader.end_setting)],
+        conversation_timeout=120
+    )
+
+    exams_checker = CheckClassExam()
+    exams_checker_handler = ConversationHandler(
+        entry_points=[CommandHandler('exams', exams_checker.start)],
+        states={1: [MessageHandler(filters.TEXT & ~filters.COMMAND, exams_checker.get_month)],
+                2: [MessageHandler(filters.TEXT & ~filters.COMMAND, exams_checker.get_class)],
+                ConversationHandler.TIMEOUT: [TypeHandler(Update, exams_checker.timeout_func)],
+                ConversationHandler.END: [TypeHandler(Update, exams_checker.timeout_func)]},
+        fallbacks=[CommandHandler('end_exams', exams_checker.end_setting)],
+        conversation_timeout=60
+    )
+
     application.add_handlers(handlers={1: [conv_handler], 2: [timetable_handler], 3: [edit_user_handler],
                                        4: [mailto_handler], 5: [load_tt_handler], 6: [prof_handler],
                                        7: [sup_hadler], 8: [load_changes_in_tt_handler], 9: [config_extra],
@@ -264,7 +286,8 @@ def main(do_update=False):
                                        17: [taking_conver], 18: [load_extra_handler],
                                        19: [wolfram_handler], 20: [game_handler],
                                        21: [PollAnswerHandler(game__.get_answer)],
-                                       22: [CommandHandler('stats', reset_cl.get_statistics)]})
+                                       22: [CommandHandler('stats', reset_cl.get_statistics)],
+                                       23: [exams_loader_handler], 24: [exams_checker_handler]})
     asyncio.gather(application.bot.set_webhook('', max_connections=100))
     # drop_pending_updates=True
     application.run_polling()
